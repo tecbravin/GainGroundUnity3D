@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="54" result="Failed(Child)" total="54" passed="53" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-20 15:31:30Z" end-time="2026-10-20 15:31:31Z" duration="0,8456667">
+  <test-suite type="TestSuite" id="1000" name="GainGroundReforged" fullname="GainGroundReforged" runstate="Runnable" testcasecount="54" result="Failed" site="Child" start-time="2026-10-20 15:31:30Z" end-time="2026-10-20 15:31:31Z" duration="0.845667" total="54" passed="53" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties />
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1063" name="GainGround.Tests.dll" fullname="C:/Users/tecbr/Documents/Projetos Pessoais/GainGround_Unity_Partial_Port/.validation/UnityProject/Library/ScriptAssemblies/GainGround.Tests.dll" runstate="Runnable" testcasecount="54" result="Failed" site="Child" start-time="2026-10-20 15:31:30Z" end-time="2026-10-20 15:31:31Z" duration="0.553633" total="54" passed="53" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="37476" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestFixture" id="1001" name="ArenaTests" fullname="ArenaTests" classname="ArenaTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-20 15:31:30Z" end-time="2026-10-20 15:31:30Z" duration="0.006920" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1004" name="ArenaBoundaryIncludesActorRadius" fullname="ArenaTests.ArenaBoundaryIncludesActorRadius" methodname="ArenaBoundaryIncludesActorRadius" classname="ArenaTests" runstate="Runnable" seed="367625607" result="Passed" start-time="2026-10-20 15:31:07Z" end-time="2026-10-20 15:31:07Z" duration="0.007874" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1002" name="FastMovementCannotTunnelThroughThinWall" fullname="ArenaTests.FastMovementCannotTunnelThroughThinWall" methodname="FastMovementCannotTunnelThroughThinWall" classname="ArenaTests" runstate="Runnable" seed="914325329" result="Passed" start-time="2026-10-20 15:31:07Z" end-time="2026-10-20 15:31:07Z" duration="0.003623" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1003" name="MovementSlidesAlongWall" fullname="ArenaTests.MovementSlidesAlongWall" methodname="MovementSlidesAlongWall" classname="ArenaTests" runstate="Runnable" seed="1207185021" result="Passed" start-time="2026-10-20 15:31:07Z" end-time="2026-10-20 15:31:07Z" duration="0.000422" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1005" name="ShippedSpawnsAreInsideArenaAndOutsideWalls" fullname="ArenaTests.ShippedSpawnsAreInsideArenaAndOutsideWalls" methodname="ShippedSpawnsAreInsideArenaAndOutsideWalls" classname="ArenaTests" runstate="Runnable" seed="1505491808" result="Passed" start-time="2026-10-20 15:31:07Z" end-time="2026-10-20 15:31:07Z" duration="0.118125" asserts="0">
+          <properties />
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1006" name="CoopTests" fullname="CoopTests" classname="CoopTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-20 15:31:30Z" end-time="2026-10-20 15:31:30Z" duration="0.002872" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1011" name="BothRostersMustFinishAndEnemiesIgnoreEvacuatedPlayers" fullname="CoopTests.BothRostersMustFinishAndEnemiesIgnoreEvacuatedPlayers" methodname="BothRostersMustFinishAndEnemiesIgnoreEvacuatedPlayers" classname="CoopTests" runstate="Runnable" seed="1293617794" result="Passed" start-time="2026-10-20 15:31:07Z" end-time="2026-10-20 15:31:09Z" duration="1.547860" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1009" name="CaptiveHasOneCarrierAndJoinsOnlyThatPlayersRoster" fullname="CoopTests.CaptiveHasOneCarrierAndJoinsOnlyThatPlayersRoster" methodname="CaptiveHasOneCarrierAndJoinsOnlyThatPlayersRoster" classname="CoopTests" runstate="Runnable" seed="1643235354" result="Passed" start-time="2026-10-20 15:31:09Z" end-time="2026-10-20 15:31:10Z" duration="1.407456" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1012" name="EnemyShotsCanHitPlayerTwoAndFriendlyShotsCannotHitPlayers" fullname="CoopTests.EnemyShotsCanHitPlayerTwoAndFriendlyShotsCannotHitPlayers" methodname="EnemyShotsCanHitPlayerTwoAndFriendlyShotsCannotHitPlayers" classname="CoopTests" runstate="Runnable" seed="1475196520" result="Passed" start-time="2026-10-20 15:31:10Z" end-time="2026-10-20 15:31:12Z" duration="1.429804" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1007" name="EveryCharacterAndCampaignReferenceUsesCanonicalFolder" fullname="CoopTests.EveryCharacterAndCampaignReferenceUsesCanonicalFolder" methodname="EveryCharacterAndCampaignReferenceUsesCanonicalFolder" classname="CoopTests" runstate="Runnable" seed="1861416599" result="Passed" start-time="2026-10-20 15:31:12Z" end-time="2026-10-20 15:31:12Z" duration="0.045840" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1008" name="IndependentMovementWeaponsDashSwitchingAndPause" fullname="CoopTests.IndependentMovementWeaponsDashSwitchingAndPause" methodname="IndependentMovementWeaponsDashSwitchingAndPause" classname="CoopTests" runstate="Runnable" seed="896443743" result="Passed" start-time="2026-10-20 15:31:12Z" end-time="2026-10-20 15:31:13Z" duration="1.425392" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1010" name="PartnerCanRecoverAnEliminatedRosterWithoutTransferringOwnership" fullname="CoopTests.PartnerCanRecoverAnEliminatedRosterWithoutTransferringOwnership" methodname="PartnerCanRecoverAnEliminatedRosterWithoutTransferringOwnership" classname="CoopTests" runstate="Runnable" seed="108896398" result="Passed" start-time="2026-10-20 15:31:13Z" end-time="2026-10-20 15:31:15Z" duration="1.475802" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1013" name="MenuSettingsTests" fullname="MenuSettingsTests" classname="MenuSettingsTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-20 15:31:30Z" end-time="2026-10-20 15:31:30Z" duration="0.000312" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1017" name="ClassicCoopWaitsIndependentlyAndDoesNotTargetSelectionPlayers" fullname="MenuSettingsTests.ClassicCoopWaitsIndependentlyAndDoesNotTargetSelectionPlayers" methodname="ClassicCoopWaitsIndependentlyAndDoesNotTargetSelectionPlayers" classname="MenuSettingsTests" runstate="Runnable" seed="646686479" result="Passed" start-time="2026-10-20 15:31:15Z" end-time="2026-10-20 15:31:16Z" duration="1.567128" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1016" name="ClassicModeRequiresSelectionForEverySpawnAndDisablesSwitching" fullname="MenuSettingsTests.ClassicModeRequiresSelectionForEverySpawnAndDisablesSwitching" methodname="ClassicModeRequiresSelectionForEverySpawnAndDisablesSwitching" classname="MenuSettingsTests" runstate="Runnable" seed="1687212545" result="Passed" start-time="2026-10-20 15:31:16Z" end-time="2026-10-20 15:31:18Z" duration="1.493167" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1014" name="LocalFileDefaultsRoundTripClampingAndMissingFields" fullname="MenuSettingsTests.LocalFileDefaultsRoundTripClampingAndMissingFields" methodname="LocalFileDefaultsRoundTripClampingAndMissingFields" classname="MenuSettingsTests" runstate="Runnable" seed="1665754872" result="Passed" start-time="2026-10-20 15:31:18Z" end-time="2026-10-20 15:31:18Z" duration="0.060644" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1015" name="MenuStartsCorrectPlayerCountAndOptionsAreTransactional" fullname="MenuSettingsTests.MenuStartsCorrectPlayerCountAndOptionsAreTransactional" methodname="MenuStartsCorrectPlayerCountAndOptionsAreTransactional" classname="MenuSettingsTests" runstate="Runnable" seed="238724215" result="Passed" start-time="2026-10-20 15:31:18Z" end-time="2026-10-20 15:31:19Z" duration="1.537536" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1018" name="OriginalStageTests" fullname="OriginalStageTests" classname="OriginalStageTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-20 15:31:30Z" end-time="2026-10-20 15:31:30Z" duration="0.000113" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1019" name="AllFiveMapsHaveReachableExitsAndCaptives" fullname="OriginalStageTests.AllFiveMapsHaveReachableExitsAndCaptives" methodname="AllFiveMapsHaveReachableExitsAndCaptives" classname="OriginalStageTests" runstate="Runnable" seed="2112680365" result="Passed" start-time="2026-10-20 15:31:19Z" end-time="2026-10-20 15:31:19Z" duration="0.011447" asserts="0">
+          <properties />
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1020" name="OriginalWeaponsTests" fullname="OriginalWeaponsTests" classname="OriginalWeaponsTests" runstate="Runnable" testcasecount="24" result="Failed" site="Child" start-time="2026-10-20 15:31:30Z" end-time="2026-10-20 15:31:30Z" duration="0.001559" total="24" passed="23" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-case id="1044" name="ArcsCrossWallsHitHighTargetsAndGrenadesExplodeAtLanding" fullname="OriginalWeaponsTests.ArcsCrossWallsHitHighTargetsAndGrenadesExplodeAtLanding" methodname="ArcsCrossWallsHitHighTargetsAndGrenadesExplodeAtLanding" classname="OriginalWeaponsTests" runstate="Runnable" seed="1112670053" result="Passed" start-time="2026-10-20 15:31:19Z" end-time="2026-10-20 15:31:20Z" duration="1.103819" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1042" name="DirectionRulesAreWorldFixedAndEightWayAimIsQuantized" fullname="OriginalWeaponsTests.DirectionRulesAreWorldFixedAndEightWayAimIsQuantized" methodname="DirectionRulesAreWorldFixedAndEightWayAimIsQuantized" classname="OriginalWeaponsTests" runstate="Runnable" seed="1126146552" result="Passed" start-time="2026-10-20 15:31:20Z" end-time="2026-10-20 15:31:20Z" duration="0.005787" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1043" name="EveryCharacterCanFireAndDashAndCoopHasSeparateLimits" fullname="OriginalWeaponsTests.EveryCharacterCanFireAndDashAndCoopHasSeparateLimits" methodname="EveryCharacterCanFireAndDashAndCoopHasSeparateLimits" classname="OriginalWeaponsTests" runstate="Runnable" seed="1502150260" result="Passed" start-time="2026-10-20 15:31:20Z" end-time="2026-10-20 15:31:22Z" duration="1.433654" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-suite type="ParameterizedMethod" id="1041" name="OriginalProfilesKeepTheirDirectionAndDash" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-10-20 15:31:30Z" end-time="2026-10-20 15:31:30Z" duration="0.000953" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-case id="1021" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Johnny&quot;,North)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Johnny&quot;,North)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="52033397" result="Passed" start-time="2026-10-20 15:31:22Z" end-time="2026-10-20 15:31:22Z" duration="0.003150" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1022" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Athra&quot;,Facing)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Athra&quot;,Facing)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="77560488" result="Passed" start-time="2026-10-20 15:31:22Z" end-time="2026-10-20 15:31:22Z" duration="0.000112" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1023" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Betty&quot;,North)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Betty&quot;,North)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="598667998" result="Passed" start-time="2026-10-20 15:31:22Z" end-time="2026-10-20 15:31:22Z" duration="0.000091" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1024" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Babalu&quot;,Facing)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Babalu&quot;,Facing)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="1152568620" result="Passed" start-time="2026-10-20 15:31:22Z" end-time="2026-10-20 15:31:22Z" duration="0.000103" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1025" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Gaston&quot;,North)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Gaston&quot;,North)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="1995449573" result="Passed" start-time="2026-10-20 15:31:22Z" end-time="2026-10-20 15:31:22Z" duration="0.000085" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1026" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Moss&quot;,North)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Moss&quot;,North)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="458360811" result="Passed" start-time="2026-10-20 15:31:22Z" end-time="2026-10-20 15:31:22Z" duration="0.000086" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1027" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Glow Knight&quot;,Facing)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Glow Knight&quot;,Facing)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="414674453" result="Passed" start-time="2026-10-20 15:31:22Z" end-time="2026-10-20 15:31:22Z" duration="0.000084" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1028" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Fire Knight&quot;,North)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Fire Knight&quot;,North)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="915122182" result="Passed" start-time="2026-10-20 15:31:22Z" end-time="2026-10-20 15:31:22Z" duration="0.000098" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1029" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Water Knight&quot;,Facing)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Water Knight&quot;,Facing)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="644254800" result="Passed" start-time="2026-10-20 15:31:22Z" end-time="2026-10-20 15:31:22Z" duration="0.000083" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1030" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Zaemon&quot;,Facing)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Zaemon&quot;,Facing)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="701432336" result="Passed" start-time="2026-10-20 15:31:22Z" end-time="2026-10-20 15:31:22Z" duration="0.000083" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1031" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Valkyrie&quot;,Facing)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Valkyrie&quot;,Facing)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="1039258686" result="Passed" start-time="2026-10-20 15:31:22Z" end-time="2026-10-20 15:31:22Z" duration="0.000082" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1032" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Mamu&quot;,North)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Mamu&quot;,North)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="985043880" result="Passed" start-time="2026-10-20 15:31:22Z" end-time="2026-10-20 15:31:22Z" duration="0.000083" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1033" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Professor&quot;,Horizontal)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Professor&quot;,Horizontal)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="166200257" result="Passed" start-time="2026-10-20 15:31:22Z" end-time="2026-10-20 15:31:22Z" duration="0.000081" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1034" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Kou&quot;,North)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Kou&quot;,North)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="1386561187" result="Passed" start-time="2026-10-20 15:31:22Z" end-time="2026-10-20 15:31:22Z" duration="0.000082" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1035" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Kiddo&quot;,Horizontal)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Kiddo&quot;,Horizontal)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="1429767729" result="Passed" start-time="2026-10-20 15:31:22Z" end-time="2026-10-20 15:31:22Z" duration="0.000082" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1036" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Mad Poppy&quot;,North)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Mad Poppy&quot;,North)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="1763982418" result="Passed" start-time="2026-10-20 15:31:22Z" end-time="2026-10-20 15:31:22Z" duration="0.000091" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1037" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;General&quot;,Facing)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;General&quot;,Facing)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="1399654946" result="Passed" start-time="2026-10-20 15:31:22Z" end-time="2026-10-20 15:31:22Z" duration="0.000084" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1038" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Robbie&quot;,Facing)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Robbie&quot;,Facing)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="214931574" result="Passed" start-time="2026-10-20 15:31:22Z" end-time="2026-10-20 15:31:22Z" duration="0.000080" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1039" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Cyber&quot;,SixWay)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Cyber&quot;,SixWay)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="822934647" result="Passed" start-time="2026-10-20 15:31:22Z" end-time="2026-10-20 15:31:22Z" duration="0.000081" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1040" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Honey&quot;,Facing)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Honey&quot;,Facing)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="1663283258" result="Passed" start-time="2026-10-20 15:31:22Z" end-time="2026-10-20 15:31:22Z" duration="0.000078" asserts="0">
+            <properties />
+          </test-case>
+        </test-suite>
+        <test-case id="1045" name="WaterFreezesFireDamagesTornadoReflectsBoomerangReturnsAndOrbitCancels" fullname="OriginalWeaponsTests.WaterFreezesFireDamagesTornadoReflectsBoomerangReturnsAndOrbitCancels" methodname="WaterFreezesFireDamagesTornadoReflectsBoomerangReturnsAndOrbitCancels" classname="OriginalWeaponsTests" runstate="Runnable" seed="845390956" result="Failed" start-time="2026-10-20 15:31:22Z" end-time="2026-10-20 15:31:23Z" duration="1.070872" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+          <failure>
+            <message><![CDATA[  Expected: less than 0.899999976f
+  But was:  0.899999976f
+]]></message>
+            <stack-trace><![CDATA[at OriginalWeaponsTests+<WaterFreezesFireDamagesTornadoReflectsBoomerangReturnsAndOrbitCancels>d__17.MoveNext () [0x00178] in C:\Users\tecbr\Documents\Projetos Pessoais\GainGround_Unity_Partial_Port\.validation\UnityProject\Assets\GainGround\Tests\Editor\OriginalWeaponsTests.cs:162
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1.1.33\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:46
+]]></stack-trace>
+          </failure>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1046" name="PlayableCampaignTests" fullname="PlayableCampaignTests" classname="PlayableCampaignTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-20 15:31:30Z" end-time="2026-10-20 15:31:31Z" duration="0.527429" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1047" name="CampaignCombatRescueExitDeathTimeoutPauseAndProgression" fullname="PlayableCampaignTests.CampaignCombatRescueExitDeathTimeoutPauseAndProgression" methodname="CampaignCombatRescueExitDeathTimeoutPauseAndProgression" classname="PlayableCampaignTests" runstate="Runnable" seed="55674241" result="Passed" start-time="2026-10-20 15:31:23Z" end-time="2026-10-20 15:31:25Z" duration="1.886869" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1048" name="DashDistanceCooldownProtectionAndSwitching" fullname="PlayableCampaignTests.DashDistanceCooldownProtectionAndSwitching" methodname="DashDistanceCooldownProtectionAndSwitching" classname="PlayableCampaignTests" runstate="Runnable" seed="1050316793" result="Passed" start-time="2026-10-20 15:31:25Z" end-time="2026-10-20 15:31:26Z" duration="1.437701" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1050" name="ElevatedArchersAndDelayedReinforcements" fullname="PlayableCampaignTests.ElevatedArchersAndDelayedReinforcements" methodname="ElevatedArchersAndDelayedReinforcements" classname="PlayableCampaignTests" runstate="Runnable" seed="1243313166" result="Passed" start-time="2026-10-20 15:31:26Z" end-time="2026-10-20 15:31:28Z" duration="1.446468" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1051" name="FallenTeammateIsReplacedUntilDeliveredAndRescueAwardsNoPoints" fullname="PlayableCampaignTests.FallenTeammateIsReplacedUntilDeliveredAndRescueAwardsNoPoints" methodname="FallenTeammateIsReplacedUntilDeliveredAndRescueAwardsNoPoints" classname="PlayableCampaignTests" runstate="Runnable" seed="282672550" result="Passed" start-time="2026-10-20 15:31:28Z" end-time="2026-10-20 15:31:29Z" duration="1.539031" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1049" name="MusicFollowsStagePauseVictoryAndRestart" fullname="PlayableCampaignTests.MusicFollowsStagePauseVictoryAndRestart" methodname="MusicFollowsStagePauseVictoryAndRestart" classname="PlayableCampaignTests" runstate="Runnable" seed="485482391" result="Passed" start-time="2026-10-20 15:31:29Z" end-time="2026-10-20 15:31:31Z" duration="1.478295" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1052" name="RecoveredTests" fullname="RecoveredTests" classname="RecoveredTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-10-20 15:31:31Z" end-time="2026-10-20 15:31:31Z" duration="0.007159" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1056" name="CopyIsSequentialWhenOverlapping" fullname="RecoveredTests.CopyIsSequentialWhenOverlapping" methodname="CopyIsSequentialWhenOverlapping" classname="RecoveredTests" runstate="Runnable" seed="980496648" result="Passed" start-time="2026-10-20 15:31:31Z" end-time="2026-10-20 15:31:31Z" duration="0.001507" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1055" name="DbraCountZeroWritesOneWord" fullname="RecoveredTests.DbraCountZeroWritesOneWord" methodname="DbraCountZeroWritesOneWord" classname="RecoveredTests" runstate="Runnable" seed="1213500413" result="Passed" start-time="2026-10-20 15:31:31Z" end-time="2026-10-20 15:31:31Z" duration="0.000164" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1059" name="DecoderHonorsOutputLimit" fullname="RecoveredTests.DecoderHonorsOutputLimit" methodname="DecoderHonorsOutputLimit" classname="RecoveredTests" runstate="Runnable" seed="65936664" result="Passed" start-time="2026-10-20 15:31:31Z" end-time="2026-10-20 15:31:31Z" duration="0.002572" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1054" name="FadeUsesOriginalWordAndWraps" fullname="RecoveredTests.FadeUsesOriginalWordAndWraps" methodname="FadeUsesOriginalWordAndWraps" classname="RecoveredTests" runstate="Runnable" seed="393910432" result="Passed" start-time="2026-10-20 15:31:31Z" end-time="2026-10-20 15:31:31Z" duration="0.000447" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1057" name="FullMaskProducesOneBlock" fullname="RecoveredTests.FullMaskProducesOneBlock" methodname="FullMaskProducesOneBlock" classname="RecoveredTests" runstate="Runnable" seed="2091982391" result="Passed" start-time="2026-10-20 15:31:31Z" end-time="2026-10-20 15:31:31Z" duration="0.000299" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1058" name="LaterMaskWinsAndUncoveredBytesAreLiteral" fullname="RecoveredTests.LaterMaskWinsAndUncoveredBytesAreLiteral" methodname="LaterMaskWinsAndUncoveredBytesAreLiteral" classname="RecoveredTests" runstate="Runnable" seed="253763438" result="Passed" start-time="2026-10-20 15:31:31Z" end-time="2026-10-20 15:31:31Z" duration="0.000159" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1062" name="MalformedOffsetFails" fullname="RecoveredTests.MalformedOffsetFails" methodname="MalformedOffsetFails" classname="RecoveredTests" runstate="Runnable" seed="67627135" result="Passed" start-time="2026-10-20 15:31:31Z" end-time="2026-10-20 15:31:31Z" duration="0.000204" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1053" name="PadIsActiveLowAndEdgesAreRising" fullname="RecoveredTests.PadIsActiveLowAndEdgesAreRising" methodname="PadIsActiveLowAndEdgesAreRising" classname="RecoveredTests" runstate="Runnable" seed="69513538" result="Passed" start-time="2026-10-20 15:31:31Z" end-time="2026-10-20 15:31:31Z" duration="0.000143" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1061" name="ZeroRunPreservesThresholdOvershoot" fullname="RecoveredTests.ZeroRunPreservesThresholdOvershoot" methodname="ZeroRunPreservesThresholdOvershoot" classname="RecoveredTests" runstate="Runnable" seed="1005153655" result="Passed" start-time="2026-10-20 15:31:31Z" end-time="2026-10-20 15:31:31Z" duration="0.000357" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1060" name="ZeroRunSupportsEscapesAndMaximumRun" fullname="RecoveredTests.ZeroRunSupportsEscapesAndMaximumRun" methodname="ZeroRunSupportsEscapesAndMaximumRun" classname="RecoveredTests" runstate="Runnable" seed="1211714269" result="Passed" start-time="2026-10-20 15:31:31Z" end-time="2026-10-20 15:31:31Z" duration="0.000203" asserts="0">
+          <properties />
+        </test-case>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

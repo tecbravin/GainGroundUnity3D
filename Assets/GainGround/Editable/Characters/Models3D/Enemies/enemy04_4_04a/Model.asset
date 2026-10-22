@@ -1,0 +1,403 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efc2dbf1ef257524c9464d78454b62fe, type: 3}
+  m_Name: Model
+  m_EditorClassIdentifier: 
+  bones:
+  - part: -1
+    parent: -1
+    translation: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 0, y: 0, z: 0}
+  - part: 0
+    parent: 0
+    translation: {x: 0, y: 0.035228, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 0, y: -3.835228, z: 0}
+  - part: 1
+    parent: 1
+    translation: {x: -0.000002, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: -15.41193, y: -5.96591, z: 0}
+  - part: 2
+    parent: 1
+    translation: {x: -0.000003, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: -12.85511, y: -5.042613, z: 0}
+  - part: 3
+    parent: 1
+    translation: {x: 0.000004, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: -15.83807, y: -4.545455, z: 0}
+  - part: 4
+    parent: 1
+    translation: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: -7, y: -4, z: -11}
+  - part: 5
+    parent: 1
+    translation: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: -7, y: -4, z: 11}
+  - part: 6
+    parent: 1
+    translation: {x: -0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 4.758523, y: 0, z: 0}
+  - part: 7
+    parent: 1
+    translation: {x: -0.000002, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 18.96307, y: -3.835228, z: 0}
+  - part: 8
+    parent: 1
+    translation: {x: -0.000002, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: -21.80397, y: 0, z: 0}
+  - part: 9
+    parent: 1
+    translation: {x: -0.000001, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: -14.13352, y: -9.09091, z: 0}
+  - part: 10
+    parent: 1
+    translation: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: -7, y: -6, z: -11}
+  - part: 11
+    parent: 1
+    translation: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: -7, y: -6, z: 11}
+  - part: 12
+    parent: 1
+    translation: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 16, y: -6, z: -11}
+  - part: 13
+    parent: 1
+    translation: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 16, y: -6, z: 11}
+  - part: 14
+    parent: 1
+    translation: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 5, y: -4, z: -11}
+  - part: 15
+    parent: 1
+    translation: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 5, y: -4, z: 11}
+  clips:
+  - name: Anime0000
+    duration: 60
+    tracks:
+    - bone: 1
+      frames: 000000001e0000003c000000
+      translation:
+      - {x: 0, y: 0.035228, z: 0}
+      - {x: 0, y: -1.420453, z: 0}
+      - {x: 0, y: 0.035228, z: 0}
+      rotation: []
+      scale: []
+  - name: Anime0001
+    duration: 60
+    tracks:
+    - bone: 1
+      frames: 000000001e0000003c000000
+      translation:
+      - {x: 0, y: 0.035228, z: 0}
+      - {x: 0, y: -1.420453, z: 0}
+      - {x: 0, y: 0.035228, z: 0}
+      rotation: []
+      scale: []
+  - name: Anime0002
+    duration: 60
+    tracks:
+    - bone: 1
+      frames: 000000001e0000003c000000
+      translation:
+      - {x: 0, y: 0.035228, z: 0}
+      - {x: 0, y: -1.420453, z: 0}
+      - {x: 0, y: 0.035228, z: 0}
+      rotation: []
+      scale: []
+  - name: Anime0003
+    duration: 70
+    tracks:
+    - bone: 1
+      frames: 000000000a000000140000001e00000028000000320000003c00000046000000
+      translation:
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 1.491478, z: 0}
+      - {x: 0, y: 1.491478, z: 0}
+      - {x: 0, y: 1.491478, z: 0}
+      - {x: 0, y: 1.491478, z: 0}
+      rotation:
+      - {x: 0, y: 0, z: 0}
+      - {x: -0.062832, y: 0, z: -0.02618}
+      - {x: 0.109956, y: 0, z: 0.040143}
+      - {x: 0.109956, y: -0.174533, z: -0.102974}
+      - {x: -0.064577, y: -0.174533, z: -0.010472}
+      - {x: 0.012217, y: -0.174533, z: -0.010472}
+      - {x: -0.05236, y: -0.089012, z: -0.010472}
+      - {x: -0.031416, y: -0.089012, z: -0.010472}
+      scale: []
+    - bone: 2
+      frames: 000000000a000000140000001e00000028000000320000003c00000046000000
+      translation: []
+      rotation:
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0.15708, y: 0, z: 0}
+      - {x: 0.15708, y: 0, z: 0}
+      scale: []
+    - bone: 4
+      frames: 000000000a000000140000001e00000028000000320000003c00000046000000
+      translation: []
+      rotation:
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: -0.010996, z: 0}
+      - {x: 0, y: -0, z: 0}
+      - {x: 0, y: -0.171042, z: 0}
+      - {x: 0, y: -0.171042, z: 0}
+      scale: []
+    - bone: 7
+      frames: 000000000a000000140000001e00000028000000320000003c00000046000000
+      translation: []
+      rotation:
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: -0, z: 0}
+      - {x: 0, y: -0.012217, z: 0}
+      - {x: 0, y: -0.012217, z: 0}
+      scale: []
+    - bone: 11
+      frames: 000000000a000000140000001e00000028000000320000003c00000046000000
+      translation: []
+      rotation:
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0.171042, y: 0, z: 0}
+      - {x: 0.171042, y: 0, z: 0}
+      scale: []
+    - bone: 13
+      frames: 000000000a000000140000001e00000028000000320000003c00000046000000
+      translation: []
+      rotation:
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: -0, z: 0}
+      - {x: 0.211185, y: -0.066323, z: 0}
+      - {x: 0.211185, y: -0.066323, z: 0}
+      scale: []
+    - bone: 14
+      frames: 000000000a000000140000001e00000028000000320000003c00000046000000
+      translation: []
+      rotation:
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0.027925, y: 0, z: 0}
+      scale: []
+  - name: Anime0004
+    duration: 70
+    tracks:
+    - bone: 1
+      frames: 000000000a000000130000001e00000028000000320000003c00000046000000
+      translation:
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0.284091, z: 0}
+      - {x: 0, y: 1.420455, z: 0}
+      - {x: 0, y: 1.420455, z: 0}
+      - {x: 0, y: 1.420455, z: 0}
+      - {x: 0, y: 1.420455, z: 0}
+      - {x: 0, y: 1.420455, z: 0}
+      rotation:
+      - {x: 0, y: 0, z: 0}
+      - {x: 0.085521, y: 0, z: 0}
+      - {x: -0.087266, y: 0, z: -0.123918}
+      - {x: 0.013963, y: 0.05236, z: -0.057596}
+      - {x: 0.013963, y: 0.033161, z: 0.041888}
+      - {x: 0.013963, y: -0.019199, z: -0.012217}
+      - {x: 0.013963, y: 0.017453, z: -0.012217}
+      - {x: 0.013963, y: -0, z: -0.012217}
+      scale: []
+    - bone: 2
+      frames: 000000000a000000130000001e00000028000000320000003c00000046000000
+      translation:
+      - {x: -0.000002, y: 0, z: 0}
+      - {x: -0.000002, y: 0, z: 0}
+      - {x: -0.000002, y: -0, z: 0}
+      - {x: -0.000002, y: -5.894309, z: 0}
+      - {x: -11.150568, y: -2.698605, z: -1.846411}
+      - {x: -17.329544, y: 0.781171, z: -3.692822}
+      - {x: -18.252777, y: 0.78117, z: -3.692822}
+      - {x: -18.252789, y: 0.782162, z: -3.621806}
+      rotation:
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: -0, z: -0}
+      - {x: 0.092502, y: -0.413643, z: -0.406662}
+      - {x: 0.092502, y: -0.413643, z: -0.862193}
+      - {x: 0.092502, y: -0.413643, z: -0.356047}
+      - {x: 0.092502, y: -0.413643, z: -0.254818}
+      - {x: 0.092502, y: -0.413643, z: -0.254818}
+      scale: []
+    - bone: 4
+      frames: 000000000a000000130000001e00000028000000320000003c00000046000000
+      translation: []
+      rotation:
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: -0, z: 0}
+      - {x: 0.031416, y: -0.008727, z: 0}
+      - {x: 0.031416, y: -0.008727, z: 0}
+      - {x: 0.031416, y: -0.008727, z: 0}
+      - {x: 0.031416, y: -0.008727, z: 0}
+      - {x: 0.031416, y: -0.008727, z: 0}
+      scale: []
+    - bone: 5
+      frames: 000000000a000000130000001e00000028000000320000003c00000046000000
+      translation: []
+      rotation:
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: -0, z: 0}
+      - {x: 0, y: 0.001745, z: 0}
+      - {x: 0, y: 0.001745, z: 0}
+      - {x: 0, y: 0.001745, z: 0}
+      scale: []
+    - bone: 7
+      frames: 000000000a000000130000001e00000028000000320000003c00000046000000
+      translation:
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 3.763835}
+      - {x: -3.906249, y: 0.007932, z: 7.101575}
+      - {x: -4.971588, y: 0.007932, z: 9.23205}
+      - {x: -5.397717, y: 0.007932, z: 9.658146}
+      - {x: -5.397717, y: 0.648018, z: 9.793236}
+      rotation:
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: -0, y: 0, z: -0}
+      - {x: -0.884882, y: 0, z: -0.342085}
+      - {x: -0.90408, y: 0, z: -0.551524}
+      - {x: -0.90408, y: -0.050615, z: -0.354302}
+      - {x: -0.319394, y: -0.050615, z: -0.123918}
+      - {x: -0.08552, y: -0.050615, z: -0.050615}
+      scale: []
+    - bone: 3
+      frames: 000000000a000000130000001e00000028000000320000003c00000046000000
+      translation:
+      - {x: -0.000001, y: 0, z: 0}
+      - {x: -0.000001, y: 0, z: 0}
+      - {x: -0.000001, y: 0, z: 0}
+      - {x: -0.000001, y: 0, z: 0}
+      - {x: -0.000001, y: 0, z: 0}
+      - {x: -0.000001, y: 0, z: -0}
+      - {x: 0.126749, y: 0.029352, z: -0.057007}
+      - {x: -0.000001, y: -0, z: 0}
+      rotation: []
+      scale: []
+    - bone: 12
+      frames: 000000000a000000130000001e00000028000000320000003c00000046000000
+      translation:
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: -4.900564, y: 0, z: 8.237827}
+      - {x: -7.741467, y: 2.212398, z: 14.699267}
+      - {x: -9.872148, y: 2.212398, z: 17.539896}
+      - {x: -10.937481, y: 2.212398, z: 18.534117}
+      - {x: -10.937481, y: 3.20952, z: 20.168472}
+      rotation:
+      - {x: 0, y: 0, z: 0}
+      - {x: 0, y: 0, z: 0}
+      - {x: -0, y: 0, z: 0}
+      - {x: -0.472984, y: 0, z: 0}
+      - {x: -0.472984, y: 0, z: -0.027925}
+      - {x: -1.64061, y: 0, z: -0.02618}
+      - {x: -2.385864, y: 0, z: 0.464258}
+      - {x: -2.705258, y: 0, z: 0.464258}
+      scale: []
+  meshes:
+  - {fileID: 4300000, guid: 8842e690f5e6e9f4882068b2b4bec4b0, type: 2}
+  - {fileID: 4300000, guid: f3c58b9df6ac63a4fbc9340b405f4cda, type: 2}
+  - {fileID: 4300000, guid: 1c2b2ec3d51325840ae488359138b062, type: 2}
+  - {fileID: 4300000, guid: a3aa5dbb8c2b914468b3a047dc13dca0, type: 2}
+  - {fileID: 4300000, guid: 0dfda850743b84244a8c9513f0d9ef81, type: 2}
+  - {fileID: 4300000, guid: 568ad880b39c41843b6ac0930e733747, type: 2}
+  - {fileID: 4300000, guid: bf7d2f3a6a43ab94fb8dfd111e7b33ca, type: 2}
+  - {fileID: 4300000, guid: 01a038d819bdd064d8a037b422ebe4ef, type: 2}
+  - {fileID: 4300000, guid: fed91b90eb125c74f889162c9aba8c8e, type: 2}
+  - {fileID: 4300000, guid: 35218b553c0c54744b4d8272c6eb689c, type: 2}
+  - {fileID: 4300000, guid: 8ed7d7338ab43a64eb17252ab84f07d9, type: 2}
+  - {fileID: 4300000, guid: a15a36a8ff3756840adc2f0183cda4e8, type: 2}
+  - {fileID: 4300000, guid: 81869130068ca1542a26038f28430177, type: 2}
+  - {fileID: 4300000, guid: e62f16e1cc8ab144b8fc1c5c3534deda, type: 2}
+  - {fileID: 4300000, guid: 2c79a0ff73d9bae44b6b9810870aa7c4, type: 2}
+  - {fileID: 4300000, guid: ab30a75b4105e1b499f7841c42e00181, type: 2}
+  partIds: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f000000
+  material: {fileID: 2100000, guid: 457c257fc301a5f43aac332bf752f2b8, type: 2}
+  modelScale: 0.045
+  idleClip: 0
+  walkClip: 2
+  fireClip: 3
+  specialClip: 4

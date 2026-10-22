@@ -1,0 +1,139 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efc2dbf1ef257524c9464d78454b62fe, type: 3}
+  m_Name: Model
+  m_EditorClassIdentifier: 
+  bones:
+  - part: -1
+    parent: -1
+    translation: {x: 0, y: -8.6, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 0, y: 0, z: 0}
+  - part: 1
+    parent: 0
+    translation: {x: 0, y: 8.6, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 0, y: -8.6, z: 0}
+  - part: 0
+    parent: 1
+    translation: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 0, y: -15.4, z: -0.1}
+  - part: 11
+    parent: 2
+    translation: {x: 0, y: -0.000001, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 0, y: -17.2, z: 0}
+  - part: 12
+    parent: 2
+    translation: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: -0.08, y: -15.84, z: 1.82}
+  - part: 2
+    parent: 1
+    translation: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: -3.6, y: -14.3, z: 0}
+  - part: -1
+    parent: 5
+    translation: {x: -4.146151, y: -11.299614, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 0, y: 0, z: 0}
+  - part: 3
+    parent: 6
+    translation: {x: 4.170277, y: 11.428124, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: -4.2, y: -11.3, z: 0}
+  - part: 10
+    parent: 7
+    translation: {x: -4.357008, y: 5.435129, z: -16.979439}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 0, y: -10.6, z: 16}
+  - part: 4
+    parent: 1
+    translation: {x: -0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 3.6, y: -14.2, z: 0}
+  - part: -1
+    parent: 9
+    translation: {x: 4.140289, y: -11.337604, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 0, y: 0, z: 0}
+  - part: 5
+    parent: 10
+    translation: {x: -4.053271, y: 11.579829, z: 0.15486}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 4.2, y: -11.3, z: 0}
+  - part: -1
+    parent: -1
+    translation: {x: 0, y: -6.6, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 0, y: 0, z: 0}
+  - part: 7
+    parent: 12
+    translation: {x: 0.062181, y: 6.61, z: 0.086637}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: -1.7, y: -0.01, z: -2.13}
+  - part: 6
+    parent: 13
+    translation: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: -1.65, y: -4.35, z: -0.35}
+  - part: 9
+    parent: 12
+    translation: {x: -0.081516, y: 6.6, z: 0.230618}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 1.6, y: 0, z: -2.1}
+  - part: 8
+    parent: 15
+    translation: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 1.65, y: -4.35, z: -0.35}
+  clips: []
+  meshes:
+  - {fileID: 4300000, guid: 4195ad0dd9e1526488a76253034eeb9a, type: 2}
+  - {fileID: 4300000, guid: 0189a1d919edcb344baa9f693a606c9b, type: 2}
+  - {fileID: 4300000, guid: 0fedb8b93bd0caf43830fe133af8c8a7, type: 2}
+  - {fileID: 4300000, guid: afd58ba4859fcc24fa33e9ef19471aab, type: 2}
+  - {fileID: 4300000, guid: 1233281d859bb0b4180b6eb346de2a90, type: 2}
+  - {fileID: 4300000, guid: 64bb7cf50da186d42ada65846e6821be, type: 2}
+  - {fileID: 4300000, guid: 6a2f0bc22b2bb924ea6dc52838a69fe6, type: 2}
+  - {fileID: 4300000, guid: ff850fd48f7f99c41b3910b67f3b65ae, type: 2}
+  - {fileID: 4300000, guid: a805553e78062da4cb44c65fc804a571, type: 2}
+  - {fileID: 4300000, guid: 0414ef203acfdb749857ba8823617149, type: 2}
+  - {fileID: 4300000, guid: a6ab4249b1fa4cf438183c59bf1dccbe, type: 2}
+  - {fileID: 4300000, guid: 215c77e67bfacc648aad0ee74080161b, type: 2}
+  - {fileID: 4300000, guid: 5c67ae13c2f50314daf3ca421abdc550, type: 2}
+  partIds: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c000000
+  material: {fileID: 2100000, guid: 79a19faa879faed4a8b744f5f679df2a, type: 2}
+  modelScale: 0.045
+  idleClip: 0
+  walkClip: 2
+  fireClip: 3
+  specialClip: 4

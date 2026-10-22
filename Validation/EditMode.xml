@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="107" result="Passed" total="107" passed="107" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-21 21:52:35Z" end-time="2026-10-21 21:52:36Z" duration="0,5038652">
+  <test-suite type="TestSuite" id="1000" name="GainGroundReforged" fullname="GainGroundReforged" runstate="Runnable" testcasecount="107" result="Passed" start-time="2026-10-21 21:52:35Z" end-time="2026-10-21 21:52:36Z" duration="0.503865" total="107" passed="107" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties />
+    <test-suite type="Assembly" id="1134" name="GainGround.Tests.dll" fullname="C:/Users/tecbr/Documents/Projetos Pessoais/GainGround_Unity_Partial_Port/.validation/UnityProject/Library/ScriptAssemblies/GainGround.Tests.dll" runstate="Runnable" testcasecount="107" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.147487" total="107" passed="107" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="38296" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+      </properties>
+      <test-suite type="TestFixture" id="1001" name="ArenaTests" fullname="ArenaTests" classname="ArenaTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.008595" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1004" name="ArenaBoundaryIncludesActorRadius" fullname="ArenaTests.ArenaBoundaryIncludesActorRadius" methodname="ArenaBoundaryIncludesActorRadius" classname="ArenaTests" runstate="Runnable" seed="1379556195" result="Passed" start-time="2026-10-21 21:51:53Z" end-time="2026-10-21 21:51:53Z" duration="0.008141" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1002" name="FastMovementCannotTunnelThroughThinWall" fullname="ArenaTests.FastMovementCannotTunnelThroughThinWall" methodname="FastMovementCannotTunnelThroughThinWall" classname="ArenaTests" runstate="Runnable" seed="85086849" result="Passed" start-time="2026-10-21 21:51:53Z" end-time="2026-10-21 21:51:53Z" duration="0.003639" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1003" name="MovementSlidesAlongWall" fullname="ArenaTests.MovementSlidesAlongWall" methodname="MovementSlidesAlongWall" classname="ArenaTests" runstate="Runnable" seed="1592197148" result="Passed" start-time="2026-10-21 21:51:53Z" end-time="2026-10-21 21:51:53Z" duration="0.000282" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1005" name="ShippedSpawnsAreInsideArenaAndOutsideWalls" fullname="ArenaTests.ShippedSpawnsAreInsideArenaAndOutsideWalls" methodname="ShippedSpawnsAreInsideArenaAndOutsideWalls" classname="ArenaTests" runstate="Runnable" seed="1673865726" result="Passed" start-time="2026-10-21 21:51:53Z" end-time="2026-10-21 21:51:53Z" duration="0.363642" asserts="0">
+          <properties />
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1006" name="CampaignSaveTests" fullname="CampaignSaveTests" classname="CampaignSaveTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.001409" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1008" name="SaveResumeConsumesOnlySelectedSlotAndRestoresBothTeams" fullname="CampaignSaveTests.SaveResumeConsumesOnlySelectedSlotAndRestoresBothTeams" methodname="SaveResumeConsumesOnlySelectedSlotAndRestoresBothTeams" classname="CampaignSaveTests" runstate="Runnable" seed="334183880" result="Passed" start-time="2026-10-21 21:51:53Z" end-time="2026-10-21 21:51:54Z" duration="1.170534" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1009" name="SinglePlayerOverwriteRequiresConfirmationAndFinalStageResumesVictory" fullname="CampaignSaveTests.SinglePlayerOverwriteRequiresConfirmationAndFinalStageResumesVictory" methodname="SinglePlayerOverwriteRequiresConfirmationAndFinalStageResumesVictory" classname="CampaignSaveTests" runstate="Runnable" seed="983731799" result="Passed" start-time="2026-10-21 21:51:54Z" end-time="2026-10-21 21:51:56Z" duration="1.503979" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1007" name="ThreeSlotsAreIndependentAndRejectInvalidOrAccidentalOverwrite" fullname="CampaignSaveTests.ThreeSlotsAreIndependentAndRejectInvalidOrAccidentalOverwrite" methodname="ThreeSlotsAreIndependentAndRejectInvalidOrAccidentalOverwrite" classname="CampaignSaveTests" runstate="Runnable" seed="24350305" result="Passed" start-time="2026-10-21 21:51:56Z" end-time="2026-10-21 21:51:56Z" duration="0.016625" asserts="0">
+          <properties />
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1010" name="CompleteCampaignTests" fullname="CompleteCampaignTests" classname="CompleteCampaignTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.000308" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1013" name="ExtraCaptivesBelongToTheirCarrierAndLasersDisable" fullname="CompleteCampaignTests.ExtraCaptivesBelongToTheirCarrierAndLasersDisable" methodname="ExtraCaptivesBelongToTheirCarrierAndLasersDisable" classname="CompleteCampaignTests" runstate="Runnable" seed="667247816" result="Passed" start-time="2026-10-21 21:51:56Z" end-time="2026-10-21 21:51:57Z" duration="1.089436" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1011" name="FiftyMapsHaveArtworkAndReachableObjectives" fullname="CompleteCampaignTests.FiftyMapsHaveArtworkAndReachableObjectives" methodname="FiftyMapsHaveArtworkAndReachableObjectives" classname="CompleteCampaignTests" runstate="Runnable" seed="1896123922" result="Passed" start-time="2026-10-21 21:51:57Z" end-time="2026-10-21 21:51:57Z" duration="0.254495" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1012" name="FinalComputerRequiresDestructionOfAllBarriers" fullname="CompleteCampaignTests.FinalComputerRequiresDestructionOfAllBarriers" methodname="FinalComputerRequiresDestructionOfAllBarriers" classname="CompleteCampaignTests" runstate="Runnable" seed="339583709" result="Passed" start-time="2026-10-21 21:51:57Z" end-time="2026-10-21 21:51:58Z" duration="1.111407" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1014" name="ContinueTests" fullname="ContinueTests" classname="ContinueTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.000227" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1015" name="ContinueResetsBothTeamsAndTimesOutToMenu" fullname="ContinueTests.ContinueResetsBothTeamsAndTimesOutToMenu" methodname="ContinueResetsBothTeamsAndTimesOutToMenu" classname="ContinueTests" runstate="Runnable" seed="409721955" result="Passed" start-time="2026-10-21 21:51:58Z" end-time="2026-10-21 21:51:59Z" duration="1.108251" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1016" name="ControlBindingTests" fullname="ControlBindingTests" classname="ControlBindingTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.000300" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1019" name="MalformedBindingsFallBackAndClampDeviceRanges" fullname="ControlBindingTests.MalformedBindingsFallBackAndClampDeviceRanges" methodname="MalformedBindingsFallBackAndClampDeviceRanges" classname="ControlBindingTests" runstate="Runnable" seed="31649776" result="Passed" start-time="2026-10-21 21:51:59Z" end-time="2026-10-21 21:51:59Z" duration="0.001724" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1018" name="OldSettingsMigrateAndBothInputSourcesSurviveSave" fullname="ControlBindingTests.OldSettingsMigrateAndBothInputSourcesSurviveSave" methodname="OldSettingsMigrateAndBothInputSourcesSurviveSave" classname="ControlBindingTests" runstate="Runnable" seed="1204178148" result="Passed" start-time="2026-10-21 21:51:59Z" end-time="2026-10-21 21:51:59Z" duration="0.047807" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1017" name="PlayerMappingsAreIndependentAndDraftIsDeepCopy" fullname="ControlBindingTests.PlayerMappingsAreIndependentAndDraftIsDeepCopy" methodname="PlayerMappingsAreIndependentAndDraftIsDeepCopy" classname="ControlBindingTests" runstate="Runnable" seed="1180105608" result="Passed" start-time="2026-10-21 21:51:59Z" end-time="2026-10-21 21:51:59Z" duration="0.000382" asserts="0">
+          <properties />
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1020" name="CoopTests" fullname="CoopTests" classname="CoopTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.000511" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1025" name="BothRostersMustFinishAndEnemiesIgnoreEvacuatedPlayers" fullname="CoopTests.BothRostersMustFinishAndEnemiesIgnoreEvacuatedPlayers" methodname="BothRostersMustFinishAndEnemiesIgnoreEvacuatedPlayers" classname="CoopTests" runstate="Runnable" seed="2031933355" result="Passed" start-time="2026-10-21 21:51:59Z" end-time="2026-10-21 21:52:00Z" duration="1.130762" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1023" name="CaptiveHasOneCarrierAndJoinsOnlyThatPlayersRoster" fullname="CoopTests.CaptiveHasOneCarrierAndJoinsOnlyThatPlayersRoster" methodname="CaptiveHasOneCarrierAndJoinsOnlyThatPlayersRoster" classname="CoopTests" runstate="Runnable" seed="1473829227" result="Passed" start-time="2026-10-21 21:52:00Z" end-time="2026-10-21 21:52:02Z" duration="1.103950" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1026" name="EnemyShotsCanHitPlayerTwoAndFriendlyShotsCannotHitPlayers" fullname="CoopTests.EnemyShotsCanHitPlayerTwoAndFriendlyShotsCannotHitPlayers" methodname="EnemyShotsCanHitPlayerTwoAndFriendlyShotsCannotHitPlayers" classname="CoopTests" runstate="Runnable" seed="334407485" result="Passed" start-time="2026-10-21 21:52:02Z" end-time="2026-10-21 21:52:03Z" duration="1.098597" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1021" name="EveryCharacterAndCampaignReferenceUsesCanonicalFolder" fullname="CoopTests.EveryCharacterAndCampaignReferenceUsesCanonicalFolder" methodname="EveryCharacterAndCampaignReferenceUsesCanonicalFolder" classname="CoopTests" runstate="Runnable" seed="1818145190" result="Passed" start-time="2026-10-21 21:52:03Z" end-time="2026-10-21 21:52:03Z" duration="0.056549" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1022" name="IndependentMovementWeaponsDashSwitchingAndPause" fullname="CoopTests.IndependentMovementWeaponsDashSwitchingAndPause" methodname="IndependentMovementWeaponsDashSwitchingAndPause" classname="CoopTests" runstate="Runnable" seed="1043027819" result="Passed" start-time="2026-10-21 21:52:03Z" end-time="2026-10-21 21:52:04Z" duration="1.123188" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1024" name="PartnerCanRecoverAnEliminatedRosterWithoutTransferringOwnership" fullname="CoopTests.PartnerCanRecoverAnEliminatedRosterWithoutTransferringOwnership" methodname="PartnerCanRecoverAnEliminatedRosterWithoutTransferringOwnership" classname="CoopTests" runstate="Runnable" seed="248481017" result="Passed" start-time="2026-10-21 21:52:04Z" end-time="2026-10-21 21:52:05Z" duration="1.108902" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1027" name="DifficultyTests" fullname="DifficultyTests" classname="DifficultyTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.000205" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1029" name="DifficultiesApplyToBothPlayersAndOnlyBossHealth" fullname="DifficultyTests.DifficultiesApplyToBothPlayersAndOnlyBossHealth" methodname="DifficultiesApplyToBothPlayersAndOnlyBossHealth" classname="DifficultyTests" runstate="Runnable" seed="1102534923" result="Passed" start-time="2026-10-21 21:52:05Z" end-time="2026-10-21 21:52:06Z" duration="1.138385" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1028" name="SettingsMigrateCopySaveAndDiscardDifficulty" fullname="DifficultyTests.SettingsMigrateCopySaveAndDiscardDifficulty" methodname="SettingsMigrateCopySaveAndDiscardDifficulty" classname="DifficultyTests" runstate="Runnable" seed="1801192583" result="Passed" start-time="2026-10-21 21:52:06Z" end-time="2026-10-21 21:52:06Z" duration="0.048770" asserts="0">
+          <properties />
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1030" name="MenuSettingsTests" fullname="MenuSettingsTests" classname="MenuSettingsTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.001990" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1031" name="CarouselWrapsSkipsUnavailableAndKeepsPlayersIndependent" fullname="MenuSettingsTests.CarouselWrapsSkipsUnavailableAndKeepsPlayersIndependent" methodname="CarouselWrapsSkipsUnavailableAndKeepsPlayersIndependent" classname="MenuSettingsTests" runstate="Runnable" seed="74196459" result="Passed" start-time="2026-10-21 21:52:06Z" end-time="2026-10-21 21:52:07Z" duration="1.179820" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1035" name="ClassicCoopWaitsIndependentlyAndDoesNotTargetSelectionPlayers" fullname="MenuSettingsTests.ClassicCoopWaitsIndependentlyAndDoesNotTargetSelectionPlayers" methodname="ClassicCoopWaitsIndependentlyAndDoesNotTargetSelectionPlayers" classname="MenuSettingsTests" runstate="Runnable" seed="391834190" result="Passed" start-time="2026-10-21 21:52:07Z" end-time="2026-10-21 21:52:09Z" duration="1.166720" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1034" name="ClassicModeRequiresSelectionForEverySpawnAndDisablesSwitching" fullname="MenuSettingsTests.ClassicModeRequiresSelectionForEverySpawnAndDisablesSwitching" methodname="ClassicModeRequiresSelectionForEverySpawnAndDisablesSwitching" classname="MenuSettingsTests" runstate="Runnable" seed="766178513" result="Passed" start-time="2026-10-21 21:52:09Z" end-time="2026-10-21 21:52:10Z" duration="1.147014" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1032" name="LocalFileDefaultsRoundTripClampingAndMissingFields" fullname="MenuSettingsTests.LocalFileDefaultsRoundTripClampingAndMissingFields" methodname="LocalFileDefaultsRoundTripClampingAndMissingFields" classname="MenuSettingsTests" runstate="Runnable" seed="65229090" result="Passed" start-time="2026-10-21 21:52:10Z" end-time="2026-10-21 21:52:10Z" duration="0.060265" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1033" name="MenuStartsCorrectPlayerCountAndOptionsAreTransactional" fullname="MenuSettingsTests.MenuStartsCorrectPlayerCountAndOptionsAreTransactional" methodname="MenuStartsCorrectPlayerCountAndOptionsAreTransactional" classname="MenuSettingsTests" runstate="Runnable" seed="2094419642" result="Passed" start-time="2026-10-21 21:52:10Z" end-time="2026-10-21 21:52:11Z" duration="1.166466" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1036" name="MobileControlsTests" fullname="MobileControlsTests" classname="MobileControlsTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.000628" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1042" name="DirectionHasDeadZoneCorrectYAxisAndBoundedDiagonals" fullname="MobileControlsTests.DirectionHasDeadZoneCorrectYAxisAndBoundedDiagonals" methodname="DirectionHasDeadZoneCorrectYAxisAndBoundedDiagonals" classname="MobileControlsTests" runstate="Runnable" seed="1339414217" result="Passed" start-time="2026-10-21 21:52:11Z" end-time="2026-10-21 21:52:11Z" duration="0.005617" asserts="0">
+          <properties />
+        </test-case>
+        <test-suite type="ParameterizedMethod" id="1041" name="LayoutFitsSafeAreaInBothOrientations" fullname="MobileControlsTests.LayoutFitsSafeAreaInBothOrientations" classname="MobileControlsTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.000249" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-case id="1038" name="LayoutFitsSafeAreaInBothOrientations(390,844)" fullname="MobileControlsTests.LayoutFitsSafeAreaInBothOrientations(390,844)" methodname="LayoutFitsSafeAreaInBothOrientations" classname="MobileControlsTests" runstate="Runnable" seed="683387326" result="Passed" start-time="2026-10-21 21:52:11Z" end-time="2026-10-21 21:52:11Z" duration="0.000361" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1039" name="LayoutFitsSafeAreaInBothOrientations(844,390)" fullname="MobileControlsTests.LayoutFitsSafeAreaInBothOrientations(844,390)" methodname="LayoutFitsSafeAreaInBothOrientations" classname="MobileControlsTests" runstate="Runnable" seed="933997570" result="Passed" start-time="2026-10-21 21:52:11Z" end-time="2026-10-21 21:52:11Z" duration="0.000063" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1040" name="LayoutFitsSafeAreaInBothOrientations(1024,768)" fullname="MobileControlsTests.LayoutFitsSafeAreaInBothOrientations(1024,768)" methodname="LayoutFitsSafeAreaInBothOrientations" classname="MobileControlsTests" runstate="Runnable" seed="1369848795" result="Passed" start-time="2026-10-21 21:52:11Z" end-time="2026-10-21 21:52:11Z" duration="0.000054" asserts="0">
+            <properties />
+          </test-case>
+        </test-suite>
+        <test-case id="1037" name="MobileMenusGameplayAndFocusLossWorkInScene" fullname="MobileControlsTests.MobileMenusGameplayAndFocusLossWorkInScene" methodname="MobileMenusGameplayAndFocusLossWorkInScene" classname="MobileControlsTests" runstate="Runnable" seed="200432145" result="Passed" start-time="2026-10-21 21:52:11Z" end-time="2026-10-21 21:52:12Z" duration="1.199470" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1043" name="OriginalStageTests" fullname="OriginalStageTests" classname="OriginalStageTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.000126" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1044" name="AllFiveMapsHaveReachableExitsAndCaptives" fullname="OriginalStageTests.AllFiveMapsHaveReachableExitsAndCaptives" methodname="AllFiveMapsHaveReachableExitsAndCaptives" classname="OriginalStageTests" runstate="Runnable" seed="918072550" result="Passed" start-time="2026-10-21 21:52:12Z" end-time="2026-10-21 21:52:12Z" duration="0.014111" asserts="0">
+          <properties />
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1045" name="OriginalWeaponsTests" fullname="OriginalWeaponsTests" classname="OriginalWeaponsTests" runstate="Runnable" testcasecount="25" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.002185" total="25" passed="25" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1069" name="ArcsCrossWallsHitHighTargetsAndGrenadesExplodeAtLanding" fullname="OriginalWeaponsTests.ArcsCrossWallsHitHighTargetsAndGrenadesExplodeAtLanding" methodname="ArcsCrossWallsHitHighTargetsAndGrenadesExplodeAtLanding" classname="OriginalWeaponsTests" runstate="Runnable" seed="238705163" result="Passed" start-time="2026-10-21 21:52:12Z" end-time="2026-10-21 21:52:13Z" duration="1.190355" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1070" name="BoomerangsAlternateMirroredArcsAndReturnToMovingOwner" fullname="OriginalWeaponsTests.BoomerangsAlternateMirroredArcsAndReturnToMovingOwner" methodname="BoomerangsAlternateMirroredArcsAndReturnToMovingOwner" classname="OriginalWeaponsTests" runstate="Runnable" seed="816882739" result="Passed" start-time="2026-10-21 21:52:13Z" end-time="2026-10-21 21:52:14Z" duration="1.181422" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1067" name="DirectionRulesAreWorldFixedAndEightWayAimIsQuantized" fullname="OriginalWeaponsTests.DirectionRulesAreWorldFixedAndEightWayAimIsQuantized" methodname="DirectionRulesAreWorldFixedAndEightWayAimIsQuantized" classname="OriginalWeaponsTests" runstate="Runnable" seed="1730303542" result="Passed" start-time="2026-10-21 21:52:14Z" end-time="2026-10-21 21:52:14Z" duration="0.003706" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1068" name="EveryCharacterCanFireAndDashAndCoopHasSeparateLimits" fullname="OriginalWeaponsTests.EveryCharacterCanFireAndDashAndCoopHasSeparateLimits" methodname="EveryCharacterCanFireAndDashAndCoopHasSeparateLimits" classname="OriginalWeaponsTests" runstate="Runnable" seed="1633183087" result="Passed" start-time="2026-10-21 21:52:14Z" end-time="2026-10-21 21:52:16Z" duration="1.748539" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-suite type="ParameterizedMethod" id="1066" name="OriginalProfilesKeepTheirDirectionAndDash" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.001205" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-case id="1046" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Johnny&quot;,North)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Johnny&quot;,North)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="814575948" result="Passed" start-time="2026-10-21 21:52:16Z" end-time="2026-10-21 21:52:16Z" duration="0.003033" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1047" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Athra&quot;,Facing)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Athra&quot;,Facing)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="1103238298" result="Passed" start-time="2026-10-21 21:52:16Z" end-time="2026-10-21 21:52:16Z" duration="0.000116" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1048" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Betty&quot;,North)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Betty&quot;,North)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="541528523" result="Passed" start-time="2026-10-21 21:52:16Z" end-time="2026-10-21 21:52:16Z" duration="0.000090" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1049" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Babalu&quot;,Facing)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Babalu&quot;,Facing)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="1394094376" result="Passed" start-time="2026-10-21 21:52:16Z" end-time="2026-10-21 21:52:16Z" duration="0.000083" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1050" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Gaston&quot;,North)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Gaston&quot;,North)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="536173830" result="Passed" start-time="2026-10-21 21:52:16Z" end-time="2026-10-21 21:52:16Z" duration="0.000080" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1051" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Moss&quot;,North)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Moss&quot;,North)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="805363961" result="Passed" start-time="2026-10-21 21:52:16Z" end-time="2026-10-21 21:52:16Z" duration="0.000081" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1052" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Glow Knight&quot;,Facing)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Glow Knight&quot;,Facing)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="1078868763" result="Passed" start-time="2026-10-21 21:52:16Z" end-time="2026-10-21 21:52:16Z" duration="0.000097" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1053" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Fire Knight&quot;,North)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Fire Knight&quot;,North)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="1895951956" result="Passed" start-time="2026-10-21 21:52:16Z" end-time="2026-10-21 21:52:16Z" duration="0.000084" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1054" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Water Knight&quot;,Facing)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Water Knight&quot;,Facing)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="1393184794" result="Passed" start-time="2026-10-21 21:52:16Z" end-time="2026-10-21 21:52:16Z" duration="0.000080" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1055" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Zaemon&quot;,Facing)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Zaemon&quot;,Facing)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="463040372" result="Passed" start-time="2026-10-21 21:52:16Z" end-time="2026-10-21 21:52:16Z" duration="0.000081" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1056" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Valkyrie&quot;,Facing)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Valkyrie&quot;,Facing)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="1152254933" result="Passed" start-time="2026-10-21 21:52:16Z" end-time="2026-10-21 21:52:16Z" duration="0.000085" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1057" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Mamu&quot;,North)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Mamu&quot;,North)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="89749910" result="Passed" start-time="2026-10-21 21:52:16Z" end-time="2026-10-21 21:52:16Z" duration="0.000083" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1058" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Professor&quot;,Horizontal)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Professor&quot;,Horizontal)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="1294038956" result="Passed" start-time="2026-10-21 21:52:16Z" end-time="2026-10-21 21:52:16Z" duration="0.000080" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1059" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Kou&quot;,North)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Kou&quot;,North)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="1241957815" result="Passed" start-time="2026-10-21 21:52:16Z" end-time="2026-10-21 21:52:16Z" duration="0.000087" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1060" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Kiddo&quot;,Horizontal)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Kiddo&quot;,Horizontal)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="1840235918" result="Passed" start-time="2026-10-21 21:52:16Z" end-time="2026-10-21 21:52:16Z" duration="0.000081" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1061" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Mad Poppy&quot;,North)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Mad Poppy&quot;,North)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="577305662" result="Passed" start-time="2026-10-21 21:52:16Z" end-time="2026-10-21 21:52:16Z" duration="0.000078" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1062" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;General&quot;,Facing)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;General&quot;,Facing)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="607452878" result="Passed" start-time="2026-10-21 21:52:16Z" end-time="2026-10-21 21:52:16Z" duration="0.000328" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1063" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Robbie&quot;,Facing)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Robbie&quot;,Facing)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="1955915416" result="Passed" start-time="2026-10-21 21:52:16Z" end-time="2026-10-21 21:52:16Z" duration="0.000086" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1064" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Cyber&quot;,SixWay)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Cyber&quot;,SixWay)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="1486318111" result="Passed" start-time="2026-10-21 21:52:16Z" end-time="2026-10-21 21:52:16Z" duration="0.000081" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1065" name="OriginalProfilesKeepTheirDirectionAndDash(&quot;Honey&quot;,Facing)" fullname="OriginalWeaponsTests.OriginalProfilesKeepTheirDirectionAndDash(&quot;Honey&quot;,Facing)" methodname="OriginalProfilesKeepTheirDirectionAndDash" classname="OriginalWeaponsTests" runstate="Runnable" seed="1874687412" result="Passed" start-time="2026-10-21 21:52:16Z" end-time="2026-10-21 21:52:16Z" duration="0.000079" asserts="0">
+            <properties />
+          </test-case>
+        </test-suite>
+        <test-case id="1071" name="WaterFreezesFireDamagesTornadoReflectsBoomerangReturnsAndOrbitCancels" fullname="OriginalWeaponsTests.WaterFreezesFireDamagesTornadoReflectsBoomerangReturnsAndOrbitCancels" methodname="WaterFreezesFireDamagesTornadoReflectsBoomerangReturnsAndOrbitCancels" classname="OriginalWeaponsTests" runstate="Runnable" seed="939068846" result="Passed" start-time="2026-10-21 21:52:16Z" end-time="2026-10-21 21:52:17Z" duration="1.227825" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1072" name="PlayableCampaignTests" fullname="PlayableCampaignTests" classname="PlayableCampaignTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.000437" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1073" name="CampaignCombatRescueExitDeathTimeoutPauseAndProgression" fullname="PlayableCampaignTests.CampaignCombatRescueExitDeathTimeoutPauseAndProgression" methodname="CampaignCombatRescueExitDeathTimeoutPauseAndProgression" classname="PlayableCampaignTests" runstate="Runnable" seed="174220454" result="Passed" start-time="2026-10-21 21:52:17Z" end-time="2026-10-21 21:52:21Z" duration="3.251230" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1074" name="DashDistanceCooldownProtectionAndSwitching" fullname="PlayableCampaignTests.DashDistanceCooldownProtectionAndSwitching" methodname="DashDistanceCooldownProtectionAndSwitching" classname="PlayableCampaignTests" runstate="Runnable" seed="643867952" result="Passed" start-time="2026-10-21 21:52:21Z" end-time="2026-10-21 21:52:22Z" duration="1.191117" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1076" name="ElevatedArchersAndDelayedReinforcements" fullname="PlayableCampaignTests.ElevatedArchersAndDelayedReinforcements" methodname="ElevatedArchersAndDelayedReinforcements" classname="PlayableCampaignTests" runstate="Runnable" seed="1636858512" result="Passed" start-time="2026-10-21 21:52:22Z" end-time="2026-10-21 21:52:23Z" duration="1.179940" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1077" name="FallenTeammateIsReplacedUntilDeliveredAndRescueAwardsNoPoints" fullname="PlayableCampaignTests.FallenTeammateIsReplacedUntilDeliveredAndRescueAwardsNoPoints" methodname="FallenTeammateIsReplacedUntilDeliveredAndRescueAwardsNoPoints" classname="PlayableCampaignTests" runstate="Runnable" seed="5691900" result="Passed" start-time="2026-10-21 21:52:23Z" end-time="2026-10-21 21:52:24Z" duration="1.155698" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1075" name="MusicFollowsStagePauseVictoryAndRestart" fullname="PlayableCampaignTests.MusicFollowsStagePauseVictoryAndRestart" methodname="MusicFollowsStagePauseVictoryAndRestart" classname="PlayableCampaignTests" runstate="Runnable" seed="267210594" result="Passed" start-time="2026-10-21 21:52:24Z" end-time="2026-10-21 21:52:25Z" duration="1.096749" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1078" name="PS2CharacterTests" fullname="PS2CharacterTests" classname="PS2CharacterTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.000209" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1080" name="AthraAllMotionsKeepFiniteBoundsAndActuallyMove" fullname="PS2CharacterTests.AthraAllMotionsKeepFiniteBoundsAndActuallyMove" methodname="AthraAllMotionsKeepFiniteBoundsAndActuallyMove" classname="PS2CharacterTests" runstate="Runnable" seed="664567860" result="Passed" start-time="2026-10-21 21:52:25Z" end-time="2026-10-21 21:52:25Z" duration="0.010458" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1079" name="AthraCompletesMovementAttacksDashSwitchDamageAndClassicSpawn" fullname="PS2CharacterTests.AthraCompletesMovementAttacksDashSwitchDamageAndClassicSpawn" methodname="AthraCompletesMovementAttacksDashSwitchDamageAndClassicSpawn" classname="PS2CharacterTests" runstate="Runnable" seed="101780910" result="Passed" start-time="2026-10-21 21:52:25Z" end-time="2026-10-21 21:52:27Z" duration="1.161229" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1081" name="PS2EnemyIntegrationTests" fullname="PS2EnemyIntegrationTests" classname="PS2EnemyIntegrationTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.000181" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1083" name="AllCampaignStagesSpawnModelsAndRespectVisibilityAndFreeze" fullname="PS2EnemyIntegrationTests.AllCampaignStagesSpawnModelsAndRespectVisibilityAndFreeze" methodname="AllCampaignStagesSpawnModelsAndRespectVisibilityAndFreeze" classname="PS2EnemyIntegrationTests" runstate="Runnable" seed="1201393633" result="Passed" start-time="2026-10-21 21:52:27Z" end-time="2026-10-21 21:52:28Z" duration="1.539964" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-case id="1082" name="EveryStageEnemyHasAModelAndBossPartsAreAssembled" fullname="PS2EnemyIntegrationTests.EveryStageEnemyHasAModelAndBossPartsAreAssembled" methodname="EveryStageEnemyHasAModelAndBossPartsAreAssembled" classname="PS2EnemyIntegrationTests" runstate="Runnable" seed="862016870" result="Passed" start-time="2026-10-21 21:52:28Z" end-time="2026-10-21 21:52:28Z" duration="0.043084" asserts="0">
+          <properties />
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1084" name="PS2HUDTests" fullname="PS2HUDTests" classname="PS2HUDTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.000152" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1085" name="OriginalArtworkRendersForBothPlayersAndSurvivesRestart" fullname="PS2HUDTests.OriginalArtworkRendersForBothPlayersAndSurvivesRestart" methodname="OriginalArtworkRendersForBothPlayersAndSurvivesRestart" classname="PS2HUDTests" runstate="Runnable" seed="704081056" result="Passed" start-time="2026-10-21 21:52:28Z" end-time="2026-10-21 21:52:29Z" duration="1.219833" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1086" name="PS2MusicTests" fullname="PS2MusicTests" classname="PS2MusicTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.000116" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1087" name="AllDiscTracksAreStereoStreamingAndCampaignReferencesResolve" fullname="PS2MusicTests.AllDiscTracksAreStereoStreamingAndCampaignReferencesResolve" methodname="AllDiscTracksAreStereoStreamingAndCampaignReferencesResolve" classname="PS2MusicTests" runstate="Runnable" seed="1582382499" result="Passed" start-time="2026-10-21 21:52:29Z" end-time="2026-10-21 21:52:29Z" duration="0.015937" asserts="0">
+          <properties />
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1088" name="PS2RosterTests" fullname="PS2RosterTests" classname="PS2RosterTests" runstate="Runnable" testcasecount="21" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.001505" total="21" passed="21" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1110" name="AllCharactersSwitchIndependentlyAndRenderInsideStage" fullname="PS2RosterTests.AllCharactersSwitchIndependentlyAndRenderInsideStage" methodname="AllCharactersSwitchIndependentlyAndRenderInsideStage" classname="PS2RosterTests" runstate="Runnable" seed="2017342317" result="Passed" start-time="2026-10-21 21:52:29Z" end-time="2026-10-21 21:52:31Z" duration="1.205319" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+        <test-suite type="ParameterizedMethod" id="1109" name="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions" fullname="PS2RosterTests.OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions" classname="PS2RosterTests" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.001133" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-case id="1089" name="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Johnny&quot;)" fullname="PS2RosterTests.OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Johnny&quot;)" methodname="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions" classname="PS2RosterTests" runstate="Runnable" seed="768531661" result="Passed" start-time="2026-10-21 21:52:31Z" end-time="2026-10-21 21:52:31Z" duration="0.017262" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1090" name="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Athra&quot;)" fullname="PS2RosterTests.OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Athra&quot;)" methodname="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions" classname="PS2RosterTests" runstate="Runnable" seed="1462580330" result="Passed" start-time="2026-10-21 21:52:31Z" end-time="2026-10-21 21:52:31Z" duration="0.005674" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1091" name="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Betty&quot;)" fullname="PS2RosterTests.OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Betty&quot;)" methodname="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions" classname="PS2RosterTests" runstate="Runnable" seed="1685429565" result="Passed" start-time="2026-10-21 21:52:31Z" end-time="2026-10-21 21:52:31Z" duration="0.005731" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1092" name="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Babalu&quot;)" fullname="PS2RosterTests.OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Babalu&quot;)" methodname="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions" classname="PS2RosterTests" runstate="Runnable" seed="278933160" result="Passed" start-time="2026-10-21 21:52:31Z" end-time="2026-10-21 21:52:31Z" duration="0.007623" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1093" name="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Gaston&quot;)" fullname="PS2RosterTests.OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Gaston&quot;)" methodname="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions" classname="PS2RosterTests" runstate="Runnable" seed="643791889" result="Passed" start-time="2026-10-21 21:52:31Z" end-time="2026-10-21 21:52:31Z" duration="0.006820" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1094" name="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Moss&quot;)" fullname="PS2RosterTests.OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Moss&quot;)" methodname="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions" classname="PS2RosterTests" runstate="Runnable" seed="1168504223" result="Passed" start-time="2026-10-21 21:52:31Z" end-time="2026-10-21 21:52:31Z" duration="0.008442" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1095" name="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Glow_Knight&quot;)" fullname="PS2RosterTests.OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Glow_Knight&quot;)" methodname="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions" classname="PS2RosterTests" runstate="Runnable" seed="12133452" result="Passed" start-time="2026-10-21 21:52:31Z" end-time="2026-10-21 21:52:31Z" duration="0.005552" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1096" name="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Fire_Knight&quot;)" fullname="PS2RosterTests.OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Fire_Knight&quot;)" methodname="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions" classname="PS2RosterTests" runstate="Runnable" seed="2096710637" result="Passed" start-time="2026-10-21 21:52:31Z" end-time="2026-10-21 21:52:31Z" duration="0.006773" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1097" name="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Water_Knight&quot;)" fullname="PS2RosterTests.OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Water_Knight&quot;)" methodname="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions" classname="PS2RosterTests" runstate="Runnable" seed="1173761724" result="Passed" start-time="2026-10-21 21:52:31Z" end-time="2026-10-21 21:52:31Z" duration="0.006767" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1098" name="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Zaemon&quot;)" fullname="PS2RosterTests.OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Zaemon&quot;)" methodname="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions" classname="PS2RosterTests" runstate="Runnable" seed="471822570" result="Passed" start-time="2026-10-21 21:52:31Z" end-time="2026-10-21 21:52:31Z" duration="0.006618" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1099" name="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Valkyrie&quot;)" fullname="PS2RosterTests.OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Valkyrie&quot;)" methodname="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions" classname="PS2RosterTests" runstate="Runnable" seed="410033315" result="Passed" start-time="2026-10-21 21:52:31Z" end-time="2026-10-21 21:52:31Z" duration="0.006361" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1100" name="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Mamu&quot;)" fullname="PS2RosterTests.OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Mamu&quot;)" methodname="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions" classname="PS2RosterTests" runstate="Runnable" seed="2039696580" result="Passed" start-time="2026-10-21 21:52:31Z" end-time="2026-10-21 21:52:31Z" duration="0.006503" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1101" name="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Professor&quot;)" fullname="PS2RosterTests.OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Professor&quot;)" methodname="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions" classname="PS2RosterTests" runstate="Runnable" seed="109872958" result="Passed" start-time="2026-10-21 21:52:31Z" end-time="2026-10-21 21:52:31Z" duration="0.005832" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1102" name="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Kou&quot;)" fullname="PS2RosterTests.OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Kou&quot;)" methodname="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions" classname="PS2RosterTests" runstate="Runnable" seed="642287743" result="Passed" start-time="2026-10-21 21:52:31Z" end-time="2026-10-21 21:52:31Z" duration="0.006191" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1103" name="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Kiddo&quot;)" fullname="PS2RosterTests.OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Kiddo&quot;)" methodname="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions" classname="PS2RosterTests" runstate="Runnable" seed="1288302313" result="Passed" start-time="2026-10-21 21:52:31Z" end-time="2026-10-21 21:52:31Z" duration="0.007150" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1104" name="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Mad_Poppy&quot;)" fullname="PS2RosterTests.OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Mad_Poppy&quot;)" methodname="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions" classname="PS2RosterTests" runstate="Runnable" seed="1931543904" result="Passed" start-time="2026-10-21 21:52:31Z" end-time="2026-10-21 21:52:31Z" duration="0.006411" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1105" name="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;General&quot;)" fullname="PS2RosterTests.OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;General&quot;)" methodname="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions" classname="PS2RosterTests" runstate="Runnable" seed="1573130085" result="Passed" start-time="2026-10-21 21:52:31Z" end-time="2026-10-21 21:52:31Z" duration="0.006898" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1106" name="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Robbie&quot;)" fullname="PS2RosterTests.OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Robbie&quot;)" methodname="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions" classname="PS2RosterTests" runstate="Runnable" seed="1778237690" result="Passed" start-time="2026-10-21 21:52:31Z" end-time="2026-10-21 21:52:31Z" duration="0.006690" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1107" name="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Cyber&quot;)" fullname="PS2RosterTests.OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Cyber&quot;)" methodname="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions" classname="PS2RosterTests" runstate="Runnable" seed="1297877033" result="Passed" start-time="2026-10-21 21:52:31Z" end-time="2026-10-21 21:52:31Z" duration="0.010739" asserts="0">
+            <properties />
+          </test-case>
+          <test-case id="1108" name="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Honey&quot;)" fullname="PS2RosterTests.OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions(&quot;Honey&quot;)" methodname="OriginalCharacterHasCompleteTexturedRigAndTenFiniteMotions" classname="PS2RosterTests" runstate="Runnable" seed="672089242" result="Passed" start-time="2026-10-21 21:52:31Z" end-time="2026-10-21 21:52:31Z" duration="0.006446" asserts="0">
+            <properties />
+          </test-case>
+        </test-suite>
+      </test-suite>
+      <test-suite type="TestFixture" id="1111" name="PS2SFXTests" fullname="PS2SFXTests" classname="PS2SFXTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.000142" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1112" name="EffectsAreConnectedAndUseLiveSfxVolume" fullname="PS2SFXTests.EffectsAreConnectedAndUseLiveSfxVolume" methodname="EffectsAreConnectedAndUseLiveSfxVolume" classname="PS2SFXTests" runstate="Runnable" seed="28957362" result="Passed" start-time="2026-10-21 21:52:31Z" end-time="2026-10-21 21:52:32Z" duration="1.180375" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1113" name="PS2StageVisualTests" fullname="PS2StageVisualTests" classname="PS2StageVisualTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.000129" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1114" name="FirstFiveStagesUsePS2BackgroundsInGame" fullname="PS2StageVisualTests.FirstFiveStagesUsePS2BackgroundsInGame" methodname="FirstFiveStagesUsePS2BackgroundsInGame" classname="PS2StageVisualTests" runstate="Runnable" seed="1078306491" result="Passed" start-time="2026-10-21 21:52:32Z" end-time="2026-10-21 21:52:33Z" duration="1.529656" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1115" name="PS2TitleTests" fullname="PS2TitleTests" classname="PS2TitleTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.000453" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1116" name="IntroWaitsExactlyTwoAndAHalfSecondsAndConsumesSkip" fullname="PS2TitleTests.IntroWaitsExactlyTwoAndAHalfSecondsAndConsumesSkip" methodname="IntroWaitsExactlyTwoAndAHalfSecondsAndConsumesSkip" classname="PS2TitleTests" runstate="Runnable" seed="1323486252" result="Passed" start-time="2026-10-21 21:52:33Z" end-time="2026-10-21 21:52:33Z" duration="0.002105" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1117" name="OriginalTitleFramesAreAvailableAtRuntime" fullname="PS2TitleTests.OriginalTitleFramesAreAvailableAtRuntime" methodname="OriginalTitleFramesAreAvailableAtRuntime" classname="PS2TitleTests" runstate="Runnable" seed="33797977" result="Passed" start-time="2026-10-21 21:52:33Z" end-time="2026-10-21 21:52:33Z" duration="0.001901" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1118" name="TitleMenuAndOptionsRenderWithDesktopAndTouchLayouts" fullname="PS2TitleTests.TitleMenuAndOptionsRenderWithDesktopAndTouchLayouts" methodname="TitleMenuAndOptionsRenderWithDesktopAndTouchLayouts" classname="PS2TitleTests" runstate="Runnable" seed="2146288139" result="Passed" start-time="2026-10-21 21:52:33Z" end-time="2026-10-21 21:52:35Z" duration="1.215449" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1119" name="RandomCharacterTests" fullname="RandomCharacterTests" classname="RandomCharacterTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.000144" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1120" name="RandomSelectionPreservesCountsAndClassicRescues" fullname="RandomCharacterTests.RandomSelectionPreservesCountsAndClassicRescues" methodname="RandomSelectionPreservesCountsAndClassicRescues" classname="RandomCharacterTests" runstate="Runnable" seed="1634762093" result="Passed" start-time="2026-10-21 21:52:35Z" end-time="2026-10-21 21:52:35Z" duration="0.013213" asserts="0">
+          <properties />
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1121" name="RecoveredTests" fullname="RecoveredTests" classname="RecoveredTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.000590" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1125" name="CopyIsSequentialWhenOverlapping" fullname="RecoveredTests.CopyIsSequentialWhenOverlapping" methodname="CopyIsSequentialWhenOverlapping" classname="RecoveredTests" runstate="Runnable" seed="1926869622" result="Passed" start-time="2026-10-21 21:52:35Z" end-time="2026-10-21 21:52:35Z" duration="0.000796" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1124" name="DbraCountZeroWritesOneWord" fullname="RecoveredTests.DbraCountZeroWritesOneWord" methodname="DbraCountZeroWritesOneWord" classname="RecoveredTests" runstate="Runnable" seed="556724696" result="Passed" start-time="2026-10-21 21:52:35Z" end-time="2026-10-21 21:52:35Z" duration="0.000470" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1128" name="DecoderHonorsOutputLimit" fullname="RecoveredTests.DecoderHonorsOutputLimit" methodname="DecoderHonorsOutputLimit" classname="RecoveredTests" runstate="Runnable" seed="1724228749" result="Passed" start-time="2026-10-21 21:52:35Z" end-time="2026-10-21 21:52:35Z" duration="0.001555" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1123" name="FadeUsesOriginalWordAndWraps" fullname="RecoveredTests.FadeUsesOriginalWordAndWraps" methodname="FadeUsesOriginalWordAndWraps" classname="RecoveredTests" runstate="Runnable" seed="1171357829" result="Passed" start-time="2026-10-21 21:52:35Z" end-time="2026-10-21 21:52:35Z" duration="0.000265" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1126" name="FullMaskProducesOneBlock" fullname="RecoveredTests.FullMaskProducesOneBlock" methodname="FullMaskProducesOneBlock" classname="RecoveredTests" runstate="Runnable" seed="461470416" result="Passed" start-time="2026-10-21 21:52:35Z" end-time="2026-10-21 21:52:35Z" duration="0.000292" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1127" name="LaterMaskWinsAndUncoveredBytesAreLiteral" fullname="RecoveredTests.LaterMaskWinsAndUncoveredBytesAreLiteral" methodname="LaterMaskWinsAndUncoveredBytesAreLiteral" classname="RecoveredTests" runstate="Runnable" seed="2007771422" result="Passed" start-time="2026-10-21 21:52:35Z" end-time="2026-10-21 21:52:35Z" duration="0.000170" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1131" name="MalformedOffsetFails" fullname="RecoveredTests.MalformedOffsetFails" methodname="MalformedOffsetFails" classname="RecoveredTests" runstate="Runnable" seed="1651315856" result="Passed" start-time="2026-10-21 21:52:35Z" end-time="2026-10-21 21:52:35Z" duration="0.000201" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1122" name="PadIsActiveLowAndEdgesAreRising" fullname="RecoveredTests.PadIsActiveLowAndEdgesAreRising" methodname="PadIsActiveLowAndEdgesAreRising" classname="RecoveredTests" runstate="Runnable" seed="1684983286" result="Passed" start-time="2026-10-21 21:52:35Z" end-time="2026-10-21 21:52:35Z" duration="0.000149" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1130" name="ZeroRunPreservesThresholdOvershoot" fullname="RecoveredTests.ZeroRunPreservesThresholdOvershoot" methodname="ZeroRunPreservesThresholdOvershoot" classname="RecoveredTests" runstate="Runnable" seed="565034054" result="Passed" start-time="2026-10-21 21:52:35Z" end-time="2026-10-21 21:52:35Z" duration="0.000330" asserts="0">
+          <properties />
+        </test-case>
+        <test-case id="1129" name="ZeroRunSupportsEscapesAndMaximumRun" fullname="RecoveredTests.ZeroRunSupportsEscapesAndMaximumRun" methodname="ZeroRunSupportsEscapesAndMaximumRun" classname="RecoveredTests" runstate="Runnable" seed="349332188" result="Passed" start-time="2026-10-21 21:52:35Z" end-time="2026-10-21 21:52:35Z" duration="0.000206" asserts="0">
+          <properties />
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1132" name="WeaponFXTests" fullname="WeaponFXTests" classname="WeaponFXTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-21 21:52:36Z" end-time="2026-10-21 21:52:36Z" duration="0.116105" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1133" name="AnimatedEffectsExpireAndFramesRender" fullname="WeaponFXTests.AnimatedEffectsExpireAndFramesRender" methodname="AnimatedEffectsExpireAndFramesRender" classname="WeaponFXTests" runstate="Runnable" seed="816631658" result="Passed" start-time="2026-10-21 21:52:35Z" end-time="2026-10-21 21:52:36Z" duration="1.253242" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+          </properties>
+        </test-case>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

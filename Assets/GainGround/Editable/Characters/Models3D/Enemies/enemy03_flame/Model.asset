@@ -1,0 +1,120 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efc2dbf1ef257524c9464d78454b62fe, type: 3}
+  m_Name: Model
+  m_EditorClassIdentifier: 
+  bones:
+  - part: 1
+    parent: -1
+    translation: {x: 0, y: 0.895574, z: 0}
+    rotation: {x: 0.113446, y: 0.644027, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 0, y: -9.4, z: 0}
+  - part: 0
+    parent: 0
+    translation: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: -0.434587, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 0, y: -15.6, z: 0}
+  - part: 10
+    parent: 1
+    translation: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: -0.1, y: -17.4, z: 1.9}
+  - part: 2
+    parent: 0
+    translation: {x: 0, y: 0, z: 0}
+    rotation: {x: 0.073304, y: 0.385718, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: -4.6, y: -13.8, z: 0}
+  - part: -1
+    parent: 3
+    translation: {x: -5.071721, y: -10.583088, z: -0.331063}
+    rotation: {x: -0.403171, y: 1.296779, z: -1.860522}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 0, y: 0, z: 0}
+  - part: 3
+    parent: 4
+    translation: {x: 5.1, y: 10.6, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: -5.1, y: -10.6, z: 0}
+  - part: 4
+    parent: 0
+    translation: {x: 0, y: 0, z: 0}
+    rotation: {x: -0.970403, y: -0.34383, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 4.4, y: -13.8, z: 0}
+  - part: -1
+    parent: 6
+    translation: {x: 4.897738, y: -10.582905, z: -0.21582}
+    rotation: {x: -0.457276, y: 0.050615, z: 0.886627}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 0, y: 0, z: 0}
+  - part: 5
+    parent: 7
+    translation: {x: -5, y: 10.6, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 5, y: -10.6, z: 0}
+  - part: 6
+    parent: 0
+    translation: {x: 0, y: -0.095002, z: 0.01551}
+    rotation: {x: -0.829031, y: 0.272271, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: -1.6, y: -6.4, z: 0}
+  - part: 8
+    parent: 0
+    translation: {x: 0.051762, y: -0, z: 0.08817}
+    rotation: {x: -0.958186, y: -0.544543, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 1.6, y: -6.4, z: 0}
+  - part: 7
+    parent: -1
+    translation: {x: -1.649713, y: 0, z: 0.746814}
+    rotation: {x: 0, y: 0.631809, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: -1.72, y: -0.06, z: -1.42}
+  - part: 9
+    parent: -1
+    translation: {x: -0.083114, y: -0, z: -2.46511}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 1.7, y: -0.05, z: -1.4}
+  - part: 11
+    parent: -1
+    translation: {x: -6.891229, y: -2.402075, z: -8.923893}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 0, y: -9, z: 7.6}
+  clips: []
+  meshes:
+  - {fileID: 4300000, guid: c5fc0aa843a0c4940809b523d5ed48fa, type: 2}
+  - {fileID: 4300000, guid: 0f9cd3f561af4d14dab466774c615748, type: 2}
+  - {fileID: 4300000, guid: 7bc1588613113b74d8e8f98a9d3b1047, type: 2}
+  - {fileID: 4300000, guid: 11d0f2a3b0b3e6946be64993c5c41fdd, type: 2}
+  - {fileID: 4300000, guid: 02478f75c322c7244891b3bbddc6ba89, type: 2}
+  - {fileID: 4300000, guid: 610360eb74f264c459950dd85971e408, type: 2}
+  - {fileID: 4300000, guid: 3a38a2a44d9bc234ba31b7f005c35383, type: 2}
+  - {fileID: 4300000, guid: 6c0808d875f74fb45a7c836a0b45695b, type: 2}
+  - {fileID: 4300000, guid: b0f4dcc670fed574abd3245b16abc412, type: 2}
+  - {fileID: 4300000, guid: e812977ea9d4d0d4281eef4cb2f8fc60, type: 2}
+  - {fileID: 4300000, guid: 9f9d95b65640f884292131bf6f11b437, type: 2}
+  - {fileID: 4300000, guid: c9ac991f05dc62d4cae03711181adf6f, type: 2}
+  partIds: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b000000
+  material: {fileID: 2100000, guid: 672334114f01c4f448b56b740d143f49, type: 2}
+  modelScale: 0.045
+  idleClip: 0
+  walkClip: 2
+  fireClip: 3
+  specialClip: 4

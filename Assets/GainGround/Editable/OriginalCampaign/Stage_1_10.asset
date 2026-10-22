@@ -1,0 +1,204 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93413a03c81cf4d43b90f090ab79ab29, type: 3}
+  m_Name: Stage_1_10
+  m_EditorClassIdentifier: 
+  displayName: 1-10 / Guardiao de duas cabecas
+  stageMusic: {fileID: 8300000, guid: 148407c3be06f1641830da0a2efa8aac, type: 3}
+  victoryMusic: {fileID: 8300000, guid: 4350a49ad023cfd419e558b7768df789, type: 3}
+  musicVolume: 0.65
+  timeLimit: 180
+  size: {x: 12, y: 14}
+  start: {x: 0, y: -6}
+  exit:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  floorColor: {r: 0.14, g: 0.23, b: 0.22, a: 1}
+  terrainAtlas: {fileID: 0}
+  atlasOrigin: {x: 0, y: 0}
+  terrainPatches: []
+  patchSources: []
+  walls:
+  - serializedVersion: 2
+    x: -6
+    y: 4
+    width: 3
+    height: 3
+  - serializedVersion: 2
+    x: 3
+    y: 4
+    width: 3
+    height: 3
+  enemies:
+  - position: {x: 0, y: 5.375}
+    health: 32
+    speed: 0
+    shotInterval: 2.8
+    sentry: 1
+    elevated: 0
+    melee: 0
+    spawnDelay: 0
+    behavior: 8
+    sprite: {fileID: 21300000, guid: ebfb1c1db1f8c5a4389493950bd66535, type: 3}
+    modelPrefab: {fileID: 6563968529842259732, guid: a753e28c14eb5c940ba9e0bb57cde68f, type: 3}
+    visualSize: {x: 6, y: 3}
+    hitRadius: 1.8
+    obstacleSize: {x: 0, y: 0}
+    boss: 1
+    freezeImmune: 1
+    triggerDistance: 0
+  - position: {x: -4.5, y: 1.875}
+    health: 12
+    speed: 0
+    shotInterval: 2.8
+    sentry: 1
+    elevated: 0
+    melee: 0
+    spawnDelay: 0
+    behavior: 9
+    sprite: {fileID: 21300000, guid: f6acff602e44b5240bd92b41803c5919, type: 3}
+    modelPrefab: {fileID: 7368455576721202906, guid: eccae3c49a2cd794cb0a47032972ef21, type: 3}
+    visualSize: {x: 2.75, y: 3.5}
+    hitRadius: 0.8
+    obstacleSize: {x: 0, y: 0}
+    boss: 0
+    freezeImmune: 0
+    triggerDistance: 0
+  - position: {x: 4.5, y: 1.875}
+    health: 12
+    speed: 0
+    shotInterval: 2.8
+    sentry: 1
+    elevated: 0
+    melee: 0
+    spawnDelay: 0
+    behavior: 9
+    sprite: {fileID: 21300000, guid: f6acff602e44b5240bd92b41803c5919, type: 3}
+    modelPrefab: {fileID: 7368455576721202906, guid: eccae3c49a2cd794cb0a47032972ef21, type: 3}
+    visualSize: {x: 2.75, y: 3.5}
+    hitRadius: 0.8
+    obstacleSize: {x: 0, y: 0}
+    boss: 0
+    freezeImmune: 0
+    triggerDistance: 0
+  - position: {x: -4.5, y: -3.125}
+    health: 12
+    speed: 0
+    shotInterval: 2.8
+    sentry: 1
+    elevated: 0
+    melee: 0
+    spawnDelay: 0
+    behavior: 9
+    sprite: {fileID: 21300000, guid: f6acff602e44b5240bd92b41803c5919, type: 3}
+    modelPrefab: {fileID: 7368455576721202906, guid: eccae3c49a2cd794cb0a47032972ef21, type: 3}
+    visualSize: {x: 2.75, y: 3.5}
+    hitRadius: 0.8
+    obstacleSize: {x: 0, y: 0}
+    boss: 0
+    freezeImmune: 0
+    triggerDistance: 0
+  - position: {x: 4.5, y: -3.125}
+    health: 12
+    speed: 0
+    shotInterval: 2.8
+    sentry: 1
+    elevated: 0
+    melee: 0
+    spawnDelay: 0
+    behavior: 9
+    sprite: {fileID: 21300000, guid: f6acff602e44b5240bd92b41803c5919, type: 3}
+    modelPrefab: {fileID: 7368455576721202906, guid: eccae3c49a2cd794cb0a47032972ef21, type: 3}
+    visualSize: {x: 2.75, y: 3.5}
+    hitRadius: 0.8
+    obstacleSize: {x: 0, y: 0}
+    boss: 0
+    freezeImmune: 0
+    triggerDistance: 0
+  - position: {x: -2.25, y: 1.375}
+    health: 1
+    speed: 0
+    shotInterval: 2.8
+    sentry: 1
+    elevated: 0
+    melee: 0
+    spawnDelay: 0
+    behavior: 0
+    sprite: {fileID: 21300000, guid: e3a384eb5146ed449bfad2a3abe05f4e, type: 3}
+    modelPrefab: {fileID: 475903555348049507, guid: 73d4cc48a6564b64192c29105d026f52, type: 3}
+    visualSize: {x: 1.5, y: 1.5}
+    hitRadius: 0.23
+    obstacleSize: {x: 0, y: 0}
+    boss: 0
+    freezeImmune: 0
+    triggerDistance: 0
+  - position: {x: -0.75, y: 1.375}
+    health: 1
+    speed: 0
+    shotInterval: 2.8
+    sentry: 1
+    elevated: 0
+    melee: 0
+    spawnDelay: 0
+    behavior: 0
+    sprite: {fileID: 21300000, guid: e3a384eb5146ed449bfad2a3abe05f4e, type: 3}
+    modelPrefab: {fileID: 475903555348049507, guid: 73d4cc48a6564b64192c29105d026f52, type: 3}
+    visualSize: {x: 1.5, y: 1.5}
+    hitRadius: 0.23
+    obstacleSize: {x: 0, y: 0}
+    boss: 0
+    freezeImmune: 0
+    triggerDistance: 0
+  - position: {x: 0.75, y: 1.375}
+    health: 1
+    speed: 0
+    shotInterval: 2.8
+    sentry: 1
+    elevated: 0
+    melee: 0
+    spawnDelay: 0
+    behavior: 0
+    sprite: {fileID: 21300000, guid: e3a384eb5146ed449bfad2a3abe05f4e, type: 3}
+    modelPrefab: {fileID: 475903555348049507, guid: 73d4cc48a6564b64192c29105d026f52, type: 3}
+    visualSize: {x: 1.5, y: 1.5}
+    hitRadius: 0.23
+    obstacleSize: {x: 0, y: 0}
+    boss: 0
+    freezeImmune: 0
+    triggerDistance: 0
+  - position: {x: 2.25, y: 1.375}
+    health: 1
+    speed: 0
+    shotInterval: 2.8
+    sentry: 1
+    elevated: 0
+    melee: 0
+    spawnDelay: 0
+    behavior: 0
+    sprite: {fileID: 21300000, guid: e3a384eb5146ed449bfad2a3abe05f4e, type: 3}
+    modelPrefab: {fileID: 475903555348049507, guid: 73d4cc48a6564b64192c29105d026f52, type: 3}
+    visualSize: {x: 1.5, y: 1.5}
+    hitRadius: 0.23
+    obstacleSize: {x: 0, y: 0}
+    boss: 0
+    freezeImmune: 0
+    triggerDistance: 0
+  rescue: {fileID: 0}
+  rescuePosition: {x: -6, y: 2}
+  background: {fileID: 21300000, guid: 0760cb25d9d900c42bdc18f2c1168586, type: 3}
+  noExit: 1
+  additionalExits: []
+  additionalCaptives: []
+  hazards: []
