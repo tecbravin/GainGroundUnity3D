@@ -24,6 +24,19 @@ namespace GainGround.Game
         public WeaponDefinition specialWeapon;
         public Color characterTint = Color.white;
 
+        [Header("Sounds (empty uses weapon or game default)")]
+        [Tooltip("Overrides Normal Weapon > Fire Sound for this character.")]
+        public AudioClip normalAttackSound;
+        [Tooltip("Overrides Special Weapon > Fire Sound for this character.")]
+        public AudioClip specialAttackSound;
+        public AudioClip dashSound;
+        [Tooltip("Played when this character is hit and leaves the stage.")]
+        public AudioClip hitSound;
+        [Tooltip("Played when switching to this character.")]
+        public AudioClip switchSound;
+        [Tooltip("Played when this character is rescued.")]
+        public AudioClip rescueSound;
+
         [Header("Dash")]
         [Tooltip("Tempo de recarga em segundos, contado desde o inicio do dash.")]
         [Min(0)] public float TempodeCooldown = 2f;

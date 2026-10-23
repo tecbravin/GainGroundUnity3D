@@ -13,59 +13,6 @@ namespace GainGround.Game
             }
             return index;
         }
-        void DrawCharacterCarousel(PlayerState p, Rect bounds, bool mobile)
-        {
-            var previous = GUI.matrix;
-            GUI.matrix = previous * Matrix4x4.TRS(bounds.position, Quaternion.identity,
-                new Vector3(bounds.width / 480, bounds.height / 150, 1));
-            var text = mobile ? mobileLabel : labelStyle;
-            var button = mobile ? mobileButton : IronButtonStyle;
-            DrawSelectionPanel(new Rect(-8, -8, 496, 166));
-            GUI.Label(new Rect(8, 2, 464, 25), "P" + (p.id + 1) + " - SELECIONE O CAMPEÃO", SelectionHeading);
-            int count = 0;
-            foreach (var member in p.party) if (!member.lost && !member.escaped) count++;
-            if (count == 0) { GUI.matrix = previous; return; }
-            if (p.selectionIndex < 0 || p.selectionIndex >= p.party.Count ||
-                p.party[p.selectionIndex].lost || p.party[p.selectionIndex].escaped)
-                p.selectionIndex = CarouselNeighbor(p, p.selectionIndex, 1);
-            bool enabled = GUI.enabled;
-            GUI.enabled = enabled && count > 1;
-            if (CarouselArrowButton(new Rect(6, 49, 46, 55), true)) p.selectionIndex = CarouselNeighbor(p, p.selectionIndex, -1);
-            if (CarouselArrowButton(new Rect(428, 49, 46, 55), false)) p.selectionIndex = CarouselNeighbor(p, p.selectionIndex, 1);
-            GUI.enabled = enabled;
-            int selected = p.selectionIndex;
-            int left = Mathf.Min(2, (count - 1) / 2), right = Mathf.Min(2, count / 2);
-            for (int slot = -left; slot <= right; slot++)
-            {
-                int index = selected;
-                for (int step = 0; step < Mathf.Abs(slot); step++) index = CarouselNeighbor(p, index, slot < 0 ? -1 : 1);
-                bool center = slot == 0;
-                float width = center ? 78 : 56, height = center ? 82 : 62;
-                var rect = new Rect(240 + slot * 70 - width / 2, center ? 30 : 40, width, height);
-                HUDRect(new Rect(rect.x - 3, rect.y - 3, rect.width + 6, rect.height + 6),
-                    center ? p.Tint : new Color(.18f, .22f, .28f));
-                if (IronButton(rect, GUIContent.none, IronButtonStyle))
-                {
-                    ChooseCharacter(p, index);
-                    if (mobile) { mobilePlayer = p.id; ResetMobileInput(); }
-                }
-                var hero = p.party[index].definition;
-                var image = new Rect(rect.x + 3, rect.y + 3, rect.width - 6, rect.height - 6);
-                if (hero.hudPortrait != null) GUI.DrawTexture(image, hero.hudPortrait, ScaleMode.ScaleToFit, true);
-                else if (hero.sprite != null)
-                {
-                    var sprite = hero.sprite; var r = sprite.textureRect; var t = sprite.texture;
-                    float fit = Mathf.Min(image.width / r.width, image.height / r.height);
-                    var fitted = new Rect(image.center.x - r.width * fit / 2, image.center.y - r.height * fit / 2, r.width * fit, r.height * fit);
-                    HUDTexture(fitted, t, new Rect(r.x / t.width, r.y / t.height, r.width / t.width, r.height / t.height));
-                }
-            }
-            GUI.Label(new Rect(52, 116, 376, 28), p.party[p.selectionIndex].definition.displayName, SelectionHeading);
-            if (selectionPortraitsLoading)
-                GUI.Label(new Rect(85, 93, 310, 24), "Carregando retratos...", SelectionHeading);
-            GUI.matrix = previous;
-        }
-
         void DrawStageCarousel(Rect bounds, bool mobile)
         {
             DrawSelectionPanel(bounds);

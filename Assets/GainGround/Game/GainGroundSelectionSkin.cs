@@ -23,6 +23,11 @@ namespace GainGround.Game
             if (selectionFont == null) selectionFont = Resources.Load<Font>("SelectionUI/UncialAntiqua-Regular");
             if (ironButtonTexture == null) ironButtonTexture = Resources.Load<Texture2D>("SelectionUI/IronButton");
             if (menuBackground == null) menuBackground = Resources.Load<Texture2D>("Menu/Menu");
+            if (menuBackground == null)
+            {
+                var menuSprite = Resources.Load<Sprite>("Menu/Menu");
+                if (menuSprite != null) menuBackground = menuSprite.texture;
+            }
         }
         GUIStyle GoldMenuText(GUIStyle original)
         {
@@ -234,7 +239,21 @@ namespace GainGround.Game
             PrepareSelectionSkin();
             var texture = selectionPanel.normal.background;
             if (texture == null) { GUI.Box(rect, ""); return; }
+            var previousColor = GUI.color;
+            GUI.color = new Color(previousColor.r, previousColor.g, previousColor.b, previousColor.a * .65f);
             GUI.DrawTexture(rect, texture, ScaleMode.StretchToFill, true);
+            GUI.color = previousColor;
+            const float border = .085f;
+            float sideWidth = rect.width * border;
+            float edgeHeight = rect.height * border;
+            GUI.DrawTextureWithTexCoords(new Rect(rect.xMin, rect.yMin, sideWidth, rect.height), texture,
+                new Rect(0, 0, border, 1), true);
+            GUI.DrawTextureWithTexCoords(new Rect(rect.xMax - sideWidth, rect.yMin, sideWidth, rect.height), texture,
+                new Rect(1 - border, 0, border, 1), true);
+            GUI.DrawTextureWithTexCoords(new Rect(rect.xMin, rect.yMin, rect.width, edgeHeight), texture,
+                new Rect(0, 1 - border, 1, border), true);
+            GUI.DrawTextureWithTexCoords(new Rect(rect.xMin, rect.yMax - edgeHeight, rect.width, edgeHeight), texture,
+                new Rect(0, 0, 1, border), true);
         }
         void DrawMenuBackground(Rect rect)
         {

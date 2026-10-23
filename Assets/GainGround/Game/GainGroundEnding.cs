@@ -5,7 +5,9 @@ namespace GainGround.Game
     public sealed partial class GainGroundGame
     {
         const float EndingAnimationDuration = 7.5f;
+        const float EndingMessageDuration = 5f;
         float endingElapsed;
+        float endingMessageElapsed;
         bool endingAnimationPlaying;
         Transform endingRoot;
         SpriteRenderer endingComputerAnchor;
@@ -18,10 +20,12 @@ namespace GainGround.Game
         void BeginEndingAnimation()
         {
             endingElapsed = 0;
+            endingMessageElapsed = 0;
             endingAnimationPlaying = true;
             if (arena != null) arena.gameObject.SetActive(false);
             if (gameCamera != null)
             {
+                gameCamera.rect = new Rect(0, 0, 1, 1);
                 gameCamera.clearFlags = CameraClearFlags.SolidColor;
                 gameCamera.backgroundColor = new Color(.012f, .016f, .026f);
                 gameCamera.transform.position = new Vector3(0, 0, -10);
@@ -175,6 +179,7 @@ namespace GainGround.Game
             if (endingRoot != null) Destroy(endingRoot.gameObject);
             endingRoot = null; endingComputer = null; endingComputerAnchor = null;
             endingAnimationPlaying = false;
+            endingMessageElapsed = 0;
             for (int i = 0; i < endingHeroes.Length; i++) { endingHeroes[i] = null; endingHeroModels[i] = null; }
         }
     }

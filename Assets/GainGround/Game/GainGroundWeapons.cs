@@ -72,6 +72,12 @@ namespace GainGround.Game
             return sprites;
         }
 
+        AudioClip CharacterWeaponSound(CharacterDefinition character, WeaponDefinition weapon, bool special)
+        {
+            var sound = special ? character.specialAttackSound : character.normalAttackSound;
+            return sound != null ? sound : weapon.fireSound != null ? weapon.fireSound : shotSound;
+        }
+
         bool FireWeapon(PlayerState p, WeaponDefinition weapon, bool special)
         {
             var character = p.party[p.active].definition;
@@ -85,7 +91,7 @@ namespace GainGround.Game
                 p.reflectingProjectiles = weapon.mode == WeaponMode.ReflectEnemyProjectiles;
                 ShowSwordSweep(p, weapon);
                 if (weapon.mode == WeaponMode.MeleeArc) DamageInSwordArc(p, weapon);
-                PlaySfx(weapon.fireSound != null ? weapon.fireSound : shotSound);
+                PlaySfx(CharacterWeaponSound(character, weapon, special));
                 return true;
             }
             int active = 0;
@@ -117,7 +123,7 @@ namespace GainGround.Game
                     WeaponSize(weapon), shot.animationFrames != null || weapon.kind == ProjectileKind.WaterTrap || weapon.kind == ProjectileKind.Boomerang ? Color.white : weapon.color, 6);
                 shots.Add(shot);
             }
-            PlaySfx(weapon.fireSound != null ? weapon.fireSound : shotSound);
+            PlaySfx(CharacterWeaponSound(character, weapon, special));
             return true;
         }
 
@@ -313,6 +319,8 @@ namespace GainGround.Game
                     if (shot.hits.TryGetValue(enemy, out float nextHit) && shot.age < nextHit) continue;
                     if (w.blastRadius > 0) { Explode(shot); return true; }
                     enemy.lastHitPlayer=shot.owner; DamageEnemy(enemy, w.damage, w.freezeSeconds);
+                    if (w.kind == ProjectileKind.WaterTrap && !enemy.data.boss && enemy.frozen > 0)
+                        enemy.waterConfused = true;
                     shot.hits[enemy] = zone || orbit || w.kind == ProjectileKind.Flame ? shot.age + .4f : float.PositiveInfinity;
                     if (!w.pierces && !zone && !orbit) return true;
                 }
@@ -338,9 +346,16 @@ namespace GainGround.Game
         void DamageEnemy(Enemy enemy, int damage, float freeze)
         {
             if (!enemy.vulnerable) return;
-            if (damage > 0 && Time.unscaledTime >= nextImpactSound)
+            bool defeated = enemy.health - damage <= 0;
+            if (damage > 0 && (defeated || Time.unscaledTime >= nextImpactSound))
             {
-                PlaySfx(impactSound); nextImpactSound = Time.unscaledTime + .06f;
+                AudioClip hit = enemy.data.hitSound != null ? enemy.data.hitSound :
+                    enemy.model != null ? enemy.model.hitSound : null;
+                AudioClip death = enemy.data.deathSound != null ? enemy.data.deathSound :
+                    enemy.model != null ? enemy.model.deathSound : null;
+                var sound = defeated && death != null ? death : hit;
+                PlaySfx(sound != null ? sound : impactSound);
+                nextImpactSound = Time.unscaledTime + .06f;
             }
             if (!enemy.data.freezeImmune) enemy.frozen = Mathf.Max(enemy.frozen, freeze);
             enemy.health -= damage;
@@ -350,6 +365,13 @@ namespace GainGround.Game
                 AwardPoints(enemy.lastHitPlayer,DifficultyRules.ScorePoints(campaignDifficulty,enemy.data.boss ? 2000 : 200));
                 if (enemy.data.obstacleSize.sqrMagnitude > 0) RebuildMovementWalls();
             }
+        }
+
+        void PlayEnemyAttackSound(Enemy enemy)
+        {
+            var clip = enemy.data.attackSound != null ? enemy.data.attackSound :
+                enemy.model != null ? enemy.model.attackSound : null;
+            PlaySfx(clip);
         }
 
         void Explode(Shot shot)

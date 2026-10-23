@@ -29,12 +29,15 @@ public static class PS2SFXInstaller
         game.shotSound=Clip("SE_01");game.hitSound=Clip("SE_20");game.rescueSound=Clip("SE_64");
         game.dashSound=Clip("SYU");game.impactSound=Clip("SE_02");game.explosionSound=Clip("SE_07");
         game.switchSound=Clip("SE_67");
+        game.scoreCountSound=Clip("SE_67");
+        game.secretUnlockSound=Clip("SE_60");
+        game.titlePressSound=Clip("SE_64");
         EditorUtility.SetDirty(game);EditorSceneManager.SaveScene(game.gameObject.scene);AssetDatabase.SaveAssets();
         Debug.Log("PS2 SFX installed: 67 imported clips, weapon and gameplay events connected.");
     }
     static void Assign(WeaponDefinition weapon)
     {
-        if(weapon==null)return;
+        if(weapon==null || weapon.fireSound!=null)return;
         string id;
         switch(weapon.kind)
         {

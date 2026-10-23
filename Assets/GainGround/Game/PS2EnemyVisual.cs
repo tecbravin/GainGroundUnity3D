@@ -16,6 +16,13 @@ namespace GainGround.Game
   public Sprite muzzleFlashSprite;
   public Sprite impactSprite;
   public Vector2 effectSize=new Vector2(.35f,.35f);
+  [Header("Enemy sounds (editable on this prefab)")]
+  [Tooltip("Played once per projectile volley or successful contact hit.")]
+  public AudioClip attackSound;
+  [Tooltip("Played when this enemy takes damage.")]
+  public AudioClip hitSound;
+  [Tooltip("Played when this enemy is defeated.")]
+  public AudioClip deathSound;
   SpriteRenderer anchor;
   float frame,attackTime;
   public static PS2EnemyVisual Bind(SpriteRenderer anchor,EnemySpawn spawn)

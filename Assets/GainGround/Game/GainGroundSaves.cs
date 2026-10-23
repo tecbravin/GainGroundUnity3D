@@ -82,7 +82,7 @@ namespace GainGround.Game
    players.Clear();players.AddRange(restored);playerCount=save.playerCount;campaignDifficulty=save.difficulty;campaignClassicMode=save.classicMode;
    score=0;foreach(var p in players)score+=p.score;
    UpdateHighScore();
-   mobilePlayer=0;stageIndex=complete?save.lastCompletedStage:save.lastCompletedStage+1;
+   stageIndex=complete?save.lastCompletedStage:save.lastCompletedStage+1;
    pendingRestoredVictory=complete;LoadStage();
   }
   void OpenSaveSlots(bool writing)

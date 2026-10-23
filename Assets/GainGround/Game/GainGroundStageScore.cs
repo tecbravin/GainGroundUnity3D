@@ -14,13 +14,19 @@ namespace GainGround.Game
         }
 
         readonly List<StageScoreEntry> stageScoreEntries = new List<StageScoreEntry>(4);
+        [Header("Stage score audio")]
+        public AudioClip scoreCountSound;
         float stageScoreElapsed;
+        float scoreCountEndTime;
+        float nextScoreCountSound;
         bool pendingEndingScore;
 
         void ResetStageScorePresentation()
         {
             stageScoreEntries.Clear();
             stageScoreElapsed = 0;
+            scoreCountEndTime = 0;
+            nextScoreCountSound = 0;
             pendingEndingScore = false;
         }
 
@@ -39,6 +45,8 @@ namespace GainGround.Game
         {
             stageScoreEntries.Clear();
             stageScoreElapsed = 0;
+            scoreCountEndTime = 0;
+            nextScoreCountSound = 0;
             mobileScroll = Vector2.zero;
 
             int seconds = Mathf.Max(0, Mathf.CeilToInt(remainingTime));
@@ -57,7 +65,19 @@ namespace GainGround.Game
                 AddSpecialStageBonus("TODOS ESCAPARAM", 8000);
 
             if (stage.enemies.Length > 0 && enemies.Count == 0)
-                AddSpecialStageBonus("TODOS OS INIMIGOS DERROTADOS", 20000);
+                AddSpecialStageBonus("TODOS INIMIGOS DERROTADOS", 20000);
+
+            for (int i = 0; i < stageScoreEntries.Count; i++)
+                if (stageScoreEntries[i].points > 0)
+                    scoreCountEndTime = i * .22f + .8f;
+        }
+
+        void TickScoreCountSound()
+        {
+            if (scoreCountSound == null || stageScoreElapsed >= scoreCountEndTime ||
+                stageScoreElapsed < nextScoreCountSound) return;
+            PlaySfx(scoreCountSound);
+            nextScoreCountSound = stageScoreElapsed + .06f;
         }
 
         string StageScorePoints(int index)
@@ -70,12 +90,34 @@ namespace GainGround.Game
 
         void DrawStageScoreSummary()
         {
+            var bonusLabelStyle = new GUIStyle(GoldMenuText(labelStyle))
+            {
+                wordWrap = false,
+                clipping = TextClipping.Clip
+            };
+            var bonusPointsStyle = new GUIStyle(bonusLabelStyle)
+            {
+                alignment = TextAnchor.MiddleRight
+            };
+            int fontSize = bonusLabelStyle.fontSize;
+
             for (int i = 0; i < stageScoreEntries.Count; i++)
             {
-                GUI.Label(new Rect(245, 251 + i * 38, 370, 33),
-                    stageScoreEntries[i].label, GoldMenuText(labelStyle));
-                GUI.Label(new Rect(610, 251 + i * 38, 145, 33),
-                    StageScorePoints(i), GoldMenuText(labelStyle));
+                var labelRect = new Rect(245, 251 + i * 42, 350, 34);
+                var content = new GUIContent(stageScoreEntries[i].label);
+                bonusLabelStyle.fontSize = fontSize;
+                while (bonusLabelStyle.fontSize > 6 &&
+                       bonusLabelStyle.CalcSize(content).x > labelRect.width)
+                    bonusLabelStyle.fontSize--;
+
+                GUI.Label(labelRect, content, bonusLabelStyle);
+                var pointsRect = new Rect(610, labelRect.y, 145, labelRect.height);
+                bonusPointsStyle.fontSize = fontSize;
+                var finalPoints = new GUIContent("+" + stageScoreEntries[i].points.ToString("N0"));
+                while (bonusPointsStyle.fontSize > 6 &&
+                       bonusPointsStyle.CalcSize(finalPoints).x > pointsRect.width)
+                    bonusPointsStyle.fontSize--;
+                GUI.Label(pointsRect, StageScorePoints(i), bonusPointsStyle);
             }
         }
 
@@ -83,7 +125,7 @@ namespace GainGround.Game
         {
             for (int i = 0; i < stageScoreEntries.Count; i++)
                 GUILayout.Label(stageScoreEntries[i].label + "   " + StageScorePoints(i),
-                    GoldMenuText(mobileLabel), GUILayout.Height(34));
+                    GoldMenuText(mobileLabel), GUILayout.MinHeight(34));
         }
     }
 }

@@ -63,8 +63,8 @@ namespace GainGround.Game
             public int health, spawnIndex, volley;
             public PlayerState lastHitPlayer;
             public PS2EnemyVisual model;
-            public float cooldown, frozen, age;
-            public bool vulnerable = true, triggered;
+            public float cooldown, frozen, age, confusionAngle;
+            public bool vulnerable = true, triggered, waterConfused;
             public SpriteRenderer visual;
         }
         sealed class Shot
@@ -113,6 +113,9 @@ namespace GainGround.Game
             LoadGuiAssets();
             if (stages == null || stages.Length == 0 || startingParty == null || startingParty.Length == 0)
             { Debug.LogError("Assign stages and starting party in the Inspector.", this); enabled = false; return; }
+            InitializeTitleUI();
+            InitializeStageSelectUI();
+            InitializeHud();
             LoadSettings(); LoadHighScore(); hasFinished = hasFinished || PlayerPrefs.GetInt("GainGround.HasFinished", 0) == 1; RefreshSaves(); state = ScreenState.Title; BeginTitleIntro();
             EnsureMusicSource();
             musicSource.clip = titleMusic;
@@ -257,6 +260,7 @@ namespace GainGround.Game
                     (stage.size.x / 2 + .7f) / gameCamera.aspect);
                 gameCamera.transform.position = new Vector3(0, -.35f, -10);
             }
+            if (hudView != null) hudView.InvalidateLayout();
             state = ScreenState.Playing; message = stage.noExit ? "Eliminem todos os inimigos e o chefe." : "Eliminem os inimigos ou levem todas as equipes ate EXIT.";
             CheckTeamOutcome();
             FinishRestoredStage();
@@ -291,6 +295,9 @@ namespace GainGround.Game
                 else musicSource.UnPause();
                 musicPaused = shouldPause;
             }
+            RefreshTitleUI();
+            RefreshStageSelectUI();
+            RefreshHud();
         }
 
         void EnsureMusicSource()
@@ -306,6 +313,10 @@ namespace GainGround.Game
 
         void OnDisable()
         {
+            CancelHudPortraitLoad();
+            if (hudView != null) { Destroy(hudView.gameObject); hudView = null; }
+            if (titleView != null) { Destroy(titleView.gameObject); titleView = null; }
+            if (stageSelectView != null) { Destroy(stageSelectView.gameObject); stageSelectView = null; }
             CancelStageMediaRequests();
             ResetMobileInput();
             if (swordSliderTexture != null) Destroy(swordSliderTexture);
@@ -358,6 +369,7 @@ namespace GainGround.Game
             if (state == ScreenState.Cleared || (state == ScreenState.Victory && pendingEndingScore))
             {
                 stageScoreElapsed += Time.unscaledDeltaTime;
+                TickScoreCountSound();
                 if (pendingEndingScore && stageScoreElapsed >= StageScorePresentationDuration)
                 {
                     pendingEndingScore = false;
@@ -367,6 +379,16 @@ namespace GainGround.Game
                 if (pendingEndingScore) return;
             }
             if (endingAnimationPlaying) { TickEndingAnimation(Time.unscaledDeltaTime); return; }
+            if (state == ScreenState.Victory && !pendingEndingScore)
+            {
+                endingMessageElapsed += Time.unscaledDeltaTime;
+                if (endingMessageElapsed >= EndingMessageDuration ||
+                    Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Escape) ||
+                    MenuDown(GameAction.Fire) || Input.GetMouseButtonDown(0) ||
+                    (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
+                    ReturnToMenu();
+                return;
+            }
             if (state == ScreenState.Defeat || state == ScreenState.GameOver) { UpdateContinueInput(); return; }
             if (state != ScreenState.Playing)
             {
@@ -374,10 +396,12 @@ namespace GainGround.Game
                 return;
             }
             if (Input.GetKeyDown(KeyCode.Escape) || MenuDown(GameAction.Pause)) paused = !paused;
-            bool secondJoined = !paused && players.Count == 1 && ActionDown(1, GameAction.Special) && JoinSecondPlayer();
+            bool secondJoined = !paused && players.Count == 1 &&
+                (ActionDown(1, GameAction.Special) || mobileInputs[1].special) && JoinSecondPlayer();
             var first = ReadMappedControls(0); var second = ReadMappedControls(1);
             if (secondJoined) second = default;
-            if (mobilePlayer == 0) MergeMobileInput(ref first); else MergeMobileInput(ref second);
+            MergeMobileInput(ref first, 0);
+            MergeMobileInput(ref second, 1);
             foreach (var p in players)
                 if (p.awaitingSelection && !paused && UpdateSelectionInput(p))
                 { if (p.id == 0) first = default; else second = default; }
@@ -437,7 +461,8 @@ namespace GainGround.Game
                 }
                 else
                 {
-                    Fire(p.position, p.facing, false, false, character.projectileSpeed, character.range, character.damage, character.shotColor);
+                    Fire(p.position, p.facing, false, false, character.projectileSpeed, character.range,
+                        character.damage, character.shotColor, null, character.normalAttackSound);
                     shots[shots.Count-1].owner=p;
                     p.fireCooldown = character.shotInterval;
                 }
@@ -450,7 +475,8 @@ namespace GainGround.Game
                 }
                 else
                 {
-                    Fire(p.position, p.facing, false, character.specialPassesWalls, character.projectileSpeed * .7f, character.range, character.damage * 2, Color.cyan);
+                    Fire(p.position, p.facing, false, character.specialPassesWalls, character.projectileSpeed * .7f,
+                        character.range, character.damage * 2, Color.cyan, null, character.specialAttackSound);
                     shots[shots.Count-1].owner=p;
                     p.specialCooldown = 1.2f;
                 }
@@ -492,7 +518,7 @@ namespace GainGround.Game
             if (state != ScreenState.Playing || paused || !p.HasActive || p.dashRemaining > 0) return;
             var member = p.party[p.active];
             if (member.dashCooldown > 0 || member.definition.Distancia <= 0) return;
-            PlaySfx(dashSound);
+            PlaySfx(member.definition.dashSound != null ? member.definition.dashSound : dashSound);
             p.dashDirection = p.facing.normalized; p.dashSpeed = member.definition.Distancia / DashDuration;
             p.dashRemaining = DashDuration; p.dashInvincible = member.definition.Invencivel;
             member.dashCooldown = Mathf.Max(0, member.definition.TempodeCooldown);
@@ -533,7 +559,13 @@ namespace GainGround.Game
             for (int n = 1; n < p.party.Count; n++)
             {
                 int next = (p.active + n) % p.party.Count;
-                if (!p.party[next].lost && !p.party[next].escaped) { SetMember(p, next); PlaySfx(switchSound); break; }
+                if (!p.party[next].lost && !p.party[next].escaped)
+                {
+                    var sound = p.party[next].definition.switchSound;
+                    SetMember(p, next);
+                    PlaySfx(sound != null ? sound : switchSound);
+                    break;
+                }
             }
         }
         void Respawn(PlayerState p, float protection)
@@ -544,7 +576,7 @@ namespace GainGround.Game
         {
             if (p.additionalCaptive != null) { SecureAdditionalRescue(p); return; }
             if (captiveCarrier != p || captive == null || rescued) return;
-            PlaySfx(rescueSound);
+            PlaySfx(currentRescue != null && currentRescue.rescueSound != null ? currentRescue.rescueSound : rescueSound);
             p.carrying = false; captiveCarrier = null; rescued = true; Destroy(captive.gameObject); captive = null;
             p.party.Add(new Member { definition = currentRescue, escaped = true }); AwardPoints(p,DifficultyRules.ScorePoints(campaignDifficulty,500));
             message = "P" + (p.id + 1) + " recrutou um aliado para sua equipe na proxima fase.";
@@ -556,10 +588,11 @@ namespace GainGround.Game
             if (owner.fallenAlly != null) { owner.fallenAlly.gameObject.SetActive(false); Destroy(owner.fallenAlly.gameObject); }
             owner.fallenAlly = null; owner.fallenMember = -1;
         }
-        void HitPlayer(PlayerState p)
+        bool HitPlayer(PlayerState p)
         {
-            if (!p.HasActive || p.invulnerability > 0 || p.dashProtectedThisFrame || (p.dashRemaining > 0 && p.dashInvincible) || state != ScreenState.Playing) return;
-            PlaySfx(hitSound);
+            if (!p.HasActive || p.invulnerability > 0 || p.dashProtectedThisFrame || (p.dashRemaining > 0 && p.dashInvincible) || state != ScreenState.Playing) return false;
+            var character = p.party[p.active].definition;
+            PlaySfx(character.hitSound != null ? character.hitSound : hitSound);
             DropAdditionalRescue(p);
             // A carrier drops a partner's fallen character; ownership never changes.
             if (p.carriedAlly != null)
@@ -581,15 +614,17 @@ namespace GainGround.Game
             }
             if (SelectAvailable(p)) Respawn(p, 2);
             CheckTeamOutcome();
+            return true;
         }
         void SecureFallenRescue(PlayerState carrier)
         {
             var owner = carrier.carriedAlly;
             if (owner == null || owner.fallenMember < 0) return;
+            var character = owner.party[owner.fallenMember].definition;
             owner.party[owner.fallenMember].lost = false;
             owner.party[owner.fallenMember].escaped = true;
             RemoveFallen(owner);
-            PlaySfx(rescueSound);
+            PlaySfx(character.rescueSound != null ? character.rescueSound : rescueSound);
             message = "Personagem de P" + (owner.id + 1) + " recuperado para a proxima fase, sem pontos!";
         }
         void CheckTeamOutcome()
@@ -617,6 +652,18 @@ namespace GainGround.Game
                 enemy.visual.enabled = true;
                 var before = enemy.position;
                 bool frozen = enemy.frozen > 0;
+                if (enemy.waterConfused && frozen && !enemy.data.boss)
+                {
+                    enemy.confusionAngle = Mathf.Repeat(enemy.confusionAngle + 540f * dt, 360f);
+                    if (enemy.model == null)
+                        enemy.visual.transform.rotation = Quaternion.Euler(0, 0, enemy.confusionAngle);
+                }
+                else if (enemy.waterConfused)
+                {
+                    enemy.waterConfused = false;
+                    enemy.confusionAngle = 0;
+                    if (enemy.model == null) enemy.visual.transform.rotation = Quaternion.identity;
+                }
                 if (UpdateCampaignEnemy(enemy, dt)) { UpdateEnemyModel(enemy, before, frozen ? 0 : dt); continue; }
                 if (enemy.frozen > 0)
                 {
@@ -634,12 +681,14 @@ namespace GainGround.Game
                 enemy.visual.transform.position = enemy.position; enemy.cooldown -= dt;
                 if (!enemy.data.melee && enemy.cooldown <= 0)
                 {
+                    PlayEnemyAttackSound(enemy);
                     Fire(enemy.position, direction, true, enemy.data.elevated, 3.2f, 16, 1, new Color(1, .35f, .25f), enemy);
                     enemy.cooldown = enemy.data.shotInterval;
                     if(enemy.model != null) enemy.model.Attack();
                 }
                 foreach (var p in players)
-                    if (p.HasActive && !enemy.data.elevated && (p.position - enemy.position).sqrMagnitude < .25f) HitPlayer(p);
+                    if (p.HasActive && !enemy.data.elevated && (p.position - enemy.position).sqrMagnitude < .25f && HitPlayer(p))
+                        PlayEnemyAttackSound(enemy);
                 UpdateEnemyModel(enemy, before, dt);
                 if (state != ScreenState.Playing) return;
             }
@@ -650,8 +699,11 @@ namespace GainGround.Game
             var target=ClosestPlayer(enemy.position);
             var facing=target == null ? Vector2.down : (target.position-enemy.position).normalized;
             enemy.model.Tick(dt,facing,(enemy.position-before).sqrMagnitude>.000001f);
+            if (enemy.waterConfused && enemy.frozen > 0 && !enemy.data.boss && enemy.model.rig != null)
+                enemy.model.rig.localRotation *= Quaternion.Euler(0, enemy.confusionAngle, 0);
         }
-        void Fire(Vector2 origin, Vector2 direction, bool hostile, bool elevated, float speed, float range, int damage, Color color, Enemy source = null)
+        void Fire(Vector2 origin, Vector2 direction, bool hostile, bool elevated, float speed, float range,
+            int damage, Color color, Enemy source = null, AudioClip playerSound = null)
         {
             var shot = new Shot { position = origin, origin = origin, launchDirection = direction.normalized, velocity = direction * speed, remaining = range, hostile = hostile, elevated = elevated, damage = damage };
             var effects = source != null ? source.model : null;
@@ -669,7 +721,7 @@ namespace GainGround.Game
             if (effects != null && effects.muzzleFlashSprite != null)
                 SpawnEnemyEffect("Enemy muzzle flash", effects.muzzleFlashSprite, origin, effects.effectSize);
             shots.Add(shot);
-            if (!hostile) PlaySfx(shotSound);
+            if (!hostile) PlaySfx(playerSound != null ? playerSound : shotSound);
         }
         void UpdateShots(float dt)
         {
@@ -735,24 +787,9 @@ namespace GainGround.Game
             if (state == ScreenState.Title) StartGame(1);
             else if (state == ScreenState.Cleared) { stageIndex++; LoadStage(); }
             else if (state == ScreenState.Defeat) NewCampaign();
-            else if (state == ScreenState.Victory) StartGame(players.Count > 0 ? players.Count : 1);
+            else if (state == ScreenState.Victory) ReturnToMenu();
         }
 
-        string RosterText(PlayerState p)
-        {
-            if (p.party.Count > 6)
-                return p.party.FindAll(m => !m.lost && !m.escaped).Count + " disponiveis / " + p.party.Count +
-                    "  |  " + (p.HasActive && p.party[p.active].definition.specialWeapon != null ?
-                    p.party[p.active].definition.specialWeapon.label : "Selecione um personagem");
-            var names = new List<string>();
-            for (int i = 0; i < p.party.Count; i++)
-            {
-                var m = p.party[i];
-                names.Add((p.active == i ? "[" : "") + m.definition.displayName +
-                    (i == p.fallenMember ? " (resgate)" : m.lost ? " x" : m.escaped ? " OK" : "") + (p.active == i ? "]" : ""));
-            }
-            return string.Join(" / ", names);
-        }
         void OnGUI()
         {
             if (UsesMobileControls) { DrawMobileGUI(); return; }
@@ -768,6 +805,9 @@ namespace GainGround.Game
             GUI.matrix = Matrix4x4.TRS(origin, Quaternion.identity, Vector3.one * scale);
             if(saveBrowserOpen){DrawSaveSlots(new Vector2(1000,700),false);GUI.matrix=old;return;}
             if (state == ScreenState.Loading) { DrawStageLoading(new Rect(215, 175, 570, 365)); GUI.matrix = old; return; }
+            if (state == ScreenState.Title && titleView != null) { GUI.matrix = old; return; }
+            if (state == ScreenState.StageSelect && stageSelectView != null && !bindingsOpen)
+            { GUI.matrix = old; return; }
             if (state == ScreenState.Title || state == ScreenState.Options || state == ScreenState.StageSelect)
             {
                 DrawMenu(); GUI.matrix = old; return;
@@ -775,15 +815,9 @@ namespace GainGround.Game
             if (stage == null) { GUI.matrix = old; return; }
             if (endingAnimationPlaying || (state == ScreenState.Victory && !pendingEndingScore))
             { DrawEndingScreen(new Vector2(1000,700)); GUI.matrix = old; return; }
-            bool selectingCharacters = state == ScreenState.Playing && !paused &&
-                players.Exists(p => p.awaitingSelection);
-            DrawPS2Header();
             foreach (var p in players)
             {
-                float x = 15 + p.id * 490;
-                if (!selectingCharacters) DrawPS2Player(p, x);
                 var color = GUI.color;
-                if (p.awaitingSelection && state == ScreenState.Playing && !paused) DrawCharacterSelector(p);
                 if (p.HasActive && gameCamera != null)
                 {
                     Vector3 screen = gameCamera.WorldToScreenPoint(p.position + Vector2.up * .65f);

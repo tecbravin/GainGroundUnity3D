@@ -63,7 +63,7 @@ namespace GainGround.Game
    if(titleLogos[logo]!=null)GUI.DrawTexture(new Rect(area.x+area.width/8,area.y,area.width*.75f,area.height*256/448),titleLogos[logo],ScaleMode.StretchToFill);
    var gainWord = new Rect(area.x + area.width*.30f, area.y + area.height*.20f, area.width*.30f, area.height*.09f);
    if(state==ScreenState.Title && CanUseTitleMenu && Event.current.type==EventType.MouseDown && Event.current.button==0 && gainWord.Contains(Event.current.mousePosition))
-   {CountSecretGainClick();Event.current.Use();}
+   {ClickTitleGain();Event.current.Use();}
    if(!titleMenuVisible)
    {
     GUI.color=new Color(1,1,1,.18f*(1-progress));

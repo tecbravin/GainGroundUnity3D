@@ -18,10 +18,13 @@ namespace GainGround.Game
             if (sfxSource != null) sfxSource.volume = AudioSettings.SFX / 100f;
         }
         AudioSource sfxSource;
-        [Header("Sound effects (optional clips)")]
+        [Header("Default sound effects (used when actor sound is empty)")]
         public AudioClip shotSound, hitSound, rescueSound;
         public AudioClip dashSound, impactSound, explosionSound, switchSound;
         public AudioClip secretUnlockSound;
+        [Header("Title screen UI")]
+        public AudioClip titlePressSound;
+        int lastTitlePressFrame = -1;
         float nextImpactSound;
         int gainLogoClicks, secretF11Presses;
         bool WaitingForSelection => players.Exists(p => p.awaitingSelection) && !players.Exists(p => p.HasActive);
@@ -39,14 +42,14 @@ namespace GainGround.Game
         }
         public void StartGame(int count)
         {
-            mobilePlayer = 0; ResetMobileInput();
+            ResetMobileInput();
             playerCount = Mathf.Clamp(count, 1, 2);
             NewCampaign();
         }
         void StartNewGameFromMenu(int count)
         {
             if (!hasFinished) { StartGame(count); return; }
-            mobilePlayer = 0; ResetMobileInput();
+            ResetMobileInput();
             pendingPlayerCount = playerCount = Mathf.Clamp(count, 1, 2);
             stageSelectIndex = 0;
             state = ScreenState.StageSelect;
@@ -59,10 +62,12 @@ namespace GainGround.Game
         void ReturnToMenu()
         {
             CancelStageMediaRequests();
+            CancelHudPortraitLoad();
             pendingRestoredVictory = false;
             DestroyEndingAnimation();
             ResetMobileInput(); saveBrowserOpen=false; RefreshSaves();
             if (arena != null) { arena.gameObject.SetActive(false); Destroy(arena.gameObject); }
+            if (gameCamera != null) gameCamera.rect = new Rect(0, 0, 1, 1);
             stage = null; players.Clear(); enemies.Clear(); shots.Clear(); blastVisuals.Clear(); extraCaptives.Clear(); hazardStates.Clear();
             paused = false; state = ScreenState.Title; menuIndex = 0; ShowTitleMenuImmediately();
             if (musicSource != null) musicSource.Stop();
@@ -74,6 +79,7 @@ namespace GainGround.Game
         void OpenOptions()
         {
             bindingsOpen=false;captureAction=-1;
+            mobileScroll = Vector2.zero;
             draftSettings = settings.Copy(); settingsError = "";
             optionsIndex = 0; state = ScreenState.Options;
         }
@@ -113,11 +119,20 @@ namespace GainGround.Game
             sfxSource.volume = AudioSettings.SFX / 100f;
             sfxSource.PlayOneShot(clip);
         }
+        void PlayTitlePressSound()
+        {
+            if (lastTitlePressFrame == Time.frameCount) return;
+            lastTitlePressFrame = Time.frameCount;
+            PlaySfx(titlePressSound);
+        }
         void ActivateMenuItem()
         {
             var labels=TitleMenuLabels;
             if(menuIndex<0||menuIndex>=labels.Length)return;
-            switch(labels[menuIndex])
+            string selected = labels[menuIndex];
+            if (selected == "Solo" || selected == "Duo" || selected == "Continue" || selected == "Menu")
+                PlayTitlePressSound();
+            switch(selected)
             {
                 case "Solo": StartNewGameFromMenu(1); break;
                 case "Duo": StartNewGameFromMenu(2); break;
@@ -137,10 +152,10 @@ namespace GainGround.Game
 
         void CountSecretGainClick()
         {
-            if (hasFinished) return;
             if (++gainLogoClicks < 5) return;
             gainLogoClicks = 0;
-            UnlockSecretFinish();
+            if (hasFinished) PlaySfx(secretUnlockSound);
+            else UnlockSecretFinish();
         }
 
         void UnlockSecretFinish()
@@ -174,7 +189,7 @@ namespace GainGround.Game
             bool confirm = Input.GetKeyDown(KeyCode.Return) || MenuDown(GameAction.Fire);
             if (state == ScreenState.Title)
             {
-                if (hasFinished && settings.Difficulty == GameDifficulty.Normal && Input.GetKeyDown(KeyCode.F2)) useFullRoster = !useFullRoster;
+                if (Input.GetKeyDown(KeyCode.F2)) ToggleTitleRoster();
                 menuIndex = (menuIndex + vertical + TitleMenuLabels.Length) % TitleMenuLabels.Length;
                 if (confirm) ActivateMenuItem();
                 return;
@@ -222,17 +237,17 @@ namespace GainGround.Game
                 
                 if (hasFinished && settings.Difficulty == GameDifficulty.Normal && allCharacters != null && allCharacters.Length > 0 &&
                     IronButton(new Rect(300, 365 + labels.Length * step, 400, 38), useFullRoster ? "Grupo: todos[F2]" : "Grupo: iniciais + resgates [F2]"))
-                    useFullRoster = !useFullRoster;
+                    ToggleTitleRoster();
             }
             else
             {
                 GUI.Label(new Rect(200, 153, 600, 38), "Menu", GoldMenuText(labelStyle));
                 GUI.Label(new Rect(265, 215 + optionsIndex * 56, 30, 30), ">", GoldMenuText(labelStyle));
                 GUI.Label(new Rect(310, 214, 120, 30), "BGM  " + draftSettings.BGM, GoldMenuText(labelStyle));
-                draftSettings.BGM = Mathf.RoundToInt(GUI.HorizontalSlider(new Rect(470, 226, 220, 25), draftSettings.BGM, 0, 100,
+                draftSettings.BGM = Mathf.RoundToInt(GUI.HorizontalSlider(new Rect(450, 226, 220, 25), draftSettings.BGM, 0, 100,
                     GUI.skin.horizontalSlider, SwordSliderThumb));
                 GUI.Label(new Rect(310, 270, 120, 30), "SFX  " + draftSettings.SFX, GoldMenuText(labelStyle));
-                draftSettings.SFX = Mathf.RoundToInt(GUI.HorizontalSlider(new Rect(470, 282, 220, 25), draftSettings.SFX, 0, 100,
+                draftSettings.SFX = Mathf.RoundToInt(GUI.HorizontalSlider(new Rect(450, 282, 220, 25), draftSettings.SFX, 0, 100,
                     GUI.skin.horizontalSlider, SwordSliderThumb));
                 ApplyAudioVolumes();
                 if (IronButton(new Rect(300, 326, 400, 45), "Modo Classic: " + (draftSettings.ClassicMode ? "Sim" : "Não")))
@@ -251,7 +266,9 @@ namespace GainGround.Game
             if (!ClassicMode || state != ScreenState.Playing || paused || selectionPortraitsLoading ||
                 !p.awaitingSelection || index < 0 || index >= p.party.Count) return;
             if (p.party[index].lost || p.party[index].escaped) return;
+            var sound = p.party[index].definition.switchSound;
             SetMember(p, index); Respawn(p, 2);
+            PlaySfx(sound != null ? sound : switchSound);
             p.fireCooldown = p.specialCooldown = 0; p.facing = Vector2.up;
             ReleasePortraitsOutsideSelection();
         }
@@ -263,10 +280,6 @@ namespace GainGround.Game
             if (delta != 0) p.selectionIndex = CarouselNeighbor(p, p.selectionIndex, delta);
             if (confirm) { ChooseCharacter(p, p.selectionIndex); return true; }
             return false;
-        }
-        void DrawCharacterSelector(PlayerState p)
-        {
-            DrawCharacterCarousel(p, new Rect(p.id == 0 ? 15 : 665, 550, 320, 135), false);
         }
     }
 }

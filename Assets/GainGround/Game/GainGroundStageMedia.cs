@@ -242,6 +242,13 @@ namespace GainGround.Game
                     var load = bundle.LoadAssetAsync<Texture2D>("portrait");
                     yield return load;
                     hero.hudPortrait = load.asset as Texture2D;
+                    if (hero.hudPortrait == null)
+                    {
+                        var spriteLoad = bundle.LoadAssetAsync<Sprite>("portrait");
+                        yield return spriteLoad;
+                        var portraitSprite = spriteLoad.asset as Sprite;
+                        if (portraitSprite != null) hero.hudPortrait = portraitSprite.texture;
+                    }
                     if (hero.hudPortrait == null) mediaError = "Retrato ausente no bundle.";
                 }
                 finally { bundle.Unload(false); }
@@ -279,9 +286,12 @@ namespace GainGround.Game
             if (!streamStageMedia || webCharacterPortraits == null) return;
             var needed = new HashSet<CharacterDefinition>();
             foreach (var player in players)
+            {
+                if (player.HasActive) needed.Add(player.party[player.active].definition);
                 if (player.awaitingSelection)
                     foreach (var member in player.party)
                         if (!member.lost && !member.escaped) needed.Add(member.definition);
+            }
             bool released = false;
             foreach (var entry in webCharacterPortraits)
                 if (entry.character != null && entry.character.hudPortrait != null && !needed.Contains(entry.character))

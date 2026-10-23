@@ -77,7 +77,8 @@ namespace GainGround.Game
             rescue.secured = true; rescue.carrier = null;
             Destroy(rescue.visual.gameObject); p.additionalCaptive = null; p.carrying = false;
             p.party.Add(new Member { definition = rescue.character, escaped = true });
-            AwardPoints(p,DifficultyRules.ScorePoints(campaignDifficulty,500)); PlaySfx(rescueSound);
+            AwardPoints(p,DifficultyRules.ScorePoints(campaignDifficulty,500));
+            PlaySfx(rescue.character.rescueSound != null ? rescue.character.rescueSound : rescueSound);
             message = "P" + (p.id+1) + " resgatou " + rescue.character.displayName + ".";
         }
 
@@ -190,12 +191,14 @@ namespace GainGround.Game
                 e.volley++;
             }
             foreach (var p in players)
-                if (p.HasActive && !e.data.elevated && e.vulnerable && ShotTouchesEnemy(e,p.position,.2f)) HitPlayer(p);
+                if (p.HasActive && !e.data.elevated && e.vulnerable && ShotTouchesEnemy(e,p.position,.2f) && HitPlayer(p))
+                    PlayEnemyAttackSound(e);
             return true;
         }
 
         void ShootFan(Enemy e, Vector2 direction, int count, float spread, bool radial)
         {
+            PlayEnemyAttackSound(e);
             for (int i=0;i<count;i++)
             {
                 float angle = radial ? i*360f/count + (e.volley%2)*22.5f : (i-(count-1)*.5f)*spread;

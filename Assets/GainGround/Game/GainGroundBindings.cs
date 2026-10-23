@@ -33,7 +33,9 @@ namespace GainGround.Game
     movement=new Vector2((ActionHeld(id,GameAction.Right)?1:0)-(ActionHeld(id,GameAction.Left)?1:0),(ActionHeld(id,GameAction.Up)?1:0)-(ActionHeld(id,GameAction.Down)?1:0)),
     fire=ActionHeld(id,GameAction.Fire),special=ActionHeld(id,GameAction.Special),dash=ActionDown(id,GameAction.Dash),switchMember=ActionDown(id,GameAction.Switch)
    };
-   if(id==0 && Input.touchCount==0 && mobileMouseAction<0 && !players.Exists(p=>p.awaitingSelection))
+   if(id==0 && Input.touchCount==0 && !players.Exists(p=>p.awaitingSelection) &&
+      (UnityEngine.EventSystems.EventSystem.current==null ||
+       !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()))
    {
     input.fire|=Input.GetMouseButton(0);
     input.special|=Input.GetMouseButton(1);
@@ -73,7 +75,7 @@ namespace GainGround.Game
   void DrawBindings(Vector2 size)
   {
    DrawSelectionPanel(new Rect(0,0,size.x,size.y));
-   GUILayout.BeginArea(new Rect(20,20,size.x-40,size.y-40));
+   GUILayout.BeginArea(new Rect(20,20,size.x-20,size.y-40));
    GUILayout.Label("MAPEAR CONTROLES — P"+(bindingPlayer+1),SelectionHeading);
    bool enabled=GUI.enabled;GUI.enabled=captureAction<0;
    GUILayout.BeginHorizontal();
@@ -84,6 +86,7 @@ namespace GainGround.Game
    GUILayout.Label(captureAction>=0?"Solte os botões e pressione "+(captureJoystick?"um botão ou direção do joystick":"uma tecla")+". Esc: cancelar.":"Cada ação aceita teclado e joystick simultaneamente. P1: tiro = mouse esquerdo, especial = direito, dash = meio.",SelectionHeading);
    if(captureAction>=0&&IronLayoutButton("Cancelar captura",GUILayout.Height(40)))captureAction=-1;
    bindingsScroll=GUILayout.BeginScrollView(bindingsScroll);
+   GUILayout.BeginVertical(GUILayout.Width(size.x-40-GUI.skin.verticalScrollbar.fixedWidth));
    for(int a=0;a<9;a++)
    {
     var b=Bindings(bindingPlayer,true).actions[a];
@@ -100,7 +103,7 @@ namespace GainGround.Game
    {if(bindingPlayer==0)draftSettings.Player1=PlayerBindings.Defaults(0);else draftSettings.Player2=PlayerBindings.Defaults(1);}
    if(IronLayoutButton("Voltar às opções",GUILayout.Height(44)))bindingsOpen=false;
    GUILayout.Label("Use Salvar nas opções para manter as alterações.",SelectionHeading);
-   GUI.enabled=enabled;GUILayout.EndScrollView();GUILayout.EndArea();
+   GUI.enabled=enabled;GUILayout.EndVertical();GUILayout.EndScrollView();GUILayout.EndArea();
   }
  }
 }

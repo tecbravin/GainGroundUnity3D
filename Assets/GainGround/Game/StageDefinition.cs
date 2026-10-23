@@ -35,6 +35,13 @@ namespace GainGround.Game
         public bool boss;
         public bool freezeImmune;
         public float triggerDistance;
+        [Header("Sound overrides (empty uses the enemy prefab)")]
+        [Tooltip("Played once per projectile volley or successful contact hit. Takes priority over the model prefab.")]
+        public AudioClip attackSound;
+        [Tooltip("Played when this enemy takes damage. Takes priority over the model prefab.")]
+        public AudioClip hitSound;
+        [Tooltip("Played when this enemy is defeated. Takes priority over the model prefab.")]
+        public AudioClip deathSound;
     }
 
     [CreateAssetMenu(menuName = "Gain Ground/Stage")]
