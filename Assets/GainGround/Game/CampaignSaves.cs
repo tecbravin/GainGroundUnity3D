@@ -32,24 +32,56 @@ namespace GainGround.Game
  public sealed class CampaignSaveStore
  {
   public const int SlotCount=3;
+  const string BrowserSlotKey="GainGround.SaveSlot.";
   public readonly string directory;
   public CampaignSaveStore(string directory){this.directory=directory;}
+  static string Key(int slot)=>BrowserSlotKey+(slot+1);
   public string SlotPath(int slot)
   {if(slot<0||slot>=SlotCount)throw new ArgumentOutOfRangeException(nameof(slot));return Path.Combine(directory,"save"+(slot+1)+".json");}
-  public bool Exists(int slot)=>File.Exists(SlotPath(slot));
+  public bool Exists(int slot)
+  {
+#if UNITY_WEBGL && !UNITY_EDITOR
+   SlotPath(slot);
+   return BrowserStorage.Read(Key(slot)) != null;
+#else
+   return File.Exists(SlotPath(slot));
+#endif
+  }
   public CampaignSave Read(int slot)
   {
-   var result=JsonUtility.FromJson<CampaignSave>(File.ReadAllText(SlotPath(slot)));
+   string json;
+#if UNITY_WEBGL && !UNITY_EDITOR
+   SlotPath(slot);
+   json=BrowserStorage.Read(Key(slot));
+   if(json==null)throw new FileNotFoundException("Save não encontrado.");
+#else
+   json=File.ReadAllText(SlotPath(slot));
+#endif
+   var result=JsonUtility.FromJson<CampaignSave>(json);
    if(result==null)throw new InvalidDataException("Save vazio.");result.Validate();return result;
   }
   public void Write(int slot,CampaignSave save,bool overwrite)
   {
-   save.Validate();string path=SlotPath(slot);Directory.CreateDirectory(directory);
-   if(File.Exists(path)&&!overwrite)throw new IOException("Esta posicao ja possui um save.");
+   save.Validate();
+   if(Exists(slot)&&!overwrite)throw new IOException("Esta posicao ja possui um save.");
+#if UNITY_WEBGL && !UNITY_EDITOR
+   BrowserStorage.Write(Key(slot),JsonUtility.ToJson(save));
+#else
+   string path=SlotPath(slot);
+   Directory.CreateDirectory(directory);
    string temporary=path+".tmp";
    File.WriteAllText(temporary,JsonUtility.ToJson(save,true));
    if(File.Exists(path))File.Replace(temporary,path,null);else File.Move(temporary,path);
+#endif
   }
-  public void Consume(int slot){File.Delete(SlotPath(slot));}
+  public void Consume(int slot)
+  {
+#if UNITY_WEBGL && !UNITY_EDITOR
+   SlotPath(slot);
+   BrowserStorage.Delete(Key(slot));
+#else
+   File.Delete(SlotPath(slot));
+#endif
+  }
  }
 }

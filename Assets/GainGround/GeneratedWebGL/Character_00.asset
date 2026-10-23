@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a5eb2034508c1f4e90fe4962b08330b, type: 3}
+  m_Name: Character_00
+  m_EditorClassIdentifier: 
+  displayName: Water Knight
+  sprite: {fileID: 21300000, guid: 85bfa90d8d89fca44bcc1453fc6c3149, type: 3}
+  hudPortrait: {fileID: 0}
+  directionalSpriteSheet: {fileID: 0}
+  modelPrefab: {fileID: 9091237171529724857, guid: e35354d0a204c8e42903695970704f32, type: 3}
+  speed: 3
+  shotInterval: 0.4
+  projectileSpeed: 7
+  range: 6
+  damage: 2
+  shotColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  specialPassesWalls: 0
+  normalWeapon:
+    label: Bomba magica
+    fireSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
+    direction: 0
+    kind: 3
+    cooldown: 0.4
+    speed: 7
+    range: 6
+    damage: 2
+    radius: 0.12
+    maxActive: 3
+    lobbed: 0
+    pierces: 0
+    blastRadius: 0
+    freezeSeconds: 0
+    duration: 2
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    mode: 0
+    arcDegrees: 120
+    effectSpriteSheet: {fileID: 0}
+    effectColumns: 3
+    effectRows: 2
+    effectDuration: 0
+    effectScale: 1
+    projectileFramesPerSecond: 12
+  specialWeapon:
+    label: 'Agua: imobiliza'
+    fireSound: {fileID: 8300000, guid: 50faef9d7c3480c40a6e359d4a52a279, type: 3}
+    direction: 0
+    kind: 10
+    cooldown: 1.2
+    speed: 1
+    range: 0.9
+    damage: 0
+    radius: 0.6
+    maxActive: 2
+    lobbed: 0
+    pierces: 0
+    blastRadius: 0
+    freezeSeconds: 3
+    duration: 2.5
+    color: {r: 0, g: 1, b: 1, a: 1}
+    mode: 0
+    arcDegrees: 120
+    effectSpriteSheet: {fileID: 0}
+    effectColumns: 3
+    effectRows: 2
+    effectDuration: 0
+    effectScale: 1
+    projectileFramesPerSecond: 12
+  characterTint: {r: 1, g: 1, b: 1, a: 1}
+  TempodeCooldown: 2
+  Distancia: 2.5
+  Invencivel: 1

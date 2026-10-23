@@ -14,7 +14,7 @@ namespace GainGround.Game
   public ActionBinding[] actions;
   public static PlayerBindings Defaults(int player)
   {
-   var keys=player==0?new[]{KeyCode.W,KeyCode.S,KeyCode.A,KeyCode.D,KeyCode.Z,KeyCode.X,KeyCode.C,KeyCode.Tab,KeyCode.P}:
+   var keys=player==0?new[]{KeyCode.W,KeyCode.S,KeyCode.A,KeyCode.D,KeyCode.Q,KeyCode.E,KeyCode.F,KeyCode.Tab,KeyCode.P}:
     new[]{KeyCode.UpArrow,KeyCode.DownArrow,KeyCode.LeftArrow,KeyCode.RightArrow,KeyCode.J,KeyCode.K,KeyCode.L,KeyCode.U,KeyCode.RightControl};
    var result=new PlayerBindings{actions=new ActionBinding[9]};
    for(int i=0;i<9;i++) result.actions[i]=new ActionBinding{keyboard=keys[i],joystick=player+1,axis=i<4?(i<2?1:0):-1,direction=i==0||i==2?-1:1,button=i>=4?i-4:-1};

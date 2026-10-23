@@ -6,6 +6,10 @@ namespace GainGround.Game
     public sealed partial class GainGroundGame : MonoBehaviour
     {
         public StageDefinition[] stages;
+        [Header("WebGL stage media (configured by the streaming build)")]
+        public bool streamStageMedia;
+        public StageMediaFiles[] webStageMedia;
+        public CharacterPortraitFiles[] webCharacterPortraits;
         [Header("Local co-op")]
         [Range(1, 2)] public int playerCount = 2;
         [Tooltip("Player 1 roster. Use assets from Editable/Characters.")]
@@ -20,7 +24,7 @@ namespace GainGround.Game
         public Camera gameCamera;
         public AudioClip titleMusic;
 
-        enum ScreenState { Title, Options, StageSelect, Playing, Cleared, Defeat, Victory, GameOver }
+        enum ScreenState { Title, Options, StageSelect, Loading, Playing, Cleared, Defeat, Victory, GameOver }
         sealed class Member { public CharacterDefinition definition; public bool lost, escaped; public float dashCooldown; }
         sealed class PlayerState
         {
@@ -95,16 +99,26 @@ namespace GainGround.Game
         string message = "";
         GUIStyle titleStyle, labelStyle, smallStyle, controlStyle;
         AudioSource musicSource;
+        UnityEngine.Object[] persistentResources;
         bool restartMusic, musicPaused;
+#if UNITY_WEBGL && !UNITY_EDITOR
+        bool titleMusicInteractionHandled;
+#endif
         public int EnemyCount => enemies.Count;
         public bool IsPlaying => state == ScreenState.Playing;
 
         void Start()
         {
             InitializeMobileControls();
+            LoadGuiAssets();
             if (stages == null || stages.Length == 0 || startingParty == null || startingParty.Length == 0)
             { Debug.LogError("Assign stages and starting party in the Inspector.", this); enabled = false; return; }
             LoadSettings(); LoadHighScore(); hasFinished = hasFinished || PlayerPrefs.GetInt("GainGround.HasFinished", 0) == 1; RefreshSaves(); state = ScreenState.Title; BeginTitleIntro();
+            EnsureMusicSource();
+            musicSource.clip = titleMusic;
+            musicSource.loop = true;
+            ApplyAudioVolumes();
+            if (titleMusic != null) musicSource.Play();
         }
 
         GameDifficulty campaignDifficulty;
@@ -121,16 +135,48 @@ namespace GainGround.Game
         {
             players.Clear();
             for (int id = 0; id < Mathf.Clamp(playerCount, 1, 2); id++)
+                players.Add(CreatePlayerState(id, allowFullRoster));
+        }
+
+        PlayerState CreatePlayerState(int id, bool allowFullRoster = true)
+        {
+            var p = new PlayerState { id = id };
+            var roster = id == 1 && secondStartingParty != null && secondStartingParty.Length > 0 ? secondStartingParty : startingParty;
+            if (allowFullRoster && campaignDifficulty == GameDifficulty.Normal && useFullRoster && allCharacters != null && allCharacters.Length > 0) roster = allCharacters;
+            roster = DifficultyRules.StartingRoster(campaignDifficulty, roster, allCharacters);
+            if (!campaignClassicMode) roster = RandomRoster(roster);
+            foreach (var definition in roster)
+                if (definition != null) p.party.Add(new Member { definition = definition });
+            return p;
+        }
+
+        bool JoinSecondPlayer()
+        {
+            if (state != ScreenState.Playing || paused || stage == null || arena == null || players.Count != 1)
+                return false;
+            var p = CreatePlayerState(1);
+            if (p.party.Count == 0) return false;
+            players.Add(p);
+            playerCount = 2;
+            p.active = 0;
+            p.awaitingSelection = campaignClassicMode;
+            p.selectionIndex = 0;
+            if (p.awaitingSelection) p.active = -1;
+            p.position = SpawnPosition(p);
+            p.facing = Vector2.up;
+            p.invulnerability = 1.5f;
+            p.player = Visual("Player 2", p.HasActive ? p.party[p.active].definition.sprite : null,
+                p.position, new Vector2(.6f, .8f), p.Tint, 5);
+            p.player.enabled = p.HasActive;
+            if (p.HasActive)
             {
-                var p = new PlayerState { id = id };
-                var roster = id == 1 && secondStartingParty != null && secondStartingParty.Length > 0 ? secondStartingParty : startingParty;
-                if (allowFullRoster && campaignDifficulty == GameDifficulty.Normal && useFullRoster && allCharacters != null && allCharacters.Length > 0) roster = allCharacters;
-                roster = DifficultyRules.StartingRoster(campaignDifficulty, roster, allCharacters);
-                if (!campaignClassicMode) roster = RandomRoster(roster);
-                foreach (var definition in roster)
-                    if (definition != null) p.party.Add(new Member { definition = definition });
-                players.Add(p);
+                SetPlayerCharacterVisual(p, p.party[p.active].definition);
+                p.modelBinding = PS2VisualBinding.Bind(p.player, p.party[p.active].definition);
             }
+            AddEligibleCaptives();
+            if (p.awaitingSelection) BeginSelectionPortraitLoad();
+            message = p.awaitingSelection ? "P2 entrou: escolha um personagem." : "P2 entrou na partida.";
+            return true;
         }
 
         Vector2 SpawnPosition(PlayerState p)
@@ -142,6 +188,12 @@ namespace GainGround.Game
         }
 
         void LoadStage()
+        {
+            if (streamStageMedia) { BeginStageMediaLoad(); return; }
+            BuildStage();
+        }
+
+        void BuildStage()
         {
             ResetMobileInput();
             restartMusic = true;
@@ -207,24 +259,21 @@ namespace GainGround.Game
             }
             state = ScreenState.Playing; message = stage.noExit ? "Eliminem todos os inimigos e o chefe." : "Eliminem os inimigos ou levem todas as equipes ate EXIT.";
             CheckTeamOutcome();
+            FinishRestoredStage();
         }
 
         void LateUpdate()
         {
-            if (musicSource == null)
-            {
-                musicSource = gameObject.AddComponent<AudioSource>();
-                musicSource.playOnAwake = false;
-                musicSource.spatialBlend = 0;
-                musicSource.priority = 32;
-                if (gameCamera != null && FindObjectOfType<AudioListener>() == null)
-                    gameCamera.gameObject.AddComponent<AudioListener>();
-            }
+            EnsureMusicSource();
             bool menuMusic = state == ScreenState.Title || state == ScreenState.Options;
             bool stageMusic = stage != null && state == ScreenState.Playing;
-            bool loop = menuMusic || stageMusic;
-            AudioClip clip = menuMusic ? titleMusic : stageMusic ? stage.stageMusic :
-                stage != null && (state == ScreenState.Cleared || state == ScreenState.Victory) ? stage.victoryMusic : null;
+            bool previewMusic = state == ScreenState.StageSelect && stages != null &&
+                stageSelectIndex >= 0 && stageSelectIndex < stages.Length && stages[stageSelectIndex] != null;
+            bool loop = menuMusic || stageMusic || previewMusic;
+            AudioClip clip = menuMusic ? titleMusic : previewMusic ? stages[stageSelectIndex].stageMusic :
+                stageMusic ? stage.stageMusic :
+                stage != null && (state == ScreenState.Cleared || state == ScreenState.Victory) ?
+                    (stage.victoryMusic != null ? stage.victoryMusic : streamStageMedia ? stage.stageMusic : null) : null;
             if (restartMusic || musicSource.clip != clip || musicSource.loop != loop)
             {
                 musicSource.Stop();
@@ -235,7 +284,7 @@ namespace GainGround.Game
                 if (clip != null) musicSource.Play();
             }
             ApplyAudioVolumes();
-            bool shouldPause = stageMusic && (paused || WaitingForSelection);
+            bool shouldPause = stageMusic && paused;
             if (shouldPause != musicPaused)
             {
                 if (shouldPause) musicSource.Pause();
@@ -244,9 +293,28 @@ namespace GainGround.Game
             }
         }
 
+        void EnsureMusicSource()
+        {
+            if (musicSource != null) return;
+            musicSource = gameObject.AddComponent<AudioSource>();
+            musicSource.playOnAwake = false;
+            musicSource.spatialBlend = 0;
+            musicSource.priority = 32;
+            if (gameCamera != null && FindObjectOfType<AudioListener>() == null)
+                gameCamera.gameObject.AddComponent<AudioListener>();
+        }
+
         void OnDisable()
         {
+            CancelStageMediaRequests();
             ResetMobileInput();
+            if (swordSliderTexture != null) Destroy(swordSliderTexture);
+            swordSliderTexture = null;
+            if (carouselArrowLeft != null) Destroy(carouselArrowLeft);
+            if (carouselArrowRight != null) Destroy(carouselArrowRight);
+            carouselArrowLeft = carouselArrowRight = null;
+            swordSliderThumb = null;
+            mobileButton = null;
             if (musicSource != null) musicSource.Stop();
             restartMusic = true;
         }
@@ -271,11 +339,22 @@ namespace GainGround.Game
         void Update()
         {
             PollBindings();
+#if UNITY_WEBGL && !UNITY_EDITOR
+            if (state == ScreenState.Title && !titleMusicInteractionHandled &&
+                (Input.anyKeyDown || Input.GetMouseButtonDown(0) || Input.touchCount > 0))
+            {
+                titleMusicInteractionHandled = true;
+                if (titleMusic != null && musicSource != null && musicSource.clip == titleMusic)
+                    musicSource.Play();
+            }
+#endif
             if(bindingsOpen){UpdateBindingCapture();return;}
             UpdateMobileControls();
             if(saveBrowserOpen){UpdateSaveSlotsInput();return;}
             if (UpdateTitleIntro()) return;
-            if (state == ScreenState.Title || state == ScreenState.Options || state == ScreenState.StageSelect) { UpdateMenuInput(); return; }
+            if (state == ScreenState.Loading) return;
+            if (state == ScreenState.Title || state == ScreenState.Options || state == ScreenState.StageSelect)
+            { UpdateMenuInput(); UpdateStagePreview(); return; }
             if (state == ScreenState.Cleared || (state == ScreenState.Victory && pendingEndingScore))
             {
                 stageScoreElapsed += Time.unscaledDeltaTime;
@@ -295,7 +374,9 @@ namespace GainGround.Game
                 return;
             }
             if (Input.GetKeyDown(KeyCode.Escape) || MenuDown(GameAction.Pause)) paused = !paused;
+            bool secondJoined = !paused && players.Count == 1 && ActionDown(1, GameAction.Special) && JoinSecondPlayer();
             var first = ReadMappedControls(0); var second = ReadMappedControls(1);
+            if (secondJoined) second = default;
             if (mobilePlayer == 0) MergeMobileInput(ref first); else MergeMobileInput(ref second);
             foreach (var p in players)
                 if (p.awaitingSelection && !paused && UpdateSelectionInput(p))
@@ -440,7 +521,9 @@ namespace GainGround.Game
             if (ClassicMode)
             {
                 CancelDash(p); p.active = -1; p.player.enabled = false;
-                p.awaitingSelection = true; p.selectionIndex = next; return false;
+                p.awaitingSelection = true; p.selectionIndex = next;
+                BeginSelectionPortraitLoad();
+                return false;
             }
             SetMember(p, next); return true;
         }
@@ -643,6 +726,7 @@ namespace GainGround.Game
             if (state != ScreenState.Playing) return;
             BuildStageScore();
             state = stageIndex == stages.Length - 1 ? ScreenState.Victory : ScreenState.Cleared;
+            BeginVictoryMusicDownload();
             pendingEndingScore = state == ScreenState.Victory;
             message = rescued ? "Fase concluida com resgate." : stage.rescue != null ? "Fase concluida." : "Fase concluida.";
         }
@@ -683,6 +767,7 @@ namespace GainGround.Game
             var origin = new Vector2((Screen.width - 1000 * scale) / 2, (Screen.height - 700 * scale) / 2);
             GUI.matrix = Matrix4x4.TRS(origin, Quaternion.identity, Vector3.one * scale);
             if(saveBrowserOpen){DrawSaveSlots(new Vector2(1000,700),false);GUI.matrix=old;return;}
+            if (state == ScreenState.Loading) { DrawStageLoading(new Rect(215, 175, 570, 365)); GUI.matrix = old; return; }
             if (state == ScreenState.Title || state == ScreenState.Options || state == ScreenState.StageSelect)
             {
                 DrawMenu(); GUI.matrix = old; return;

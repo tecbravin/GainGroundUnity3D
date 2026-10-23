@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a5eb2034508c1f4e90fe4962b08330b, type: 3}
+  m_Name: Character_04
+  m_EditorClassIdentifier: 
+  displayName: Fire Knight
+  sprite: {fileID: 21300000, guid: 85bfa90d8d89fca44bcc1453fc6c3149, type: 3}
+  hudPortrait: {fileID: 0}
+  directionalSpriteSheet: {fileID: 0}
+  modelPrefab: {fileID: 808639926359276032, guid: 9fe95206fd5731d44af0a2b3f8bb7423, type: 3}
+  speed: 3
+  shotInterval: 0.4
+  projectileSpeed: 7
+  range: 6
+  damage: 2
+  shotColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  specialPassesWalls: 0
+  normalWeapon:
+    label: Bomba de fogo
+    fireSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
+    direction: 0
+    kind: 3
+    cooldown: 0.4
+    speed: 7
+    range: 6
+    damage: 2
+    radius: 0.12
+    maxActive: 3
+    lobbed: 0
+    pierces: 0
+    blastRadius: 0
+    freezeSeconds: 0
+    duration: 2
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    mode: 0
+    arcDegrees: 120
+    effectSpriteSheet: {fileID: 2800000, guid: ca21aadfb1cd404428389f51e603f124, type: 3}
+    effectColumns: 4
+    effectRows: 2
+    effectDuration: 0
+    effectScale: 1
+    projectileFramesPerSecond: 14
+  specialWeapon:
+    label: 'Fogo: armadilha frontal'
+    fireSound: {fileID: 8300000, guid: 8f382feb7624c6b439d0ef3ec5817a01, type: 3}
+    direction: 1
+    kind: 9
+    cooldown: 1.2
+    speed: 1
+    range: 0.85
+    damage: 2
+    radius: 0.6
+    maxActive: 2
+    lobbed: 0
+    pierces: 0
+    blastRadius: 0
+    freezeSeconds: 0
+    duration: 2.5
+    color: {r: 1, g: 0.35, b: 0.08, a: 1}
+    mode: 0
+    arcDegrees: 120
+    effectSpriteSheet: {fileID: 2800000, guid: ca21aadfb1cd404428389f51e603f124, type: 3}
+    effectColumns: 4
+    effectRows: 2
+    effectDuration: 0
+    effectScale: 1
+    projectileFramesPerSecond: 11
+  characterTint: {r: 1, g: 1, b: 1, a: 1}
+  TempodeCooldown: 2
+  Distancia: 2.5
+  Invencivel: 1

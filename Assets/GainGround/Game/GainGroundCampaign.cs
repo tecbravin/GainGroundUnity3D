@@ -24,20 +24,27 @@ namespace GainGround.Game
             foreach (var enemy in enemies)
                 if (enemy.data.behavior == EnemyBehavior.Computer)
                     enemy.vulnerable = !enemies.Exists(other => other.data.behavior == EnemyBehavior.Barrier);
-            foreach (var data in stage.additionalCaptives)
-            {
-                if (data.character == null || players.Count < data.minimumPlayers) continue;
-                var character = RandomRescue(data.character);
-                extraCaptives.Add(new RescueState {
-                    data = data, character = character,
-                    visual = Visual("Rescue " + character.displayName, character.sprite, data.position,
-                        new Vector2(.45f,.6f), new Color(.7f,1,1), 3)
-                });
-                PS2VisualBinding.Bind(extraCaptives[extraCaptives.Count - 1].visual, character);
-            }
+            AddEligibleCaptives();
             foreach (var data in stage.hazards)
                 hazardStates.Add(new HazardState { data = data, visual = Visual("Energy barrier",
                     data.sprite != null ? data.sprite : floorSprite, data.area.center, data.area.size, Color.green, 3) });
+        }
+
+        void AddEligibleCaptives()
+        {
+            foreach (var data in stage.additionalCaptives)
+            {
+                if (data.character == null || players.Count < data.minimumPlayers ||
+                    extraCaptives.Exists(captive => captive.data == data)) continue;
+                var character = RandomRescue(data.character);
+                var rescue = new RescueState {
+                    data = data, character = character,
+                    visual = Visual("Rescue " + character.displayName, character.sprite, data.position,
+                        new Vector2(.45f, .6f), new Color(.7f, 1, 1), 3)
+                };
+                extraCaptives.Add(rescue);
+                PS2VisualBinding.Bind(rescue.visual, character);
+            }
         }
 
         void RebuildMovementWalls()

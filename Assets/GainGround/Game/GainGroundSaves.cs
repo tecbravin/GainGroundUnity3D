@@ -82,8 +82,8 @@ namespace GainGround.Game
    players.Clear();players.AddRange(restored);playerCount=save.playerCount;campaignDifficulty=save.difficulty;campaignClassicMode=save.classicMode;
    score=0;foreach(var p in players)score+=p.score;
    UpdateHighScore();
-   mobilePlayer=0;stageIndex=complete?save.lastCompletedStage:save.lastCompletedStage+1;LoadStage();
-   if(complete){state=ScreenState.Victory;message="Campanha concluida.";}
+   mobilePlayer=0;stageIndex=complete?save.lastCompletedStage:save.lastCompletedStage+1;
+   pendingRestoredVictory=complete;LoadStage();
   }
   void OpenSaveSlots(bool writing)
   {
@@ -100,14 +100,14 @@ namespace GainGround.Game
     }
     else
     {
-     var save=saveStore.Read(slot);RestoreCampaign(save);
-     try{saveStore.Consume(slot);}catch{ReturnToMenu();throw;}
+     var save=saveStore.Read(slot);
+     RestoreCampaign(save);
      saveBrowserOpen=false;saveError="";RefreshSaves();
     }
    }
    catch(Exception e)
    {
-    if(!saveBrowserWriting){ReturnToMenu();saveBrowserOpen=true;}
+    if(!saveBrowserWriting){pendingRestoredVictory=false;ReturnToMenu();saveBrowserOpen=true;}
     saveError=e.Message;RefreshSaves();
    }
   }
@@ -146,6 +146,12 @@ namespace GainGround.Game
    GUILayout.EndScrollView();GUILayout.EndArea();
   }
   Vector2 saveScroll;
+  bool pendingRestoredVictory;
+  void FinishRestoredStage()
+  {
+   if(!pendingRestoredVictory)return;
+   pendingRestoredVictory=false;state=ScreenState.Victory;message="Campanha concluida.";BeginVictoryMusicDownload();
+  }
   void MobileSafeSaveHeading(string text,GUIStyle style){GUILayout.Label(text,style,GUILayout.MinHeight(48));}
  }
 }

@@ -27,10 +27,20 @@ namespace GainGround.Game
     controlDown[p,a]=held&&!controlHeld[p,a];controlHeld[p,a]=held;
    }
   }
-  PlayerInput ReadMappedControls(int id)=>new PlayerInput {
-   movement=new Vector2((ActionHeld(id,GameAction.Right)?1:0)-(ActionHeld(id,GameAction.Left)?1:0),(ActionHeld(id,GameAction.Up)?1:0)-(ActionHeld(id,GameAction.Down)?1:0)),
-   fire=ActionHeld(id,GameAction.Fire),special=ActionHeld(id,GameAction.Special),dash=ActionDown(id,GameAction.Dash),switchMember=ActionDown(id,GameAction.Switch)
-  };
+  PlayerInput ReadMappedControls(int id)
+  {
+   var input=new PlayerInput {
+    movement=new Vector2((ActionHeld(id,GameAction.Right)?1:0)-(ActionHeld(id,GameAction.Left)?1:0),(ActionHeld(id,GameAction.Up)?1:0)-(ActionHeld(id,GameAction.Down)?1:0)),
+    fire=ActionHeld(id,GameAction.Fire),special=ActionHeld(id,GameAction.Special),dash=ActionDown(id,GameAction.Dash),switchMember=ActionDown(id,GameAction.Switch)
+   };
+   if(id==0 && Input.touchCount==0 && mobileMouseAction<0 && !players.Exists(p=>p.awaitingSelection))
+   {
+    input.fire|=Input.GetMouseButton(0);
+    input.special|=Input.GetMouseButton(1);
+    input.dash|=Input.GetMouseButtonDown(2);
+   }
+   return input;
+  }
   void BeginBindingCapture(int action,bool joystick)
   {
    captureAction=action;captureJoystick=joystick;captureFrame=Time.frameCount;captureReady=false;
@@ -71,7 +81,7 @@ namespace GainGround.Game
    if(IronLayoutButton("Jogador 2",GUILayout.Height(40)))bindingPlayer=1;
    GUILayout.EndHorizontal();
    GUI.enabled=enabled;
-   GUILayout.Label(captureAction>=0?"Solte os botões e pressione "+(captureJoystick?"um botão ou direção do joystick":"uma tecla")+". Esc: cancelar.":"Cada ação aceita teclado e joystick simultaneamente.",SelectionHeading);
+   GUILayout.Label(captureAction>=0?"Solte os botões e pressione "+(captureJoystick?"um botão ou direção do joystick":"uma tecla")+". Esc: cancelar.":"Cada ação aceita teclado e joystick simultaneamente. P1: tiro = mouse esquerdo, especial = direito, dash = meio.",SelectionHeading);
    if(captureAction>=0&&IronLayoutButton("Cancelar captura",GUILayout.Height(40)))captureAction=-1;
    bindingsScroll=GUILayout.BeginScrollView(bindingsScroll);
    for(int a=0;a<9;a++)

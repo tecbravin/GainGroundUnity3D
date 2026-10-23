@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Athra
   sprite: {fileID: 21300000, guid: c54dd0d20abcba94f800ed12050ebe91, type: 3}
   hudPortrait: {fileID: 2800000, guid: 13f80acb5ea8bdb41b825e86afb2163c, type: 3}
+  directionalSpriteSheet: {fileID: 0}
   modelPrefab: {fileID: 4266932886503673140, guid: 664c13a307604cb46ae21d79e6c87a05, type: 3}
   speed: 3.8
   shotInterval: 0.4
@@ -25,7 +26,7 @@ MonoBehaviour:
   specialPassesWalls: 1
   normalWeapon:
     label: Lanca
-    fireSound: {fileID: 8300000, guid: 5643289c2507c244f8c8da87c7979fc3, type: 3}
+    fireSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
     direction: 0
     kind: 1
     cooldown: 0.4
@@ -40,9 +41,17 @@ MonoBehaviour:
     freezeSeconds: 0
     duration: 2
     color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    mode: 0
+    arcDegrees: 120
+    effectSpriteSheet: {fileID: 0}
+    effectColumns: 3
+    effectRows: 2
+    effectDuration: 0
+    effectScale: 1
+    projectileFramesPerSecond: 12
   specialWeapon:
     label: Lanca em arco
-    fireSound: {fileID: 8300000, guid: 5643289c2507c244f8c8da87c7979fc3, type: 3}
+    fireSound: {fileID: 8300000, guid: 296cdbedcedf4944f9282710b55513b5, type: 3}
     direction: 0
     kind: 1
     cooldown: 0.65
@@ -57,7 +66,15 @@ MonoBehaviour:
     freezeSeconds: 0
     duration: 2
     color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    mode: 0
+    arcDegrees: 120
+    effectSpriteSheet: {fileID: 0}
+    effectColumns: 3
+    effectRows: 2
+    effectDuration: 0
+    effectScale: 1
+    projectileFramesPerSecond: 12
   characterTint: {r: 1, g: 1, b: 1, a: 1}
   TempodeCooldown: 2
-  Distancia: 2.5
-  Invencivel: 1
+  Distancia: 0
+  Invencivel: 0

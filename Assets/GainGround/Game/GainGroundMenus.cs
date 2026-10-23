@@ -58,13 +58,18 @@ namespace GainGround.Game
         }
         void ReturnToMenu()
         {
+            CancelStageMediaRequests();
+            pendingRestoredVictory = false;
             DestroyEndingAnimation();
             ResetMobileInput(); saveBrowserOpen=false; RefreshSaves();
             if (arena != null) { arena.gameObject.SetActive(false); Destroy(arena.gameObject); }
             stage = null; players.Clear(); enemies.Clear(); shots.Clear(); blastVisuals.Clear(); extraCaptives.Clear(); hazardStates.Clear();
             paused = false; state = ScreenState.Title; menuIndex = 0; ShowTitleMenuImmediately();
             if (musicSource != null) musicSource.Stop();
+            if (musicSource != null) musicSource.clip = null;
             if (sfxSource != null) sfxSource.Stop();
+            ReleaseStageMediaExcept(-1);
+            ReleaseSelectionPortraits();
         }
         void OpenOptions()
         {
@@ -175,7 +180,7 @@ namespace GainGround.Game
                 return;
             }
             if (Input.GetKeyDown(KeyCode.Escape)) { DiscardOptions(); return; }
-            int optionsCount = UsesMobileControls ? 6 : 7;
+            int optionsCount = CanMapControls ? 7 : 6;
             optionsIndex = (optionsIndex + vertical + optionsCount) % optionsCount;
             int horizontal = Input.GetKeyDown(KeyCode.RightArrow) || MenuDown(GameAction.Right) ? 1 :
                 Input.GetKeyDown(KeyCode.LeftArrow) || MenuDown(GameAction.Left) ? -1 : 0;
@@ -184,9 +189,9 @@ namespace GainGround.Game
             ApplyAudioVolumes();
             if (optionsIndex == 2 && (horizontal != 0 || confirm)) draftSettings.ClassicMode = !draftSettings.ClassicMode;
             if (optionsIndex == 3 && (horizontal != 0 || confirm)) CycleDifficulty(horizontal != 0 ? horizontal : 1);
-            if (!UsesMobileControls && confirm && optionsIndex == 4) bindingsOpen=true;
-            else if (confirm && optionsIndex == (UsesMobileControls ? 4 : 5)) SaveOptions();
-            else if (confirm && optionsIndex == (UsesMobileControls ? 5 : 6)) DiscardOptions();
+            if (CanMapControls && confirm && optionsIndex == 4) bindingsOpen=true;
+            else if (confirm && optionsIndex == (CanMapControls ? 5 : 4)) SaveOptions();
+            else if (confirm && optionsIndex == (CanMapControls ? 6 : 5)) DiscardOptions();
         }
         void DrawMenu()
         {
@@ -224,9 +229,11 @@ namespace GainGround.Game
                 GUI.Label(new Rect(200, 153, 600, 38), "Menu", GoldMenuText(labelStyle));
                 GUI.Label(new Rect(265, 215 + optionsIndex * 56, 30, 30), ">", GoldMenuText(labelStyle));
                 GUI.Label(new Rect(310, 214, 120, 30), "BGM  " + draftSettings.BGM, GoldMenuText(labelStyle));
-                draftSettings.BGM = Mathf.RoundToInt(GUI.HorizontalSlider(new Rect(450, 226, 220, 25), draftSettings.BGM, 0, 100));
+                draftSettings.BGM = Mathf.RoundToInt(GUI.HorizontalSlider(new Rect(470, 226, 220, 25), draftSettings.BGM, 0, 100,
+                    GUI.skin.horizontalSlider, SwordSliderThumb));
                 GUI.Label(new Rect(310, 270, 120, 30), "SFX  " + draftSettings.SFX, GoldMenuText(labelStyle));
-                draftSettings.SFX = Mathf.RoundToInt(GUI.HorizontalSlider(new Rect(450, 282, 220, 25), draftSettings.SFX, 0, 100));
+                draftSettings.SFX = Mathf.RoundToInt(GUI.HorizontalSlider(new Rect(470, 282, 220, 25), draftSettings.SFX, 0, 100,
+                    GUI.skin.horizontalSlider, SwordSliderThumb));
                 ApplyAudioVolumes();
                 if (IronButton(new Rect(300, 326, 400, 45), "Modo Classic: " + (draftSettings.ClassicMode ? "Sim" : "Não")))
                     draftSettings.ClassicMode = !draftSettings.ClassicMode;
@@ -241,10 +248,12 @@ namespace GainGround.Game
         }
         void ChooseCharacter(PlayerState p, int index)
         {
-            if (!ClassicMode || state != ScreenState.Playing || paused || !p.awaitingSelection || index < 0 || index >= p.party.Count) return;
+            if (!ClassicMode || state != ScreenState.Playing || paused || selectionPortraitsLoading ||
+                !p.awaitingSelection || index < 0 || index >= p.party.Count) return;
             if (p.party[index].lost || p.party[index].escaped) return;
             SetMember(p, index); Respawn(p, 2);
             p.fireCooldown = p.specialCooldown = 0; p.facing = Vector2.up;
+            ReleasePortraitsOutsideSelection();
         }
         bool UpdateSelectionInput(PlayerState p)
         {

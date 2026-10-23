@@ -19,7 +19,8 @@ namespace GainGround.Game
   public void Tick(float dt,Vector2 facing,bool moving,bool dash,bool visible)
   {
    foreach(var renderer in renderers) renderer.enabled=visible;
-   float yaw=Mathf.Atan2(facing.x,-facing.y)*Mathf.Rad2Deg;
+   // The source model faces the camera at zero yaw; positive yaw turns it toward screen left.
+   float yaw=Mathf.Atan2(-facing.x,-facing.y)*Mathf.Rad2Deg;
    rig.localRotation=Quaternion.Euler(35,0,0)*Quaternion.Euler(0,yaw,0);
    int clip=attackRemaining>0?attackClip:moving||dash?data.walkClip:data.idleClip;
    if(clip!=currentClip){currentClip=clip;frame=0;}

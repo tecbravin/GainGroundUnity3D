@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using GainGround.Game;
 using UnityEditor;
@@ -9,12 +10,22 @@ using UnityEngine;
 public sealed class CharacterAssets : IPreprocessBuildWithReport
 {
     public const string Folder = "Assets/GainGround/Editable/Characters";
+    const string GeneratedWebGLFolder = "Assets/GainGround/GeneratedWebGL/";
     public int callbackOrder => 0;
 
     public static CharacterDefinition Load(string name)
     {
-        var path = Folder + "/" + name.Replace(" ", "_") + ".asset";
+        var fileName = name.Replace(" ", "_");
+        var path = Folder + "/" + fileName + ".asset";
         var result = AssetDatabase.LoadAssetAtPath<CharacterDefinition>(path);
+        if (result != null) return result;
+        foreach (var guid in AssetDatabase.FindAssets("t:CharacterDefinition", new[] { Folder }))
+        {
+            var candidate = AssetDatabase.GUIDToAssetPath(guid);
+            if (!string.Equals(Path.GetFileNameWithoutExtension(candidate), fileName, StringComparison.Ordinal)) continue;
+            if (result != null) throw new InvalidOperationException("Duplicate character asset: " + fileName);
+            result = AssetDatabase.LoadAssetAtPath<CharacterDefinition>(candidate);
+        }
         if (result == null) throw new FileNotFoundException("Character must exist in the Characters folder.", path);
         return result;
     }
@@ -38,7 +49,8 @@ public sealed class CharacterAssets : IPreprocessBuildWithReport
         foreach (var guid in AssetDatabase.FindAssets("t:CharacterDefinition"))
         {
             var path = AssetDatabase.GUIDToAssetPath(guid);
-            if (!path.StartsWith(Folder + "/", System.StringComparison.Ordinal))
+            if (path.StartsWith(GeneratedWebGLFolder, StringComparison.Ordinal)) continue;
+            if (!path.StartsWith(Folder + "/", StringComparison.Ordinal))
                 throw new BuildFailedException("Move this character into " + Folder + " before building: " + path);
         }
     }
