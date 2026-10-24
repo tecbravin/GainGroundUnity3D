@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Fire Knight
   sprite: {fileID: 21300000, guid: 85bfa90d8d89fca44bcc1453fc6c3149, type: 3}
   hudPortrait: {fileID: 2800000, guid: dcbdf1eab11f756429550778fb26e3be, type: 3}
+  directionalSpriteSheet: {fileID: 0}
   modelPrefab: {fileID: 808639926359276032, guid: 9fe95206fd5731d44af0a2b3f8bb7423, type: 3}
   speed: 3
   shotInterval: 0.4
@@ -32,17 +33,21 @@ MonoBehaviour:
     speed: 7
     range: 6
     damage: 2
-    radius: 0.12
+    radius: 1.12
     maxActive: 3
     lobbed: 0
     pierces: 0
-    blastRadius: 0
+    blastRadius: 0.4
     freezeSeconds: 0
     duration: 2
     color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    mode: 0
+    arcDegrees: 120
     effectSpriteSheet: {fileID: 2800000, guid: ca21aadfb1cd404428389f51e603f124, type: 3}
     effectColumns: 4
     effectRows: 2
+    effectDuration: 0
+    effectScale: 1
     projectileFramesPerSecond: 14
   specialWeapon:
     label: 'Fogo: armadilha frontal'
@@ -53,7 +58,7 @@ MonoBehaviour:
     speed: 1
     range: 0.85
     damage: 2
-    radius: 0.6
+    radius: 1
     maxActive: 2
     lobbed: 0
     pierces: 0
@@ -61,11 +66,21 @@ MonoBehaviour:
     freezeSeconds: 0
     duration: 2.5
     color: {r: 1, g: 0.35, b: 0.08, a: 1}
+    mode: 0
+    arcDegrees: 120
     effectSpriteSheet: {fileID: 2800000, guid: ca21aadfb1cd404428389f51e603f124, type: 3}
     effectColumns: 4
     effectRows: 2
+    effectDuration: 0
+    effectScale: 1
     projectileFramesPerSecond: 11
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  TempodeCooldown: 2
+  normalAttackSound: {fileID: 0}
+  specialAttackSound: {fileID: 0}
+  dashSound: {fileID: 0}
+  hitSound: {fileID: 0}
+  switchSound: {fileID: 0}
+  rescueSound: {fileID: 0}
+  TempodeCooldown: 1.5
   Distancia: 2.5
   Invencivel: 1

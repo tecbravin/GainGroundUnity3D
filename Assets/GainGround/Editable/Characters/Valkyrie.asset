@@ -53,7 +53,7 @@ MonoBehaviour:
     label: 'Bumerangue: 8 direcoes'
     fireSound: {fileID: 8300000, guid: f816be56df731c741b9ab49b64233e7b, type: 3}
     direction: 0
-    kind: 5
+    kind: 1
     cooldown: 0.45
     speed: 7
     range: 6
@@ -75,6 +75,12 @@ MonoBehaviour:
     effectScale: 1
     projectileFramesPerSecond: 12
   characterTint: {r: 1, g: 1, b: 1, a: 1}
+  normalAttackSound: {fileID: 0}
+  specialAttackSound: {fileID: 0}
+  dashSound: {fileID: 0}
+  hitSound: {fileID: 0}
+  switchSound: {fileID: 0}
+  rescueSound: {fileID: 0}
   TempodeCooldown: 2
   Distancia: 2.5
   Invencivel: 1

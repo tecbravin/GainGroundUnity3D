@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Water Knight
   sprite: {fileID: 21300000, guid: 85bfa90d8d89fca44bcc1453fc6c3149, type: 3}
   hudPortrait: {fileID: 2800000, guid: 8fe783ec2f00afc4f85876a6037932f6, type: 3}
+  directionalSpriteSheet: {fileID: 0}
   modelPrefab: {fileID: 9091237171529724857, guid: e35354d0a204c8e42903695970704f32, type: 3}
   speed: 3
   shotInterval: 0.4
@@ -40,6 +41,14 @@ MonoBehaviour:
     freezeSeconds: 0
     duration: 2
     color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    mode: 0
+    arcDegrees: 120
+    effectSpriteSheet: {fileID: 0}
+    effectColumns: 3
+    effectRows: 2
+    effectDuration: 0
+    effectScale: 1
+    projectileFramesPerSecond: 12
   specialWeapon:
     label: 'Agua: imobiliza'
     fireSound: {fileID: 8300000, guid: 50faef9d7c3480c40a6e359d4a52a279, type: 3}
@@ -57,7 +66,21 @@ MonoBehaviour:
     freezeSeconds: 3
     duration: 2.5
     color: {r: 0, g: 1, b: 1, a: 1}
+    mode: 0
+    arcDegrees: 120
+    effectSpriteSheet: {fileID: 0}
+    effectColumns: 3
+    effectRows: 2
+    effectDuration: 0
+    effectScale: 1
+    projectileFramesPerSecond: 12
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  TempodeCooldown: 2
+  normalAttackSound: {fileID: 0}
+  specialAttackSound: {fileID: 0}
+  dashSound: {fileID: 0}
+  hitSound: {fileID: 0}
+  switchSound: {fileID: 0}
+  rescueSound: {fileID: 0}
+  TempodeCooldown: 1.5
   Distancia: 2.5
   Invencivel: 1

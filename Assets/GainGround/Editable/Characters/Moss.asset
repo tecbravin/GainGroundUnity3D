@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Moss
   sprite: {fileID: 21300000, guid: c54dd0d20abcba94f800ed12050ebe91, type: 3}
   hudPortrait: {fileID: 2800000, guid: 9d0e644c2544d6e499d3561b4d4e2237, type: 3}
+  directionalSpriteSheet: {fileID: 0}
   modelPrefab: {fileID: 5896393131509823585, guid: 9594007b6030c2c4a8ea07f9e35ce5b5, type: 3}
   speed: 3.7
   shotInterval: 0.32
@@ -40,16 +41,24 @@ MonoBehaviour:
     freezeSeconds: 0
     duration: 2
     color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    mode: 0
+    arcDegrees: 120
+    effectSpriteSheet: {fileID: 0}
+    effectColumns: 3
+    effectRows: 2
+    effectDuration: 0
+    effectScale: 1
+    projectileFramesPerSecond: 12
   specialWeapon:
-    label: Flecha em arco
+    label: Bumerangue pro lado
     fireSound: {fileID: 8300000, guid: 5643289c2507c244f8c8da87c7979fc3, type: 3}
-    direction: 1
-    kind: 2
+    direction: 2
+    kind: 5
     cooldown: 0.6
     speed: 6
     range: 9
     damage: 1
-    radius: 0.12
+    radius: 0.22
     maxActive: 3
     lobbed: 1
     pierces: 0
@@ -57,7 +66,21 @@ MonoBehaviour:
     freezeSeconds: 0
     duration: 2
     color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    mode: 0
+    arcDegrees: 120
+    effectSpriteSheet: {fileID: 0}
+    effectColumns: 3
+    effectRows: 2
+    effectDuration: 0
+    effectScale: 1
+    projectileFramesPerSecond: 12
   characterTint: {r: 1, g: 1, b: 1, a: 1}
+  normalAttackSound: {fileID: 0}
+  specialAttackSound: {fileID: 0}
+  dashSound: {fileID: 0}
+  hitSound: {fileID: 0}
+  switchSound: {fileID: 0}
+  rescueSound: {fileID: 0}
   TempodeCooldown: 2
   Distancia: 2.5
   Invencivel: 1

@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Cyber
   sprite: {fileID: 21300000, guid: 3a0d7d7be189ac348ae546da8e9f1af6, type: 3}
   hudPortrait: {fileID: 2800000, guid: d4f66c42ea0f2724a9af9e1724fde7a1, type: 3}
+  directionalSpriteSheet: {fileID: 0}
   modelPrefab: {fileID: 2056851605431783379, guid: a3a4e316baac2db45874b11e52dedb7d, type: 3}
   speed: 1.8
   shotInterval: 0.32
@@ -40,6 +41,14 @@ MonoBehaviour:
     freezeSeconds: 0
     duration: 2
     color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    mode: 0
+    arcDegrees: 120
+    effectSpriteSheet: {fileID: 0}
+    effectColumns: 3
+    effectRows: 2
+    effectDuration: 0
+    effectScale: 1
+    projectileFramesPerSecond: 12
   specialWeapon:
     label: 'Missil: leque de seis'
     fireSound: {fileID: 8300000, guid: cf77f42a2793da64da8610d73bb4a340, type: 3}
@@ -49,15 +58,29 @@ MonoBehaviour:
     speed: 8
     range: 20
     damage: 1
-    radius: 0.12
+    radius: 0.6
     maxActive: 6
     lobbed: 0
     pierces: 0
-    blastRadius: 0
+    blastRadius: 0.7
     freezeSeconds: 0
     duration: 2
     color: {r: 1, g: 0.5, b: 0.3, a: 1}
+    mode: 0
+    arcDegrees: 120
+    effectSpriteSheet: {fileID: 0}
+    effectColumns: 3
+    effectRows: 2
+    effectDuration: 0
+    effectScale: 1
+    projectileFramesPerSecond: 12
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  TempodeCooldown: 2
+  normalAttackSound: {fileID: 0}
+  specialAttackSound: {fileID: 0}
+  dashSound: {fileID: 0}
+  hitSound: {fileID: 0}
+  switchSound: {fileID: 0}
+  rescueSound: {fileID: 0}
+  TempodeCooldown: 5
   Distancia: 2.5
   Invencivel: 1

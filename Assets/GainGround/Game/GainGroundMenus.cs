@@ -168,6 +168,15 @@ namespace GainGround.Game
 
         void CycleDifficulty(int direction=1)
         { draftSettings.Difficulty=(GameDifficulty)(((int)draftSettings.Difficulty+direction+3)%3); }
+        static string DifficultyLabel(GameDifficulty difficulty)
+        {
+            switch (difficulty)
+            {
+                case GameDifficulty.Easy: return "Fácil";
+                case GameDifficulty.Hard: return "Difícil";
+                default: return "Normal";
+            }
+        }
         void UpdateMenuInput()
         {
             if ((state == ScreenState.Title || state == ScreenState.Options || state == ScreenState.StageSelect) && Input.GetKeyDown(KeyCode.F11))
@@ -250,9 +259,9 @@ namespace GainGround.Game
                 draftSettings.SFX = Mathf.RoundToInt(GUI.HorizontalSlider(new Rect(450, 282, 220, 25), draftSettings.SFX, 0, 100,
                     GUI.skin.horizontalSlider, SwordSliderThumb));
                 ApplyAudioVolumes();
-                if (IronButton(new Rect(300, 326, 400, 45), "Modo Classic: " + (draftSettings.ClassicMode ? "Sim" : "Não")))
+                if (IronButton(new Rect(300, 326, 400, 45), "Modo Clássico: " + (draftSettings.ClassicMode ? "Sim" : "Não")))
                     draftSettings.ClassicMode = !draftSettings.ClassicMode;
-                if (IronButton(new Rect(300, 382, 400, 45), "Dificuldade: " + draftSettings.Difficulty)) CycleDifficulty();
+                if (IronButton(new Rect(300, 382, 400, 45), "Dificuldade: " + DifficultyLabel(draftSettings.Difficulty))) CycleDifficulty();
                 if(IronButton(new Rect(300,438,400,45),"Mapear controles — P1 / P2"))bindingsOpen=true;
                 if (IronButton(new Rect(300, 494, 400, 45), "Salvar e voltar")) SaveOptions();
                 if (IronButton(new Rect(300, 550, 400, 45), "Não salvar")) DiscardOptions();

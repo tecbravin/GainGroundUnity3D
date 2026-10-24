@@ -33,11 +33,11 @@ MonoBehaviour:
     speed: 7
     range: 6
     damage: 2
-    radius: 0.12
+    radius: 1.12
     maxActive: 3
     lobbed: 0
     pierces: 0
-    blastRadius: 0
+    blastRadius: 0.4
     freezeSeconds: 0
     duration: 2
     color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
@@ -58,7 +58,7 @@ MonoBehaviour:
     speed: 1
     range: 0.85
     damage: 2
-    radius: 0.6
+    radius: 1
     maxActive: 2
     lobbed: 0
     pierces: 0
@@ -81,6 +81,6 @@ MonoBehaviour:
   hitSound: {fileID: 0}
   switchSound: {fileID: 0}
   rescueSound: {fileID: 0}
-  TempodeCooldown: 2
+  TempodeCooldown: 1.5
   Distancia: 2.5
   Invencivel: 1

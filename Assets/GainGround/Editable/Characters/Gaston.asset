@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Gaston
   sprite: {fileID: 21300000, guid: c54dd0d20abcba94f800ed12050ebe91, type: 3}
   hudPortrait: {fileID: 2800000, guid: 4c14ac1e5ad02744da480c4e9e010357, type: 3}
+  directionalSpriteSheet: {fileID: 0}
   modelPrefab: {fileID: 4622336896041716183, guid: df39a520890967d4e910c1da818a13b7, type: 3}
   speed: 3.8
   shotInterval: 0.4
@@ -40,6 +41,14 @@ MonoBehaviour:
     freezeSeconds: 0
     duration: 2
     color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    mode: 0
+    arcDegrees: 120
+    effectSpriteSheet: {fileID: 0}
+    effectColumns: 3
+    effectRows: 2
+    effectDuration: 0
+    effectScale: 1
+    projectileFramesPerSecond: 12
   specialWeapon:
     label: Lanca em arco
     fireSound: {fileID: 8300000, guid: 5643289c2507c244f8c8da87c7979fc3, type: 3}
@@ -49,15 +58,29 @@ MonoBehaviour:
     speed: 5
     range: 4.8
     damage: 1
-    radius: 0.12
+    radius: 0.42
     maxActive: 3
     lobbed: 1
     pierces: 0
-    blastRadius: 0
+    blastRadius: 0.3
     freezeSeconds: 0
     duration: 2
     color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    mode: 0
+    arcDegrees: 120
+    effectSpriteSheet: {fileID: 0}
+    effectColumns: 3
+    effectRows: 2
+    effectDuration: 0
+    effectScale: 1
+    projectileFramesPerSecond: 12
   characterTint: {r: 1, g: 1, b: 1, a: 1}
+  normalAttackSound: {fileID: 0}
+  specialAttackSound: {fileID: 0}
+  dashSound: {fileID: 0}
+  hitSound: {fileID: 0}
+  switchSound: {fileID: 0}
+  rescueSound: {fileID: 0}
   TempodeCooldown: 2
   Distancia: 2.5
   Invencivel: 1

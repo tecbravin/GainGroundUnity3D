@@ -178,9 +178,9 @@ namespace GainGround.Game
                     MobileText("SFX  " + draftSettings.SFX);
                     draftSettings.SFX = Mathf.RoundToInt(GUILayout.HorizontalSlider(draftSettings.SFX, 0, 100, mobileSlider, mobileThumb, GUILayout.Height(44)));
                     ApplyAudioVolumes();
-                    if (MobileButton("Classic Mode: " + (draftSettings.ClassicMode ? "On" : "Off"))) draftSettings.ClassicMode = !draftSettings.ClassicMode;
-                    if (MobileButton("Difficulty: " + draftSettings.Difficulty)) CycleDifficulty();
-                    MobileText("Easy: 5 personagens, chefes -20% HP. Hard: 1 personagem, chefes +20% HP.");
+                    if (MobileButton("Modo Clássico: " + (draftSettings.ClassicMode ? "Sim" : "Não"))) draftSettings.ClassicMode = !draftSettings.ClassicMode;
+                    if (MobileButton("Dificuldade: " + DifficultyLabel(draftSettings.Difficulty))) CycleDifficulty();
+                    MobileText("Fácil: 5 personagens, chefes -20% HP. Difícil: 1 personagem, chefes +20% HP.");
                     if (CanMapControls && MobileButton("Mapear controles — P1 / P2")) bindingsOpen = true;
                     if (MobileButton("Save changes and return")) SaveOptions();
                     if (MobileButton("Don't save and return")) DiscardOptions();

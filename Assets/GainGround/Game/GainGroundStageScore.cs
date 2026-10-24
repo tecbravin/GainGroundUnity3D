@@ -97,13 +97,13 @@ namespace GainGround.Game
             };
             var bonusPointsStyle = new GUIStyle(bonusLabelStyle)
             {
-                alignment = TextAnchor.MiddleRight
+                alignment = TextAnchor.MiddleCenter
             };
             int fontSize = bonusLabelStyle.fontSize;
 
             for (int i = 0; i < stageScoreEntries.Count; i++)
             {
-                var labelRect = new Rect(245, 251 + i * 42, 350, 34);
+                var labelRect = new Rect(255, 248 + i * 37, 315, 34);
                 var content = new GUIContent(stageScoreEntries[i].label);
                 bonusLabelStyle.fontSize = fontSize;
                 while (bonusLabelStyle.fontSize > 6 &&
@@ -111,7 +111,7 @@ namespace GainGround.Game
                     bonusLabelStyle.fontSize--;
 
                 GUI.Label(labelRect, content, bonusLabelStyle);
-                var pointsRect = new Rect(610, labelRect.y, 145, labelRect.height);
+                var pointsRect = new Rect(580, labelRect.y, 130, labelRect.height);
                 bonusPointsStyle.fontSize = fontSize;
                 var finalPoints = new GUIContent("+" + stageScoreEntries[i].points.ToString("N0"));
                 while (bonusPointsStyle.fontSize > 6 &&

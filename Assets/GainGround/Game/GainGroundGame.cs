@@ -836,10 +836,10 @@ namespace GainGround.Game
                 GUI.Label(new Rect(230, 196, 540, 50), heading, SelectionHeading);
                 if (!paused && (state == ScreenState.Cleared || pendingEndingScore)) DrawStageScoreSummary();
                 if (pendingEndingScore) { GUI.matrix = old; return; }
-                if (IronButton(new Rect(340, paused ? 313 : 430, 320, 45), paused ? "CONTINUAR" : state == ScreenState.Title ? "JOGAR [ENTER]" : state == ScreenState.Cleared ? "CONTINUAR [ENTER]" : "JOGAR NOVAMENTE [ENTER]"))
+                if (IronButton(new Rect(340, paused ? 313 : 407, 320, 45), paused ? "CONTINUAR" : state == ScreenState.Title ? "JOGAR [ENTER]" : state == ScreenState.Cleared ? "CONTINUAR [ENTER]" : "JOGAR NOVAMENTE [ENTER]"))
                 { if (paused) paused = false; else Continue(); }
                 if(state==ScreenState.Cleared||state==ScreenState.Victory)
-                {if(IronButton(new Rect(340,484,320,40),"Salvar e voltar para o menu"))OpenSaveSlots(true);}
+                {if(IronButton(new Rect(340,461,320,40),"Salvar e voltar para o menu"))OpenSaveSlots(true);}
                 else if (IronButton(new Rect(340, paused ? 373 : 484, 320, paused ? 45 : 35), "Menu Principal")) ReturnToMenu();
             }
             GUI.matrix = old;

@@ -123,7 +123,7 @@ namespace GainGround.Game
    var save=saveSlots[slot];string prefix="Posicao "+(slot+1)+": ";
    if(save==null)return prefix+(slotOccupied[slot]?"Arquivo indisponivel — "+slotErrors[slot]:"Vazio");
    string points="";for(int i=0;i<save.players.Length;i++)points+="  P"+(i+1)+": "+save.players[i].score;
-   return prefix+save.stageLabel+" concluida\n"+save.playerCount+" jogador(es) | "+save.difficulty+(save.classicMode?" | Classic":"")+points;
+   return prefix+save.stageLabel+" concluida\n"+save.playerCount+" jogador(es) | "+DifficultyLabel(save.difficulty)+(save.classicMode?" | Clássico":"")+points;
   }
   void DrawSaveSlots(Vector2 size,bool mobile)
   {
