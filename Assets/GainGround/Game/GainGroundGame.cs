@@ -47,6 +47,7 @@ namespace GainGround.Game
             public float swordSweepVisualDuration;
             public int currentFacingSprite = -1;
             public bool carrying, dashInvincible, dashProtectedThisFrame, dashRequested;
+            public bool teleportArmed = true;
             public bool carryingFallen => carriedAlly != null;
             public bool HasActive => active >= 0 && active < party.Count && !party[active].lost && !party[active].escaped;
             public Color Tint => id == 0 ? new Color(.55f, .85f, 1) : new Color(1, .7f, .35f);
@@ -73,12 +74,15 @@ namespace GainGround.Game
             public float boomerangSide;
             public float remaining, age, orbitAngle, travel;
             public bool hostile, elevated, special, returning;
+            public bool directionalSprite;
             public int damage;
             public SpriteRenderer visual;
             public WeaponDefinition weapon;
             public Sprite[] animationFrames;
             public float animationFramesPerSecond;
             public Sprite impactSprite;
+            public Sprite[] impactFrames;
+            public float impactFramesPerSecond;
             public Vector2 impactSize;
             public PlayerState owner;
             public CharacterDefinition character;
@@ -87,6 +91,13 @@ namespace GainGround.Game
         readonly List<PlayerState> players = new List<PlayerState>();
         readonly List<Enemy> enemies = new List<Enemy>();
         readonly List<Shot> shots = new List<Shot>();
+        readonly Stack<Shot> spareShots = new Stack<Shot>();
+        readonly Stack<SpriteRenderer> spareShotVisuals = new Stack<SpriteRenderer>();
+        readonly Stack<SpriteRenderer> spareEffectVisuals = new Stack<SpriteRenderer>();
+        readonly Dictionary<GameObject, Sprite> effectPrefabSprites = new Dictionary<GameObject, Sprite>();
+        Transform transientVisualPool;
+        readonly Dictionary<long, List<Rect>> projectileWallCells = new Dictionary<long, List<Rect>>();
+        readonly Dictionary<long, List<Enemy>> projectileEnemyCells = new Dictionary<long, List<Enemy>>();
         ScreenState state;
         Transform arena;
         SpriteRenderer captive;
@@ -200,10 +211,12 @@ namespace GainGround.Game
         {
             ResetMobileInput();
             restartMusic = true;
+            ClearShots();
             if (arena != null) { arena.gameObject.SetActive(false); Destroy(arena.gameObject); }
             arena = new GameObject("Arena (generated from editable stage asset)").transform;
-            arena.SetParent(transform); enemies.Clear(); shots.Clear(); blastVisuals.Clear(); extraCaptives.Clear(); hazardStates.Clear();
+            arena.SetParent(transform); enemies.Clear(); blastVisuals.Clear(); extraCaptives.Clear(); hazardStates.Clear();
             stage = stages[stageIndex]; remainingTime = stage.timeLimit;
+            BuildProjectileWallCells();
             ResetStageScorePresentation();
             paused = false; rescued = false; captiveCarrier = null;
             foreach (var p in players)
@@ -218,6 +231,7 @@ namespace GainGround.Game
                 p.selectionIndex = Mathf.Max(0, p.active);
                 if (p.awaitingSelection) p.active = -1;
                 p.position = SpawnPosition(p); p.facing = Vector2.up;
+                p.teleportArmed = true;
             }
             if (stage.background != null) Visual("Original stage terrain", stage.background, Vector2.zero, stage.size, Color.white, -10);
             else if (stage.terrainAtlas != null) arena.gameObject.AddComponent<OriginalStageTerrain>().Build(stage);
@@ -269,13 +283,10 @@ namespace GainGround.Game
         void LateUpdate()
         {
             EnsureMusicSource();
-            bool menuMusic = state == ScreenState.Title || state == ScreenState.Options;
+            bool menuMusic = state == ScreenState.Title || state == ScreenState.Options || state == ScreenState.StageSelect;
             bool stageMusic = stage != null && state == ScreenState.Playing;
-            bool previewMusic = state == ScreenState.StageSelect && stages != null &&
-                stageSelectIndex >= 0 && stageSelectIndex < stages.Length && stages[stageSelectIndex] != null;
-            bool loop = menuMusic || stageMusic || previewMusic;
-            AudioClip clip = menuMusic ? titleMusic : previewMusic ? stages[stageSelectIndex].stageMusic :
-                stageMusic ? stage.stageMusic :
+            bool loop = menuMusic || stageMusic;
+            AudioClip clip = menuMusic ? titleMusic : stageMusic ? stage.stageMusic :
                 stage != null && (state == ScreenState.Cleared || state == ScreenState.Victory) ?
                     (stage.victoryMusic != null ? stage.victoryMusic : streamStageMedia ? stage.stageMusic : null) : null;
             if (restartMusic || musicSource.clip != clip || musicSource.loop != loop)
@@ -296,6 +307,7 @@ namespace GainGround.Game
                 musicPaused = shouldPause;
             }
             RefreshTitleUI();
+            if (state != ScreenState.Title) ReleaseTitleArtwork();
             RefreshStageSelectUI();
             RefreshHud();
         }
@@ -339,12 +351,152 @@ namespace GainGround.Game
             return renderer;
         }
 
-        void SpawnEnemyEffect(string name, Sprite sprite, Vector2 position, Vector2 size)
+        void SpawnEnemyEffect(string name, Sprite sprite, Vector2 position, Vector2 size,
+            Sprite[] frames = null, float framesPerSecond = 45)
         {
             if (sprite == null) return;
-            var renderer = Visual(name, sprite, position,
+            var renderer = AcquireTransientVisual(spareEffectVisuals, name, sprite, position,
                 size.sqrMagnitude > 0 ? size : Vector2.one * .35f, Color.white, 7);
-            renderer.gameObject.AddComponent<EnemyEffectLifetime>().Initialize(renderer);
+            var lifetime = renderer.GetComponent<EnemyEffectLifetime>();
+            if (lifetime == null) lifetime = renderer.gameObject.AddComponent<EnemyEffectLifetime>();
+            lifetime.Initialize(renderer, this, frames, framesPerSecond);
+        }
+
+        Sprite SpriteFromEffectPrefab(GameObject prefab)
+        {
+            if (prefab == null) return null;
+            if (!effectPrefabSprites.TryGetValue(prefab, out var sprite))
+            {
+                var renderer = prefab.GetComponent<SpriteRenderer>();
+                sprite = renderer != null ? renderer.sprite : null;
+                effectPrefabSprites.Add(prefab, sprite);
+            }
+            return sprite;
+        }
+
+        Shot RentShot()
+        {
+            var shot = spareShots.Count > 0 ? spareShots.Pop() : new Shot();
+            shot.position = shot.velocity = shot.origin = shot.launchDirection = Vector2.zero;
+            shot.boomerangSide = shot.remaining = shot.age = shot.orbitAngle = shot.travel = 0;
+            shot.hostile = shot.elevated = shot.special = shot.returning = shot.directionalSprite = false;
+            shot.damage = 0; shot.visual = null; shot.weapon = null;
+            shot.animationFrames = null; shot.animationFramesPerSecond = 0;
+            shot.impactSprite = null; shot.impactFrames = null;
+            shot.impactFramesPerSecond = 0; shot.impactSize = Vector2.zero;
+            shot.owner = null; shot.character = null; shot.hits.Clear();
+            return shot;
+        }
+
+        void ReleaseShot(Shot shot)
+        {
+            if (shot.visual != null) ReleaseTransientVisual(shot.visual, spareShotVisuals);
+            shot.visual = null;
+            shot.weapon = null; shot.owner = null; shot.character = null;
+            shot.animationFrames = null; shot.impactSprite = null; shot.impactFrames = null;
+            shot.hits.Clear();
+            if (spareShots.Count < 256) spareShots.Push(shot);
+        }
+
+        void ClearShots()
+        {
+            foreach (var shot in shots) ReleaseShot(shot);
+            shots.Clear();
+        }
+
+        SpriteRenderer AcquireShotVisual(string name, Sprite sprite, Vector2 position, Vector2 size, Color tint, int order)
+            => AcquireTransientVisual(spareShotVisuals, name, sprite, position, size, tint, order);
+
+        SpriteRenderer AcquireTransientVisual(Stack<SpriteRenderer> pool, string name, Sprite sprite,
+            Vector2 position, Vector2 size, Color tint, int order)
+        {
+            var renderer = pool.Count > 0 ? pool.Pop() : new GameObject(name).AddComponent<SpriteRenderer>();
+            renderer.gameObject.name = name;
+            renderer.transform.SetParent(arena);
+            renderer.transform.position = position;
+            renderer.transform.rotation = Quaternion.identity;
+            renderer.sprite = sprite;
+            renderer.color = tint;
+            renderer.sortingOrder = order;
+            renderer.enabled = true;
+            renderer.transform.localScale = sprite != null
+                ? new Vector3(size.x / sprite.bounds.size.x, size.y / sprite.bounds.size.y, 1)
+                : Vector3.one;
+            renderer.gameObject.SetActive(true);
+            return renderer;
+        }
+
+        void ReleaseTransientVisual(SpriteRenderer renderer, Stack<SpriteRenderer> pool)
+        {
+            if (renderer == null) return;
+            if (pool.Count >= 256) { Destroy(renderer.gameObject); return; }
+            if (transientVisualPool == null)
+            {
+                transientVisualPool = new GameObject("Transient visual pool").transform;
+                transientVisualPool.SetParent(transform);
+            }
+            renderer.gameObject.SetActive(false);
+            renderer.sprite = null;
+            renderer.transform.SetParent(transientVisualPool);
+            pool.Push(renderer);
+        }
+
+        internal void ReleaseEnemyEffectVisual(SpriteRenderer renderer)
+            => ReleaseTransientVisual(renderer, spareEffectVisuals);
+
+        static long ProjectileCellKey(int x, int y) => ((long)x << 32) | (uint)y;
+
+        void BuildProjectileWallCells()
+        {
+            projectileWallCells.Clear();
+            foreach (var wall in stage.walls)
+                for (int x = Mathf.FloorToInt(wall.xMin - .06f); x <= Mathf.FloorToInt(wall.xMax + .06f); x++)
+                    for (int y = Mathf.FloorToInt(wall.yMin - .06f); y <= Mathf.FloorToInt(wall.yMax + .06f); y++)
+                    {
+                        long key = ProjectileCellKey(x, y);
+                        if (!projectileWallCells.TryGetValue(key, out var cells))
+                        { cells = new List<Rect>(); projectileWallCells.Add(key, cells); }
+                        cells.Add(wall);
+                    }
+        }
+
+        bool ProjectileWallBlocked(Vector2 position)
+        {
+            if (!projectileWallCells.TryGetValue(ProjectileCellKey(Mathf.FloorToInt(position.x),
+                Mathf.FloorToInt(position.y)), out var cells)) return false;
+            foreach (var wall in cells)
+                if (ArenaRules.Intersects(wall, position, .06f)) return true;
+            return false;
+        }
+
+        void BuildProjectileEnemyCells()
+        {
+            foreach (var cells in projectileEnemyCells.Values) cells.Clear();
+            foreach (var enemy in enemies)
+            {
+                if (!enemy.visual.enabled || !enemy.vulnerable) continue;
+                float halfX = enemy.data.obstacleSize.sqrMagnitude > 0 ?
+                    enemy.data.obstacleSize.x * .5f : enemy.data.hitRadius;
+                float halfY = enemy.data.obstacleSize.sqrMagnitude > 0 ?
+                    enemy.data.obstacleSize.y * .5f : enemy.data.hitRadius;
+                for (int x = Mathf.FloorToInt(enemy.position.x - halfX); x <= Mathf.FloorToInt(enemy.position.x + halfX); x++)
+                    for (int y = Mathf.FloorToInt(enemy.position.y - halfY); y <= Mathf.FloorToInt(enemy.position.y + halfY); y++)
+                    {
+                        long key = ProjectileCellKey(x, y);
+                        if (!projectileEnemyCells.TryGetValue(key, out var cells))
+                        { cells = new List<Enemy>(); projectileEnemyCells.Add(key, cells); }
+                        cells.Add(enemy);
+                    }
+            }
+        }
+
+        bool HasProjectileEnemyNearby(Vector2 position, float radius)
+        {
+            for (int x = Mathf.FloorToInt(position.x - radius); x <= Mathf.FloorToInt(position.x + radius); x++)
+                for (int y = Mathf.FloorToInt(position.y - radius); y <= Mathf.FloorToInt(position.y + radius); y++)
+                    if (projectileEnemyCells.TryGetValue(ProjectileCellKey(x, y), out var cells) && cells.Count > 0)
+                        return true;
+            return false;
         }
 
         void Update()
@@ -415,6 +567,7 @@ namespace GainGround.Game
             if (remainingTime <= 0) { remainingTime = 0; BeginContinue("O tempo acabou."); return; }
             foreach (var p in players) UpdatePlayer(p, p.id == 0 ? first : second, dt);
             if (state != ScreenState.Playing) return;
+            UpdateStageTeleports();
             UpdateEnemies(dt);
             if (state != ScreenState.Playing) return;
             UpdateHazards();
@@ -705,33 +858,57 @@ namespace GainGround.Game
         void Fire(Vector2 origin, Vector2 direction, bool hostile, bool elevated, float speed, float range,
             int damage, Color color, Enemy source = null, AudioClip playerSound = null)
         {
-            var shot = new Shot { position = origin, origin = origin, launchDirection = direction.normalized, velocity = direction * speed, remaining = range, hostile = hostile, elevated = elevated, damage = damage };
+            var shot = RentShot();
+            shot.position = origin; shot.origin = origin; shot.launchDirection = direction.normalized;
+            shot.velocity = direction * speed; shot.remaining = range; shot.hostile = hostile;
+            shot.elevated = elevated; shot.damage = damage; shot.age = 0;
             var effects = source != null ? source.model : null;
             var frames = effects != null ? effects.projectileFrames : null;
+            Sprite prefabSprite = effects != null ? SpriteFromEffectPrefab(effects.projectileVisualPrefab) : null;
+            shot.directionalSprite = prefabSprite != null;
             Sprite sprite = frames != null && frames.Length > 0 && frames[0] != null ? frames[0] :
-                effects != null && effects.projectileSprite != null ? effects.projectileSprite : projectileSprite;
+                prefabSprite != null ? prefabSprite : effects != null && effects.projectileSprite != null ?
+                    effects.projectileSprite : projectileSprite;
             Vector2 size = effects != null && effects.projectileSize.sqrMagnitude > 0 ? effects.projectileSize :
                 Vector2.one * (elevated ? .24f : .16f);
-            Color tint = effects != null ? color * effects.projectileTint : color;
-            shot.visual = Visual(hostile ? "Enemy shot" : "Player shot", sprite, origin, size, tint, 6);
+            Color tint = effects != null && prefabSprite != null ? effects.projectileTint :
+                effects != null ? color * effects.projectileTint : color;
+            shot.visual = AcquireShotVisual(hostile ? "Enemy shot" : "Player shot", sprite, origin, size, tint, 6);
+            if (prefabSprite != null)
+                shot.visual.transform.rotation = Quaternion.Euler(0, 0,
+                    Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90);
             shot.animationFrames = frames;
             shot.animationFramesPerSecond = effects != null ? effects.projectileFramesPerSecond : 0;
-            shot.impactSprite = effects != null ? effects.impactSprite : null;
+            shot.impactSprite = effects != null ?
+                SpriteFromEffectPrefab(effects.impactVisualPrefab) ?? effects.impactSprite : null;
+            shot.impactFrames = effects != null ? effects.impactFrames : null;
+            shot.impactFramesPerSecond = effects != null ? effects.impactFramesPerSecond : 45;
             shot.impactSize = effects != null ? effects.effectSize : Vector2.zero;
-            if (effects != null && effects.muzzleFlashSprite != null)
-                SpawnEnemyEffect("Enemy muzzle flash", effects.muzzleFlashSprite, origin, effects.effectSize);
+            if (effects != null)
+            {
+                var muzzle = SpriteFromEffectPrefab(effects.muzzleVisualPrefab) ?? effects.muzzleFlashSprite;
+                if (muzzle != null) SpawnEnemyEffect("Enemy muzzle flash", muzzle, origin, effects.effectSize);
+            }
             shots.Add(shot);
             if (!hostile) PlaySfx(playerSound != null ? playerSound : shotSound);
         }
         void UpdateShots(float dt)
         {
             UpdateBlastVisuals(dt);
+            BuildProjectileEnemyCells();
             for (int i = shots.Count - 1; i >= 0; i--)
             {
                 var shot = shots[i]; bool remove = false;
                 if (shot.weapon != null)
                 {
-                    if (UpdateWeaponShot(shot, dt)) { Destroy(shot.visual.gameObject); shots.RemoveAt(i); }
+                    if (UpdateWeaponShot(shot, dt))
+                    {
+                        var impact = SpriteFromEffectPrefab(shot.weapon.impactVisualPrefab);
+                        if (impact != null) SpawnEnemyEffect("Player shot impact", impact, shot.position,
+                            Vector2.one * Mathf.Max(.35f, shot.weapon.blastRadius * 2),
+                            shot.weapon.impactFrames, shot.weapon.impactFramesPerSecond);
+                        ReleaseShot(shot); shots.RemoveAt(i);
+                    }
                     continue;
                 }
                 int steps = Mathf.Max(1, Mathf.CeilToInt(shot.velocity.magnitude * dt / .08f));
@@ -742,7 +919,7 @@ namespace GainGround.Game
                     shot.position += delta; shot.remaining -= delta.magnitude;
                     if (shot.hostile && TryReflectEnemyShot(shot)) delta = shot.velocity * dt / steps;
                     remove = shot.remaining <= 0 || Mathf.Abs(shot.position.x) > stage.size.x / 2 || Mathf.Abs(shot.position.y) > stage.size.y / 2;
-                    if (!shot.elevated) foreach (var wall in stage.walls) if (ArenaRules.Intersects(wall, shot.position, .06f)) { remove = true; break; }
+                    if (!shot.elevated && ProjectileWallBlocked(shot.position)) remove = true;
                     if (remove) break;
                     if (shot.hostile)
                     {
@@ -750,7 +927,7 @@ namespace GainGround.Game
                             if (p.HasActive && (shot.position - p.position).sqrMagnitude < .09f)
                             { HitPlayer(p); remove = true; break; }
                     }
-                    else for (int e = enemies.Count - 1; e >= 0; e--)
+                    else if (HasProjectileEnemyNearby(shot.position, .12f)) for (int e = enemies.Count - 1; e >= 0; e--)
                     {
                         var enemy = enemies[e];
                         if (!enemy.visual.enabled || !enemy.vulnerable || (enemy.data.elevated && !shot.elevated)) continue;
@@ -760,6 +937,9 @@ namespace GainGround.Game
                     }
                 }
                 shot.visual.transform.position = shot.position;
+                if (shot.directionalSprite)
+                    shot.visual.transform.rotation = Quaternion.Euler(0, 0,
+                        Mathf.Atan2(shot.velocity.y, shot.velocity.x) * Mathf.Rad2Deg - 90);
                 if (shot.animationFrames != null && shot.animationFrames.Length > 0)
                 {
                     var frame = shot.animationFrames[Mathf.FloorToInt(shot.age * shot.animationFramesPerSecond) % shot.animationFrames.Length];
@@ -767,8 +947,9 @@ namespace GainGround.Game
                 }
                 if (remove)
                 {
-                    if (shot.impactSprite != null) SpawnEnemyEffect("Enemy shot impact", shot.impactSprite, shot.position, shot.impactSize);
-                    Destroy(shot.visual.gameObject); shots.RemoveAt(i);
+                    if (shot.impactSprite != null) SpawnEnemyEffect("Enemy shot impact", shot.impactSprite,
+                        shot.position, shot.impactSize, shot.impactFrames, shot.impactFramesPerSecond);
+                    ReleaseShot(shot); shots.RemoveAt(i);
                 }
                 if (state != ScreenState.Playing) return;
             }

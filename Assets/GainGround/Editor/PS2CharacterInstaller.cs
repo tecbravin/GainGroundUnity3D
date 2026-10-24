@@ -34,6 +34,7 @@ public static class PS2CharacterInstaller
   data.bones=source.bones;data.clips=source.clips;data.material=material;
   data.meshes=new Mesh[source.parts.Length];data.partIds=new int[source.parts.Length];
   var root=new GameObject(name);var view=root.AddComponent<PS2CharacterModel>();view.data=data;
+  if(name=="Betty")view.viewPitchDegrees=-35;
   view.rig=new GameObject("Original PS2 rig").transform;view.rig.SetParent(root.transform,false);
   view.rig.localScale=new Vector3(data.modelScale,-data.modelScale,data.modelScale);
   view.bones=new Transform[data.bones.Length];var renderers=new List<Renderer>();

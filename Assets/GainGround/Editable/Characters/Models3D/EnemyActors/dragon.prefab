@@ -2664,12 +2664,31 @@ MonoBehaviour:
   walkClip: 1
   attackClip: 2
   projectileSprite: {fileID: 21300000, guid: 8e5b4151da19838408180c2122b38bf9, type: 3}
-  projectileFrames: []
+  projectileVisualPrefab: {fileID: 100000, guid: 8942790e381e4a7b877facbc04422ff1, type: 3}
+  projectileFrames:
+  - {fileID: 21300000, guid: 4a8b23dfcabe4c56a8fafaabccbe9740, type: 3}
+  - {fileID: 21300000, guid: dfdd26b2522a4addba8f08d64c37bfb8, type: 3}
   projectileFramesPerSecond: 12
   projectileSize: {x: 0, y: 0}
   projectileTint: {r: 1, g: 1, b: 1, a: 1}
   muzzleFlashSprite: {fileID: 0}
+  muzzleVisualPrefab: {fileID: 0}
   impactSprite: {fileID: 0}
+  impactVisualPrefab: {fileID: 100000, guid: c68463aed61f4403912d3d3e0852eb39, type: 3}
+  impactFrames:
+  - {fileID: 21300000, guid: 434d42aac44a4327b4906b7bf2adeb6d, type: 3}
+  - {fileID: 21300000, guid: 9d8d51ec445d462182db01cdbf4351f0, type: 3}
+  - {fileID: 21300000, guid: 4467b510b3814ebe843232d46ae42730, type: 3}
+  - {fileID: 21300000, guid: 18eafe90b9784d9d82e2b1a2b988b972, type: 3}
+  - {fileID: 21300000, guid: 24b3f69bacad44bfa86d1af1a152739b, type: 3}
+  - {fileID: 21300000, guid: 18a6e505b760499bbbc5188ce2f16363, type: 3}
+  - {fileID: 21300000, guid: 16657f07240742f08031a5ce986a2bd7, type: 3}
+  - {fileID: 21300000, guid: d81af66c569040fca6134a590e0db18c, type: 3}
+  - {fileID: 21300000, guid: 3b1bb5fa858242b7a61d13a67c8071bf, type: 3}
+  - {fileID: 21300000, guid: 89e7c8a903c6478ca18003fe2672ba9b, type: 3}
+  - {fileID: 21300000, guid: 29e3bf61a539407c9eec33916a0967bf, type: 3}
+  - {fileID: 21300000, guid: ce1e51c941a5457a9ad636fb31a0356d, type: 3}
+  impactFramesPerSecond: 45
   effectSize: {x: 0.35, y: 0.35}
 --- !u!1 &5442855135877002696
 GameObject:

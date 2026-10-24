@@ -39,6 +39,9 @@ public static class WebGLStreamedStageBuild
         var musicNames = new string[originalStages.Length];
         var victoryNames = new string[originalStages.Length];
         var enemyNames = new string[originalStages.Length][];
+        var objectNames = new string[originalStages.Length];
+        var objectAddresses = new string[originalStages.Length][];
+        var hazardAddresses = new string[originalStages.Length][];
         var musicByPath = new Dictionary<string, string>();
         var enemyByPair = new Dictionary<string, string>();
         for (int i = 0; i < originalStages.Length; i++)
@@ -62,6 +65,8 @@ public static class WebGLStreamedStageBuild
             enemyNames[i] = new string[stage.enemies.Length];
             for (int e = 0; e < stage.enemies.Length; e++)
                 enemyNames[i][e] = AddEnemyBundle(stage.enemies[e], builds, enemyByPair);
+            objectNames[i] = AddStageObjectBundle(stage, i, builds,
+                out objectAddresses[i], out hazardAddresses[i]);
         }
 
         var portraitNames = new Dictionary<CharacterDefinition, string>();
@@ -90,7 +95,7 @@ public static class WebGLStreamedStageBuild
         }
 
         GenerateLightweightScene(originalStages, mapNames, musicNames, victoryNames,
-            enemyNames, portraitNames, files);
+            enemyNames, objectNames, objectAddresses, hazardAddresses, portraitNames, files);
         var options = new BuildPlayerOptions {
             scenes = new[] { GeneratedScene },
             locationPathName = candidate,
@@ -216,8 +221,39 @@ public static class WebGLStreamedStageBuild
         return name;
     }
 
+    static string AddStageObjectBundle(StageDefinition stage, int index, List<AssetBundleBuild> builds,
+        out string[] objectAddresses, out string[] hazardAddresses)
+    {
+        var paths = new List<string>();
+        var aliases = new List<string>();
+        var byPath = new Dictionary<string, string>();
+        objectAddresses = new string[stage.objects == null ? 0 : stage.objects.Length];
+        hazardAddresses = new string[stage.hazards == null ? 0 : stage.hazards.Length];
+        for (int i = 0; i < objectAddresses.Length; i++)
+            objectAddresses[i] = AddStagePrefab(stage.objects[i]?.prefab, paths, aliases, byPath);
+        for (int i = 0; i < hazardAddresses.Length; i++)
+            hazardAddresses[i] = AddStagePrefab(stage.hazards[i]?.prefab, paths, aliases, byPath);
+        if (paths.Count == 0) return null;
+        string name = "stage-" + (index + 1).ToString("D2") + "-objects";
+        builds.Add(new AssetBundleBuild { assetBundleName = name,
+            assetNames = paths.ToArray(), addressableNames = aliases.ToArray() });
+        return name;
+    }
+
+    static string AddStagePrefab(GameObject prefab, List<string> paths, List<string> aliases,
+        Dictionary<string, string> byPath)
+    {
+        if (prefab == null) return null;
+        string path = RequireAssetPath(prefab);
+        if (byPath.TryGetValue(path, out string alias)) return alias;
+        alias = "visual-" + paths.Count;
+        paths.Add(path); aliases.Add(alias); byPath.Add(path, alias);
+        return alias;
+    }
+
     static void GenerateLightweightScene(StageDefinition[] originals, string[] maps, string[] music,
-        string[] victory, string[][] enemies, Dictionary<CharacterDefinition, string> portraits,
+        string[] victory, string[][] enemies, string[] objects, string[][] objectAddresses,
+        string[][] hazardAddresses, Dictionary<CharacterDefinition, string> portraits,
         Dictionary<string, StageBundleFile> files)
     {
         if (AssetDatabase.IsValidFolder(GeneratedFolder)) AssetDatabase.DeleteAsset(GeneratedFolder);
@@ -257,15 +293,24 @@ public static class WebGLStreamedStageBuild
                 copy.enemies[e].sprite = null;
                 copy.enemies[e].modelPrefab = null;
             }
+            if (copy.objects != null)
+                foreach (var item in copy.objects)
+                    if (item != null) item.prefab = null;
+            if (copy.hazards != null)
+                foreach (var item in copy.hazards)
+                    if (item != null) { item.prefab = null; item.sprite = null; }
             AssetDatabase.CreateAsset(copy, GeneratedFolder + "/Stage_" + (i + 1).ToString("D2") + ".asset");
             clones[i] = copy;
             media[i] = new StageMediaFiles {
                 map = Resolve(maps[i], files),
+                objects = Resolve(objects[i], files),
                 music = Resolve(music[i], files),
                 victoryMusic = Resolve(victory[i], files),
                 hasBackground = originals[i].background != null,
                 hasTerrainAtlas = originals[i].background == null && originals[i].terrainAtlas != null,
-                enemyVisuals = enemyFiles
+                enemyVisuals = enemyFiles,
+                objectAddresses = objectAddresses[i],
+                hazardAddresses = hazardAddresses[i]
             };
         }
         AssetDatabase.SaveAssets();

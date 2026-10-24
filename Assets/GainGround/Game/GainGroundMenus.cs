@@ -66,9 +66,10 @@ namespace GainGround.Game
             pendingRestoredVictory = false;
             DestroyEndingAnimation();
             ResetMobileInput(); saveBrowserOpen=false; RefreshSaves();
+            ClearShots();
             if (arena != null) { arena.gameObject.SetActive(false); Destroy(arena.gameObject); }
             if (gameCamera != null) gameCamera.rect = new Rect(0, 0, 1, 1);
-            stage = null; players.Clear(); enemies.Clear(); shots.Clear(); blastVisuals.Clear(); extraCaptives.Clear(); hazardStates.Clear();
+            stage = null; players.Clear(); enemies.Clear(); blastVisuals.Clear(); extraCaptives.Clear(); hazardStates.Clear();
             paused = false; state = ScreenState.Title; menuIndex = 0; ShowTitleMenuImmediately();
             if (musicSource != null) musicSource.Stop();
             if (musicSource != null) musicSource.clip = null;

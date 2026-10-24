@@ -27,9 +27,15 @@ public static class CompleteCampaignInstaller
             var importer=(TextureImporter)AssetImporter.GetAtPath(path);
             importer.textureType=TextureImporterType.Sprite;
             importer.spriteImportMode=SpriteImportMode.Single;
-            importer.spritePixelsPerUnit=16; importer.npotScale=TextureImporterNPOTScale.None;
-            importer.filterMode=FilterMode.Point; importer.mipmapEnabled=false;
-            importer.textureCompression=TextureImporterCompression.Uncompressed;
+            bool isMap=path.Contains("/Maps/");
+            importer.spritePixelsPerUnit=isMap ? MapPixelsPerUnit(file) : 16;
+            importer.npotScale=TextureImporterNPOTScale.None;
+            if(!isMap)
+            {
+                importer.filterMode=FilterMode.Point;
+                importer.textureCompression=TextureImporterCompression.Uncompressed;
+            }
+            importer.mipmapEnabled=false;
             importer.alphaIsTransparency=true; importer.SaveAndReimport();
         }
         var manifest=JsonUtility.FromJson<Manifest>(File.ReadAllText(Content+"/campaign.json"));
@@ -41,6 +47,8 @@ public static class CompleteCampaignInstaller
         EditorUtility.SetDirty(game);
         EditorSceneManager.SaveScene(game.gameObject.scene);
         AssetDatabase.SaveAssets();
+        if (AssetDatabase.IsValidFolder(Root + "/Objects/Prefabs"))
+            PS2StageObjectInstaller.Install();
         Debug.Log("Installed complete campaign: 50 stages.");
     }
     static StageDefinition InstallMap(Map map)
@@ -79,6 +87,27 @@ public static class CompleteCampaignInstaller
         }
         EditorUtility.SetDirty(s);
         return s;
+    }
+    static int MapPixelsPerUnit(string path)
+    {
+        using(var stream=File.OpenRead(path))
+        using(var reader=new BinaryReader(stream))
+        {
+            if(stream.Length<24 || reader.ReadUInt64()!=0x0A1A0A0D474E5089UL)
+                throw new InvalidDataException("Invalid PNG map: "+path);
+            stream.Position=16;
+            int width=ReadBigEndianInt(reader);
+            int height=ReadBigEndianInt(reader);
+            if(width<=0 || width%12!=0 || (long)width*14!=(long)height*12)
+                throw new InvalidDataException("Unexpected map dimensions: "+path);
+            return width/12;
+        }
+    }
+    static int ReadBigEndianInt(BinaryReader reader)
+    {
+        var bytes=reader.ReadBytes(4);
+        if(bytes.Length!=4) throw new EndOfStreamException();
+        return (bytes[0]<<24)|(bytes[1]<<16)|(bytes[2]<<8)|bytes[3];
     }
     static EnemySpawn Enemy(Unit e)
     {

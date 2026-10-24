@@ -29,6 +29,15 @@ namespace GainGround.Game
         [Range(1, 360)] public float arcDegrees = 120;
         [Header("Optional animated visual")]
         public Texture2D effectSpriteSheet;
+        [Tooltip("SpriteRenderer prefab used for this projectile when no animation sheet is set.")]
+        public GameObject projectileVisualPrefab;
+        [Tooltip("Optional original PS2 projectile animation frames.")]
+        public Sprite[] projectileFrames;
+        [Tooltip("SpriteRenderer prefab briefly shown when the projectile ends or hits.")]
+        public GameObject impactVisualPrefab;
+        [Tooltip("Optional original PS2 animation frames for the impact prefab.")]
+        public Sprite[] impactFrames;
+        [Min(1)] public float impactFramesPerSecond = 45;
         [Min(1)] public int effectColumns = 3, effectRows = 2;
         [Min(0)] public float effectDuration;
         [Min(.1f)] public float effectScale = 1;
@@ -59,8 +68,8 @@ namespace GainGround.Game
         public bool HitsHeight(bool high, float progress)
         {
             if (!lobbed) return !high;
-            // High targets are hit near the crest; ground targets only on landing.
-            return high ? progress >= .25f && progress <= .85f : progress >= .85f;
+            // Ground targets can be hit once the projectile begins descending.
+            return high ? progress >= .25f && progress <= .85f : progress >= .55f;
         }
     }
 }

@@ -14,7 +14,6 @@ namespace GainGround.Game
   void BeginTitleIntro()
   {
    titleElapsed=0;titleMenuVisible=false;titleInputBlocked=false;titleRevealFrame=-1;
-   LoadTitleArtwork();
   }
   void LoadTitleArtwork()
   {
@@ -23,6 +22,13 @@ namespace GainGround.Game
    titleLogos=new Texture2D[5];titleNoise=new Texture2D[4];
    for(int i=0;i<5;i++)titleLogos[i]=Resources.Load<Texture2D>("PS2Title/LOGO_0"+(i+1));
    for(int i=0;i<4;i++)titleNoise[i]=Resources.Load<Texture2D>("PS2Title/NOISE"+(i+1));
+  }
+  void ReleaseTitleArtwork()
+  {
+   if(titleLogos==null)return;
+   titleLeft=titleRight=null;
+   titleLogos=titleNoise=null;
+   RequestUnloadReleasedMedia();
   }
   void AdvanceTitleIntro(float dt,bool pressed,bool held)
   {

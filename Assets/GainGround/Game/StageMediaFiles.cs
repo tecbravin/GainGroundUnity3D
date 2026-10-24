@@ -16,9 +16,12 @@ namespace GainGround.Game
         public StageBundleFile map;
         public StageBundleFile music;
         public StageBundleFile victoryMusic;
+        public StageBundleFile objects;
         public bool hasBackground;
         public bool hasTerrainAtlas;
         public EnemyVisualFiles[] enemyVisuals;
+        public string[] objectAddresses;
+        public string[] hazardAddresses;
     }
 
     [Serializable]

@@ -8,6 +8,8 @@ namespace GainGround.Game
         public int HighScore { get; private set; }
         int continueCount;
         float continueElapsed, gameOverElapsed;
+        [Header("Continue screen")]
+        public AudioClip gameOverSound;
         void LoadHighScore() { HighScore = Mathf.Max(0, PlayerPrefs.GetInt(HighScoreKey, 0)); }
         void UpdateHighScore()
         {
@@ -37,7 +39,8 @@ namespace GainGround.Game
             if (state == ScreenState.GameOver)
             {
                 gameOverElapsed += dt;
-                if (gameOverElapsed >= 2) ReturnToMenu();
+                if (gameOverElapsed >= Mathf.Max(2f, gameOverSound != null ? gameOverSound.length : 0f) + 4f)
+                    ReturnToMenu();
                 return;
             }
             if (state != ScreenState.Defeat) return;
@@ -46,7 +49,12 @@ namespace GainGround.Game
             int seconds = Mathf.FloorToInt(continueElapsed);
             continueElapsed -= seconds;
             continueCount = Mathf.Max(0,continueCount - seconds - (dash ? 1 : 0));
-            if (continueCount == 0) { state = ScreenState.GameOver; gameOverElapsed = 0; }
+            if (continueCount == 0)
+            {
+                state = ScreenState.GameOver;
+                gameOverElapsed = 0;
+                PlaySfx(gameOverSound);
+            }
         }
         void RestartCurrentStage()
         {
@@ -64,8 +72,11 @@ namespace GainGround.Game
             GUI.Label(new Rect(x,bounds.y+100,width,50), "RECORDE: " + HighScore, SelectionHeading);
             if (state == ScreenState.GameOver) return;
             GUI.Label(new Rect(x,bounds.y+150,width,70), "Especial: continuar na mesma fase\nDash: diminuir o contador", SelectionHeading);
-            if (IronButton(new Rect(x,bounds.y+230,width,48), "ESPECIAL — CONTINUAR")) RestartCurrentStage();
-            if (IronButton(new Rect(x,bounds.y+286,width,48), "DASH — CONTADOR -1")) AdvanceContinue(0,true,false);
+            float buttonInset = Mathf.Min(bounds.width * .085f + 20f, bounds.width * .35f);
+            float buttonX = bounds.x + buttonInset;
+            float buttonWidth = bounds.width - 2f * buttonInset;
+            if (IronButton(new Rect(buttonX,bounds.y+230,buttonWidth,48), "ESPECIAL — CONTINUAR")) RestartCurrentStage();
+            if (IronButton(new Rect(buttonX,bounds.y+286,buttonWidth,48), "DASH — CONTADOR -1")) AdvanceContinue(0,true,false);
         }
     }
 }

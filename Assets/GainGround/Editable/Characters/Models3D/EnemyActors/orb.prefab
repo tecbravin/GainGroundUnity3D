@@ -135,12 +135,21 @@ MonoBehaviour:
   walkClip: 1
   attackClip: 2
   projectileSprite: {fileID: 21300000, guid: 8e5b4151da19838408180c2122b38bf9, type: 3}
+  projectileVisualPrefab: {fileID: 100000, guid: 57573394079f4751a380618ae49828a0, type: 3}
   projectileFrames: []
   projectileFramesPerSecond: 12
   projectileSize: {x: 0, y: 0}
   projectileTint: {r: 1, g: 1, b: 1, a: 1}
   muzzleFlashSprite: {fileID: 0}
+  muzzleVisualPrefab: {fileID: 0}
   impactSprite: {fileID: 0}
+  impactVisualPrefab: {fileID: 100000, guid: 5ff1e66b6551470d9fb83c388c779e8b, type: 3}
+  impactFrames:
+  - {fileID: 21300000, guid: 6d60f8e2627a466694be039c91ed1961, type: 3}
+  - {fileID: 21300000, guid: b461c268a44b4c1899f2eaaf10c8dcb9, type: 3}
+  - {fileID: 21300000, guid: f9f5dc4a51bb453a933d7751599451c4, type: 3}
+  - {fileID: 21300000, guid: 6e9c111183764b2eb0c9a6299dcceb72, type: 3}
+  impactFramesPerSecond: 45
   effectSize: {x: 0.35, y: 0.35}
 --- !u!1 &5927124517190372773
 GameObject:

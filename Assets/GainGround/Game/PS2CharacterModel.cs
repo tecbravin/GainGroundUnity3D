@@ -5,6 +5,8 @@ namespace GainGround.Game
  {
   public PS2ModelData data;
   public Transform rig;
+  [Tooltip("Inclinação vertical do modelo. Valores negativos mostram o personagem visto de cima.")]
+  public float viewPitchDegrees=35;
   public Transform[] bones;
   public Renderer[] renderers;
   float frame,attackRemaining; int currentClip=-1,attackClip;
@@ -21,7 +23,7 @@ namespace GainGround.Game
    foreach(var renderer in renderers) renderer.enabled=visible;
    // The source model faces the camera at zero yaw; positive yaw turns it toward screen left.
    float yaw=Mathf.Atan2(-facing.x,-facing.y)*Mathf.Rad2Deg;
-   rig.localRotation=Quaternion.Euler(35,0,0)*Quaternion.Euler(0,yaw,0);
+   rig.localRotation=Quaternion.Euler(viewPitchDegrees,0,0)*Quaternion.Euler(0,yaw,0);
    int clip=attackRemaining>0?attackClip:moving||dash?data.walkClip:data.idleClip;
    if(clip!=currentClip){currentClip=clip;frame=0;}
    frame+=dt*(dash?100:60);attackRemaining=Mathf.Max(0,attackRemaining-dt);Sample(moving||dash?data.walkClip:-1,moving||dash?frame:0);

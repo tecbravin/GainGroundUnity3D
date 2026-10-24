@@ -7,7 +7,6 @@ Existing PNG names and Unity .meta GUIDs are retained.
 import hashlib
 import json
 import re
-import shutil
 import struct
 
 from PIL import Image, ImageDraw
@@ -18,7 +17,6 @@ from extract_ps2_hud import ISO, read_file
 
 MAPS = ROOT / "Assets/GainGround/Editable/OriginalCampaign/Complete/Maps"
 STAGES = ROOT / "Assets/GainGround/Editable/OriginalCampaign"
-EXISTING_PS2 = STAGES / "PS2Stages"
 PROVENANCE = ROOT / "Analysis/PS2Stages/complete_maps_provenance.json"
 
 
@@ -69,7 +67,9 @@ def compose(round_number, stage_number, textures, banner):
     width, height, walls, exits = stage_geometry(round_number, stage_number)
     size = (round(width * PPU), round(height * PPU))
     ground = textures[f"{prefix}_c.tm2"]
-    if round_number == 2:
+    if round_number == 1 and stage_number == 2:
+        ground = ground.crop((0, 0, 256, 128))
+    elif round_number == 2:
         ground = ground.crop((0, 0, 256, 128))
     elif round_number == 4:
         ground = ground.crop((0, 0, 128, 128))
@@ -113,11 +113,18 @@ def compose(round_number, stage_number, textures, banner):
 def update_import_settings(path):
     meta = path.with_suffix(path.suffix + ".meta")
     text = meta.read_text(encoding="utf-8")
-    if "  spritePixelsToUnits: 64\n" in text:
+    with Image.open(path) as image:
+        width, height = image.size
+    if width * 14 != height * 12 or width % 12:
+        raise ValueError(f"Unexpected stage image dimensions: {path} ({width}x{height})")
+    pixels_per_unit = width // 12
+    expected = f"  spritePixelsToUnits: {pixels_per_unit}\n"
+    if expected in text:
         return
-    if "  spritePixelsToUnits: 16\n" not in text:
+    current = re.search(r"^  spritePixelsToUnits: \d+$", text, re.M)
+    if current is None:
         raise ValueError(f"Unexpected importer settings: {meta}")
-    text = text.replace("  spritePixelsToUnits: 16\n", "  spritePixelsToUnits: 64\n", 1)
+    text = text[:current.start()] + expected.rstrip("\n") + text[current.end():]
     text = text.replace("    filterMode: 0\n", "    filterMode: 1\n", 1)
     meta.write_text(text, encoding="utf-8", newline="")
 
@@ -134,14 +141,8 @@ def main():
             if not target.is_file() or not target.with_suffix(".png.meta").is_file():
                 raise FileNotFoundError(target)
             textures, hashes = archive_textures(archive, round_number, stage_number)
-            if round_number == 1 and stage_number <= 5:
-                source = EXISTING_PS2 / f"Stage_1_{stage_number}_PS2.png"
-                shutil.copyfile(source, target)
-                width, height, walls, exits = stage_geometry(round_number, stage_number)
-                pixels = (round(width * PPU), round(height * PPU))
-            else:
-                image, pixels, walls, exits = compose(round_number, stage_number, textures, banner)
-                image.save(target, optimize=True)
+            image, pixels, walls, exits = compose(round_number, stage_number, textures, banner)
+            image.save(target, optimize=True)
             update_import_settings(target)
             manifest.append(dict(stage=f"{round_number}-{stage_number:02}", pixels=pixels,
                                  source_pack=f"fr{round_number}s{stage_number:02}.rom",

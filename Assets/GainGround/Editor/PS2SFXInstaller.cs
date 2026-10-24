@@ -22,7 +22,10 @@ public static class PS2SFXInstaller
         foreach(var name in OriginalCharactersInstaller.Names)
         {
             var hero=CharacterAssets.Load(name);
-            Assign(hero.normalWeapon);Assign(hero.specialWeapon);EditorUtility.SetDirty(hero);
+            Assign(hero.normalWeapon);Assign(hero.specialWeapon);
+            if(hero.normalAttackSound==null) hero.normalAttackSound=Clip(CharacterSound(name,false,hero.normalWeapon));
+            if(hero.specialAttackSound==null) hero.specialAttackSound=Clip(CharacterSound(name,true,hero.specialWeapon));
+            EditorUtility.SetDirty(hero);
         }
         EditorSceneManager.OpenScene("Assets/GainGround/Editable/Scenes/GainGround.unity");
         var game=Object.FindObjectOfType<GainGroundGame>();
@@ -52,6 +55,25 @@ public static class PS2SFXInstaller
             default:id="SE_01";break;
         }
         weapon.fireSound=Clip(id);
+    }
+    static string CharacterSound(string name,bool special,WeaponDefinition weapon)
+    {
+        switch(name)
+        {
+            case "Athra":case "Gaston":case "Babalu":return "SE_03";
+            case "Moss":return special && weapon.kind==ProjectileKind.Boomerang ? "SYU" : "SE_03";
+            case "Betty":case "Honey":return special ? "SE_05" : "SE_01";
+            case "Johnny":case "Professor":case "Kou":case "Kiddo":return "SE_01";
+            case "Glow Knight":return "SE_09";
+            case "Fire Knight":return special ? "SE_08" : "SE_09";
+            case "Water Knight":return special ? "SE_11" : "SE_09";
+            case "Zaemon":return special ? "SE_12" : "SE_09";
+            case "Valkyrie":case "Mamu":return special ? "SYU" : "SE_01";
+            case "Mad Poppy":case "Cyber":return special ? "SE_06" : "SE_01";
+            case "Robbie":return special || weapon.kind==ProjectileKind.Rocket ? "SE_06" : "SE_01";
+            case "General":return special ? "SE_08" : "SE_01";
+            default:throw new InvalidDataException("Unknown original character sound profile: "+name);
+        }
     }
     static AudioClip Clip(string name)=>AssetDatabase.LoadAssetAtPath<AudioClip>(Root+"/"+name+".wav");
 }

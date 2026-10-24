@@ -47,7 +47,9 @@ namespace GainGround.Game
 
         Sprite[] WeaponEffectSprites(WeaponDefinition weapon)
         {
-            if (weapon.effectSpriteSheet == null) return null;
+            if (weapon.effectSpriteSheet == null)
+                return weapon.projectileFrames != null && weapon.projectileFrames.Length > 0
+                    ? weapon.projectileFrames : null;
             if (!weaponEffectSheets.TryGetValue(weapon.effectSpriteSheet, out var sprites))
             {
                 sprites = CreateGridSprites(weapon.effectSpriteSheet, weapon.effectColumns, weapon.effectRows,
@@ -102,14 +104,16 @@ namespace GainGround.Game
             for (int i = 0; i < weapon.ProjectileCount; i++)
             {
                 var direction = weapon.Direction(p.facing, i);
-                var shot = new Shot {
-                    position = p.position, origin = p.position, velocity = direction * weapon.speed,
-                    remaining = weapon.range, weapon = weapon, owner = p, character = character,
-                    special = special, damage = weapon.damage, elevated = weapon.lobbed,
-                    launchDirection = direction,
-                    boomerangSide = weapon.kind == ProjectileKind.Boomerang ? (p.boomerangLaunches++ % 2 == 0 ? 1 : -1) : 0,
-                    orbitAngle = i * Mathf.PI * .5f
-                };
+                var shot = RentShot();
+                shot.position = shot.origin = p.position;
+                shot.velocity = direction * weapon.speed;
+                shot.remaining = weapon.range; shot.weapon = weapon; shot.owner = p;
+                shot.character = character; shot.special = special;
+                shot.damage = weapon.damage; shot.elevated = weapon.lobbed;
+                shot.launchDirection = direction;
+                shot.boomerangSide = weapon.kind == ProjectileKind.Boomerang ?
+                    (p.boomerangLaunches++ % 2 == 0 ? 1 : -1) : 0;
+                shot.orbitAngle = i * Mathf.PI * .5f;
                 if (weapon.kind == ProjectileKind.FireTrap || weapon.kind == ProjectileKind.WaterTrap)
                 {
                     shot.position = ArenaRules.Move(p.position, direction * weapon.range, .1f, stage.size, stage.walls);
@@ -117,10 +121,12 @@ namespace GainGround.Game
                 }
                 shot.animationFrames = WeaponEffectSprites(weapon);
                 shot.animationFramesPerSecond = weapon.projectileFramesPerSecond;
+                Sprite prefabSprite = SpriteFromEffectPrefab(weapon.projectileVisualPrefab);
                 Sprite shotSprite = shot.animationFrames != null && shot.animationFrames.Length > 0 && shot.animationFrames[0] != null
-                    ? shot.animationFrames[0] : WeaponSprite(weapon.kind);
-                shot.visual = Visual(weapon.label, shotSprite, shot.position,
-                    WeaponSize(weapon), shot.animationFrames != null || weapon.kind == ProjectileKind.WaterTrap || weapon.kind == ProjectileKind.Boomerang ? Color.white : weapon.color, 6);
+                    ? shot.animationFrames[0] : prefabSprite != null ? prefabSprite : WeaponSprite(weapon.kind);
+                shot.visual = AcquireShotVisual(weapon.label, shotSprite, shot.position,
+                    WeaponSize(weapon), shot.animationFrames != null || prefabSprite != null ||
+                    weapon.kind == ProjectileKind.WaterTrap || weapon.kind == ProjectileKind.Boomerang ? Color.white : weapon.color, 6);
                 shots.Add(shot);
             }
             PlaySfx(CharacterWeaponSound(character, weapon, special));
@@ -238,6 +244,12 @@ namespace GainGround.Game
             }
         }
 
+        static float ShotHitRadius(WeaponDefinition weapon)
+        {
+            if (!weapon.lobbed) return weapon.radius;
+            return Mathf.Max(.3f, weapon.radius);
+        }
+
         bool UpdateWeaponShot(Shot shot, float dt)
         {
             var w = shot.weapon;
@@ -286,9 +298,7 @@ namespace GainGround.Game
                     shot.remaining -= w.speed * step; shot.travel += w.speed * step;
                 }
                 bool blocked = false;
-                if (!w.lobbed && !zone)
-                    foreach (var wall in stage.walls)
-                        if (ArenaRules.Intersects(wall, shot.position, .06f)) { blocked = true; break; }
+                if (!w.lobbed && !zone) blocked = ProjectileWallBlocked(shot.position);
                 bool outside = Mathf.Abs(shot.position.x) > stage.size.x / 2 || Mathf.Abs(shot.position.y) > stage.size.y / 2;
                 if (blocked || outside)
                 {
@@ -297,7 +307,7 @@ namespace GainGround.Game
                         // Reflect on the obstructed axis; keep the projectile outside the solid wall.
                         var xPoint = new Vector2(shot.position.x, previous.y);
                         bool xBlocked = Mathf.Abs(xPoint.x) > stage.size.x / 2;
-                        foreach (var wall in stage.walls) xBlocked |= ArenaRules.Intersects(wall, xPoint, .06f);
+                        xBlocked |= ProjectileWallBlocked(xPoint);
                         shot.velocity = xBlocked ? new Vector2(-shot.velocity.x, shot.velocity.y) : new Vector2(shot.velocity.x, -shot.velocity.y);
                         shot.position = previous;
                     }
@@ -310,20 +320,22 @@ namespace GainGround.Game
                     else { Explode(shot); return true; }
                 }
                 float progress = Mathf.Clamp01(shot.travel / w.range);
-                for (int e = enemies.Count - 1; e >= 0; e--)
-                {
-                    var enemy = enemies[e];
-                    if (!enemy.visual.enabled || !enemy.vulnerable || !w.HitsHeight(enemy.data.elevated, progress)) continue;
-                    if (!ShotTouchesEnemy(enemy, shot.position,w.radius)) continue;
-                    if (!w.lobbed && WallBetween(shot.position, enemy.position)) continue;
-                    if (shot.hits.TryGetValue(enemy, out float nextHit) && shot.age < nextHit) continue;
-                    if (w.blastRadius > 0) { Explode(shot); return true; }
-                    enemy.lastHitPlayer=shot.owner; DamageEnemy(enemy, w.damage, w.freezeSeconds);
-                    if (w.kind == ProjectileKind.WaterTrap && !enemy.data.boss && enemy.frozen > 0)
-                        enemy.waterConfused = true;
-                    shot.hits[enemy] = zone || orbit || w.kind == ProjectileKind.Flame ? shot.age + .4f : float.PositiveInfinity;
-                    if (!w.pierces && !zone && !orbit) return true;
-                }
+                float hitRadius = ShotHitRadius(w);
+                if (HasProjectileEnemyNearby(shot.position, hitRadius))
+                    for (int e = enemies.Count - 1; e >= 0; e--)
+                    {
+                        var enemy = enemies[e];
+                        if (!enemy.visual.enabled || !enemy.vulnerable || !w.HitsHeight(enemy.data.elevated, progress)) continue;
+                        if (!ShotTouchesEnemy(enemy, shot.position, hitRadius)) continue;
+                        if (!w.lobbed && WallBetween(shot.position, enemy.position)) continue;
+                        if (shot.hits.TryGetValue(enemy, out float nextHit) && shot.age < nextHit) continue;
+                        if (w.blastRadius > 0) { Explode(shot); return true; }
+                        enemy.lastHitPlayer=shot.owner; DamageEnemy(enemy, w.damage, w.freezeSeconds);
+                        if (w.kind == ProjectileKind.WaterTrap && !enemy.data.boss && enemy.frozen > 0)
+                            enemy.waterConfused = true;
+                        shot.hits[enemy] = zone || orbit || w.kind == ProjectileKind.Flame ? shot.age + .4f : float.PositiveInfinity;
+                        if (!w.pierces && !zone && !orbit) return true;
+                    }
                 if (!zone && !orbit && !shot.returning && shot.remaining <= 0 &&
                     w.kind != ProjectileKind.Boomerang && w.kind != ProjectileKind.Tornado)
                 { Explode(shot); return true; }
@@ -379,12 +391,15 @@ namespace GainGround.Game
             var w = shot.weapon;
             if (w.blastRadius <= 0) return;
             PlaySfx(explosionSound);
+            float damageRadius = Mathf.Max(w.blastRadius, ShotHitRadius(w));
+            if (!HasProjectileEnemyNearby(shot.position, damageRadius))
+            { SpawnBlast(shot.position, w.blastRadius); return; }
             float progress = Mathf.Clamp01(shot.travel / w.range);
             for (int e = enemies.Count - 1; e >= 0; e--)
             {
                 var enemy = enemies[e];
                 if (!enemy.visual.enabled || !enemy.vulnerable || !w.HitsHeight(enemy.data.elevated, progress)) continue;
-                if (!ShotTouchesEnemy(enemy,shot.position,w.blastRadius)) continue;
+                if (!ShotTouchesEnemy(enemy, shot.position, damageRadius)) continue;
                 // Ground explosions cannot damage enemies on the other side of a wall.
                 if (!w.lobbed && WallBetween(shot.position, enemy.position)) continue;
                 enemy.lastHitPlayer=shot.owner; DamageEnemy(enemy, w.damage, w.freezeSeconds);

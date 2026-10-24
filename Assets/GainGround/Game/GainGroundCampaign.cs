@@ -21,13 +21,61 @@ namespace GainGround.Game
         void BuildCampaignObjects()
         {
             RebuildMovementWalls();
+            if (stage.objects != null)
+                foreach (var item in stage.objects)
+                    if (item != null && item.prefab != null)
+                        SpawnStageObject(item.prefab, item.area);
             foreach (var enemy in enemies)
                 if (enemy.data.behavior == EnemyBehavior.Computer)
                     enemy.vulnerable = !enemies.Exists(other => other.data.behavior == EnemyBehavior.Barrier);
             AddEligibleCaptives();
             foreach (var data in stage.hazards)
-                hazardStates.Add(new HazardState { data = data, visual = Visual("Energy barrier",
-                    data.sprite != null ? data.sprite : floorSprite, data.area.center, data.area.size, Color.green, 3) });
+                hazardStates.Add(new HazardState { data = data,
+                    visual = data.prefab != null ? SpawnStageObject(data.prefab, data.area) :
+                        Visual("Energy barrier", data.sprite != null ? data.sprite : floorSprite,
+                            data.area.center, data.area.size, Color.green, 3) });
+        }
+
+        SpriteRenderer SpawnStageObject(GameObject prefab, Rect area)
+        {
+            var instance = Instantiate(prefab, arena);
+            instance.name = prefab.name;
+            instance.transform.position = new Vector3(area.center.x, area.center.y, 0);
+            var visual = instance.GetComponent<SpriteRenderer>();
+            if (visual == null || visual.sprite == null) return visual;
+            if (visual.drawMode == SpriteDrawMode.Tiled)
+                visual.size = area.size;
+            else
+                instance.transform.localScale = new Vector3(
+                    area.width / visual.sprite.bounds.size.x,
+                    area.height / visual.sprite.bounds.size.y, 1);
+            return visual;
+        }
+
+        void UpdateStageTeleports()
+        {
+            if (stage.objects == null || stage.objects.Length < 2) return;
+            foreach (var player in players)
+            {
+                if (!player.HasActive) continue;
+                StageObjectSpawn entered = null;
+                foreach (var item in stage.objects)
+                    if (item != null && item.teleportGroup > 0 &&
+                        Vector2.Distance(player.position, item.area.center) <
+                        Mathf.Min(item.area.width, item.area.height) * .32f)
+                    { entered = item; break; }
+                if (entered == null) { player.teleportArmed = true; continue; }
+                if (!player.teleportArmed) continue;
+                foreach (var destination in stage.objects)
+                    if (destination != null && destination != entered &&
+                        destination.teleportGroup == entered.teleportGroup)
+                    {
+                        player.position = destination.area.center;
+                        player.player.transform.position = player.position;
+                        player.teleportArmed = false;
+                        break;
+                    }
+            }
         }
 
         void AddEligibleCaptives()
@@ -98,9 +146,12 @@ namespace GainGround.Game
                 foreach (int index in hazard.data.controllers)
                     foreach (var e in enemies)
                         if (e.spawnIndex == index && e.health > 0) active = true;
+                if (hazard.visual == null) continue;
                 hazard.visual.enabled = active;
                 if (!active) continue;
-                hazard.visual.color = Color.Lerp(Color.green, Color.white, .25f + .2f * Mathf.Sin(remainingTime * 15));
+                hazard.visual.color = hazard.data.prefab != null ?
+                    new Color(1, 1, 1, .8f + .2f * Mathf.Sin(remainingTime * 15)) :
+                    Color.Lerp(Color.green, Color.white, .25f + .2f * Mathf.Sin(remainingTime * 15));
                 foreach (var p in players)
                     if (p.HasActive && ArenaRules.Intersects(hazard.data.area,p.position,.2f)) HitPlayer(p);
             }

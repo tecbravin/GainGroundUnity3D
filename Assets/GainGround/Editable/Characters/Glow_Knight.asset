@@ -44,6 +44,15 @@ MonoBehaviour:
     mode: 0
     arcDegrees: 120
     effectSpriteSheet: {fileID: 0}
+    projectileVisualPrefab: {fileID: 100000, guid: 6b7b90502872423e8b6796c8719c0191, type: 3}
+    projectileFrames: []
+    impactVisualPrefab: {fileID: 100000, guid: 5ff1e66b6551470d9fb83c388c779e8b, type: 3}
+    impactFrames:
+    - {fileID: 21300000, guid: 6d60f8e2627a466694be039c91ed1961, type: 3}
+    - {fileID: 21300000, guid: b461c268a44b4c1899f2eaaf10c8dcb9, type: 3}
+    - {fileID: 21300000, guid: f9f5dc4a51bb453a933d7751599451c4, type: 3}
+    - {fileID: 21300000, guid: 6e9c111183764b2eb0c9a6299dcceb72, type: 3}
+    impactFramesPerSecond: 45
     effectColumns: 3
     effectRows: 2
     effectDuration: 0
@@ -69,14 +78,23 @@ MonoBehaviour:
     mode: 0
     arcDegrees: 120
     effectSpriteSheet: {fileID: 0}
+    projectileVisualPrefab: {fileID: 100000, guid: f182f2f2fc574178ab9eb7c695da3a79, type: 3}
+    projectileFrames: []
+    impactVisualPrefab: {fileID: 100000, guid: 5ff1e66b6551470d9fb83c388c779e8b, type: 3}
+    impactFrames:
+    - {fileID: 21300000, guid: 6d60f8e2627a466694be039c91ed1961, type: 3}
+    - {fileID: 21300000, guid: b461c268a44b4c1899f2eaaf10c8dcb9, type: 3}
+    - {fileID: 21300000, guid: f9f5dc4a51bb453a933d7751599451c4, type: 3}
+    - {fileID: 21300000, guid: 6e9c111183764b2eb0c9a6299dcceb72, type: 3}
+    impactFramesPerSecond: 45
     effectColumns: 3
     effectRows: 2
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  normalAttackSound: {fileID: 0}
-  specialAttackSound: {fileID: 0}
+  normalAttackSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
+  specialAttackSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
   dashSound: {fileID: 0}
   hitSound: {fileID: 0}
   switchSound: {fileID: 0}

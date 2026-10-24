@@ -14,7 +14,16 @@ namespace GainGround.Game
     {
         public Rect area;
         public Sprite sprite;
+        public GameObject prefab;
         public int[] controllers = new int[0];
+    }
+    [Serializable] public sealed class StageObjectSpawn
+    {
+        public string id;
+        public GameObject prefab;
+        public Rect area;
+        [Tooltip("Matching positive IDs form a pair of teleport tiles. Zero is visual only.")]
+        public int teleportGroup;
     }
     [Serializable] public sealed class EnemySpawn
     {
@@ -72,6 +81,8 @@ namespace GainGround.Game
         public bool noExit;
         public Rect[] additionalExits = new Rect[0];
         public CaptiveSpawn[] additionalCaptives = new CaptiveSpawn[0];
+        [Header("PS2 stage objects")]
+        public StageObjectSpawn[] objects = new StageObjectSpawn[0];
         public HazardSpawn[] hazards = new HazardSpawn[0];
         public bool ContainsExit(Vector2 position)
         {
