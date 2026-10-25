@@ -26,7 +26,7 @@ MonoBehaviour:
   specialPassesWalls: 1
   normalWeapon:
     label: Pistola
-    fireSound: {fileID: 8300000, guid: 6cdd576e48767c04e90bda42b6aea15a, type: 3}
+    fireSound: {fileID: 8300000, guid: a8a7eb9208b69ac42ada70de4ce8daeb, type: 3}
     direction: 0
     kind: 0
     cooldown: 0.32
@@ -54,9 +54,10 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   specialWeapon:
     label: 'Granada: 8 direcoes'
-    fireSound: {fileID: 8300000, guid: 296cdbedcedf4944f9282710b55513b5, type: 3}
+    fireSound: {fileID: 8300000, guid: 2267106fef55c5e468e208d596fc0c81, type: 3}
     direction: 0
     kind: 4
     cooldown: 0.9
@@ -96,11 +97,12 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  normalAttackSound: {fileID: 8300000, guid: 6cdd576e48767c04e90bda42b6aea15a, type: 3}
-  specialAttackSound: {fileID: 8300000, guid: 296cdbedcedf4944f9282710b55513b5, type: 3}
+  normalAttackSound: {fileID: 8300000, guid: a8a7eb9208b69ac42ada70de4ce8daeb, type: 3}
+  specialAttackSound: {fileID: 8300000, guid: 2267106fef55c5e468e208d596fc0c81, type: 3}
   dashSound: {fileID: 0}
-  hitSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: 9884a5c04ca89ca479875b2348647341, type: 3}
   switchSound: {fileID: 0}
   rescueSound: {fileID: 0}
   TempodeCooldown: 2

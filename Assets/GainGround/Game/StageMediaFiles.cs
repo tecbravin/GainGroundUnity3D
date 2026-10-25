@@ -13,11 +13,13 @@ namespace GainGround.Game
     [Serializable]
     public struct StageMediaFiles
     {
+        public StageBundleFile preview;
         public StageBundleFile map;
         public StageBundleFile music;
         public StageBundleFile victoryMusic;
         public StageBundleFile objects;
         public bool hasBackground;
+        public bool hasPaintedLayout;
         public bool hasTerrainAtlas;
         public EnemyVisualFiles[] enemyVisuals;
         public string[] objectAddresses;

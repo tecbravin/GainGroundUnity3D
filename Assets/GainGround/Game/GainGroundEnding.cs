@@ -8,7 +8,10 @@ namespace GainGround.Game
         const float EndingMessageDuration = 5f;
         float endingElapsed;
         float endingMessageElapsed;
+        float endingSequenceElapsed;
         bool endingAnimationPlaying;
+        bool endingSequencePlaying;
+        GainGroundEndingSequence activeEndingSequence;
         Transform endingRoot;
         SpriteRenderer endingComputerAnchor;
         PS2EnemyVisual endingComputer;
@@ -21,7 +24,11 @@ namespace GainGround.Game
         {
             endingElapsed = 0;
             endingMessageElapsed = 0;
+            endingSequenceElapsed = 0;
             endingAnimationPlaying = true;
+            endingSequencePlaying = false;
+            activeEndingSequence = endingSequence != null ? endingSequence :
+                Resources.Load<GainGroundEndingSequence>("EndingSequence");
             if (arena != null) arena.gameObject.SetActive(false);
             if (gameCamera != null)
             {
@@ -111,8 +118,33 @@ namespace GainGround.Game
                 PlayerPrefs.SetInt("GainGround.HasFinished", 1);
                 PlayerPrefs.Save();
                 endingAnimationPlaying = false;
-                message = "Você terminou o jogo! Divirta-se agora com todos os personagens!";
+                endingSequencePlaying = activeEndingSequence != null &&
+                    activeEndingSequence.cards != null && activeEndingSequence.cards.Length > 0;
+                if (!endingSequencePlaying) FinishEndingSequence();
             }
+        }
+
+        void TickEndingSequence(float dt)
+        {
+            endingSequenceElapsed += Mathf.Max(0, dt);
+            if (endingSequenceElapsed >= EndingSequenceDuration()) FinishEndingSequence();
+        }
+
+        float EndingSequenceDuration()
+        {
+            if (activeEndingSequence == null || activeEndingSequence.cards == null) return 0;
+            float fade = Mathf.Max(.05f, activeEndingSequence.fadeSeconds);
+            float total = 0;
+            foreach (var card in activeEndingSequence.cards)
+                if (card != null) total += Mathf.Max(.1f, card.holdSeconds) + fade * 2;
+            return total;
+        }
+
+        void FinishEndingSequence()
+        {
+            endingSequencePlaying = false;
+            endingMessageElapsed = 0;
+            message = "Parabéns, você terminou o jogo! Divirta-se agora com todos os personagens!";
         }
 
         void DrawEndingScreen(Vector2 size)
@@ -134,8 +166,17 @@ namespace GainGround.Game
                     };
                     endingMessageStyle.normal.textColor = new Color(1f, .79f, .28f);
                 }
+                endingMessageStyle.fontSize = Mathf.RoundToInt(size.y * .045f);
+                if (endingSequencePlaying)
+                {
+                    DrawEndingCard(size);
+                    return;
+                }
+                GUI.color = new Color(1, 1, 1, Mathf.Clamp01(endingMessageElapsed /
+                    Mathf.Max(.05f, activeEndingSequence != null ? activeEndingSequence.finalMessageFadeSeconds : .65f)));
                 GUI.Label(new Rect(size.x * .12f, size.y * .34f, size.x * .76f, size.y * .32f),
-                    "Você terminou o jogo!\nDivirta-se agora com todos os personagens!", endingMessageStyle);
+                    "Parabéns, você terminou o jogo!\nDivirta-se agora com todos os personagens!", endingMessageStyle);
+                GUI.color = Color.white;
                 return;
             }
 
@@ -158,6 +199,48 @@ namespace GainGround.Game
             }
         }
 
+        void DrawEndingCard(Vector2 size)
+        {
+            if (activeEndingSequence == null || activeEndingSequence.cards == null) return;
+            float fade = Mathf.Max(.05f, activeEndingSequence.fadeSeconds);
+            float start = 0;
+            foreach (var card in activeEndingSequence.cards)
+            {
+                if (card == null) continue;
+                float hold = Mathf.Max(.1f, card.holdSeconds);
+                float length = hold + fade * 2;
+                if (endingSequenceElapsed >= start + length) { start += length; continue; }
+                float local = Mathf.Max(0, endingSequenceElapsed - start);
+                float alpha = Mathf.Min(1f, Mathf.Min(local / fade, (length - local) / fade));
+                alpha = Mathf.Clamp01(alpha);
+                GUI.color = new Color(1, 1, 1, alpha);
+                endingMessageStyle.fontSize = Mathf.RoundToInt(size.y * .045f * Mathf.Clamp(card.fontScale, .5f, 2f));
+                if (card.image != null)
+                {
+                    var sprite = card.image;
+                    var texture = sprite.texture;
+                    var source = sprite.textureRect;
+                    var uv = new Rect(source.x / texture.width, source.y / texture.height,
+                        source.width / texture.width, source.height / texture.height);
+                    Rect imageArea = card.customLayout ? card.imageArea : new Rect(.15f, .08f, .7f, .52f);
+                    float width = size.x * imageArea.width;
+                    float height = size.y * imageArea.height;
+                    float scale = Mathf.Min(width / source.width, height / source.height);
+                    var target = new Rect(size.x * imageArea.x + (width - source.width * scale) * .5f,
+                        size.y * imageArea.y + (height - source.height * scale) * .5f,
+                        source.width * scale, source.height * scale);
+                    GUI.DrawTextureWithTexCoords(target, texture, uv, true);
+                }
+                Rect textBounds = card.customLayout ? card.textArea :
+                    card.image != null ? new Rect(.1f, .64f, .8f, .26f) : new Rect(.1f, .33f, .8f, .34f);
+                var textArea = new Rect(size.x * textBounds.x, size.y * textBounds.y,
+                    size.x * textBounds.width, size.y * textBounds.height);
+                GUI.Label(textArea, card.text ?? "", endingMessageStyle);
+                GUI.color = Color.white;
+                return;
+            }
+        }
+
         Texture2D MakeEndingBurst()
         {
             const int resolution = 64;
@@ -177,8 +260,13 @@ namespace GainGround.Game
         void DestroyEndingAnimation()
         {
             if (endingRoot != null) Destroy(endingRoot.gameObject);
+            if (endingBurst != null) Destroy(endingBurst);
+            endingBurst = null;
             endingRoot = null; endingComputer = null; endingComputerAnchor = null;
             endingAnimationPlaying = false;
+            endingSequencePlaying = false;
+            endingSequenceElapsed = 0;
+            activeEndingSequence = null;
             endingMessageElapsed = 0;
             for (int i = 0; i < endingHeroes.Length; i++) { endingHeroes[i] = null; endingHeroModels[i] = null; }
         }

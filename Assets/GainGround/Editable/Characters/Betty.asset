@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Betty
   sprite: {fileID: 21300000, guid: 3a0d7d7be189ac348ae546da8e9f1af6, type: 3}
   hudPortrait: {fileID: 2800000, guid: 89e116f56aef872488ad05226e002a7c, type: 3}
+  directionalSpriteSheet: {fileID: 0}
   modelPrefab: {fileID: 2614090240380184814, guid: 4d827fc707efaa446983e22f92204d17, type: 3}
   speed: 3
   shotInterval: 0.32
@@ -40,6 +41,20 @@ MonoBehaviour:
     freezeSeconds: 0
     duration: 2
     color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    mode: 0
+    arcDegrees: 120
+    effectSpriteSheet: {fileID: 0}
+    projectileVisualPrefab: {fileID: 0}
+    projectileFrames: []
+    impactVisualPrefab: {fileID: 0}
+    impactFrames: []
+    impactFramesPerSecond: 45
+    effectColumns: 3
+    effectRows: 2
+    effectDuration: 0
+    effectScale: 1
+    projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   specialWeapon:
     label: 'Granada: cima'
     fireSound: {fileID: 8300000, guid: 296cdbedcedf4944f9282710b55513b5, type: 3}
@@ -57,9 +72,27 @@ MonoBehaviour:
     freezeSeconds: 0
     duration: 2
     color: {r: 0.5, g: 1, b: 0.3, a: 1}
+    mode: 0
+    arcDegrees: 120
+    effectSpriteSheet: {fileID: 0}
+    projectileVisualPrefab: {fileID: 100000, guid: 0893c533cd23492f9e13afabff45d738, type: 3}
+    projectileFrames: []
+    impactVisualPrefab: {fileID: 0}
+    impactFrames: []
+    impactFramesPerSecond: 45
+    effectColumns: 3
+    effectRows: 2
+    effectDuration: 0
+    effectScale: 1
+    projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 720
   characterTint: {r: 1, g: 1, b: 1, a: 1}
+  normalAttackSound: {fileID: 8300000, guid: a8a7eb9208b69ac42ada70de4ce8daeb, type: 3}
   specialAttackSound: {fileID: 8300000, guid: 296cdbedcedf4944f9282710b55513b5, type: 3}
-  normalAttackSound: {fileID: 8300000, guid: 6cdd576e48767c04e90bda42b6aea15a, type: 3}
+  dashSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: 9884a5c04ca89ca479875b2348647341, type: 3}
+  switchSound: {fileID: 0}
+  rescueSound: {fileID: 0}
   TempodeCooldown: 2
   Distancia: 2.5
   Invencivel: 1

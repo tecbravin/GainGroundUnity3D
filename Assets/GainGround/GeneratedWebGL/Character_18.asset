@@ -44,6 +44,11 @@ MonoBehaviour:
     mode: 0
     arcDegrees: 120
     effectSpriteSheet: {fileID: 0}
+    projectileVisualPrefab: {fileID: 0}
+    projectileFrames: []
+    impactVisualPrefab: {fileID: 0}
+    impactFrames: []
+    impactFramesPerSecond: 45
     effectColumns: 3
     effectRows: 2
     effectDuration: 0
@@ -69,14 +74,20 @@ MonoBehaviour:
     mode: 0
     arcDegrees: 120
     effectSpriteSheet: {fileID: 0}
+    projectileVisualPrefab: {fileID: 100000, guid: 0893c533cd23492f9e13afabff45d738, type: 3}
+    projectileFrames: []
+    impactVisualPrefab: {fileID: 0}
+    impactFrames: []
+    impactFramesPerSecond: 45
     effectColumns: 3
     effectRows: 2
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 720
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  normalAttackSound: {fileID: 0}
-  specialAttackSound: {fileID: 0}
+  normalAttackSound: {fileID: 8300000, guid: 6cdd576e48767c04e90bda42b6aea15a, type: 3}
+  specialAttackSound: {fileID: 8300000, guid: 296cdbedcedf4944f9282710b55513b5, type: 3}
   dashSound: {fileID: 0}
   hitSound: {fileID: 0}
   switchSound: {fileID: 0}

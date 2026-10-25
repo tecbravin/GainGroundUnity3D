@@ -26,7 +26,7 @@ MonoBehaviour:
   specialPassesWalls: 1
   normalWeapon:
     label: Pistola
-    fireSound: {fileID: 8300000, guid: cf77f42a2793da64da8610d73bb4a340, type: 3}
+    fireSound: {fileID: 8300000, guid: f9d4f42b982960e4da52b4b792e87e64, type: 3}
     direction: 0
     kind: 7
     cooldown: 0.52
@@ -66,9 +66,10 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   specialWeapon:
     label: Foguete em arco
-    fireSound: {fileID: 8300000, guid: cf77f42a2793da64da8610d73bb4a340, type: 3}
+    fireSound: {fileID: 8300000, guid: 7f8cb2ddd4329c149833fa904860575d, type: 3}
     direction: 0
     kind: 7
     cooldown: 0.9
@@ -108,13 +109,14 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  normalAttackSound: {fileID: 8300000, guid: cf77f42a2793da64da8610d73bb4a340, type: 3}
-  specialAttackSound: {fileID: 8300000, guid: cf77f42a2793da64da8610d73bb4a340, type: 3}
+  normalAttackSound: {fileID: 8300000, guid: f9d4f42b982960e4da52b4b792e87e64, type: 3}
+  specialAttackSound: {fileID: 8300000, guid: 7f8cb2ddd4329c149833fa904860575d, type: 3}
   dashSound: {fileID: 0}
-  hitSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: b1852e19f2bd363478a999c461613359, type: 3}
   switchSound: {fileID: 0}
   rescueSound: {fileID: 0}
   TempodeCooldown: 2
-  Distancia: 0.5
-  Invencivel: 1
+  Distancia: 0
+  Invencivel: 0

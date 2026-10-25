@@ -16,9 +16,7 @@ namespace GainGround.Game
         readonly System.Collections.Generic.Dictionary<GUIStyle, GUIStyle> goldMenuStyles = new System.Collections.Generic.Dictionary<GUIStyle, GUIStyle>();
         void LoadGuiAssets()
         {
-            if (persistentResources == null)
-                persistentResources = Resources.LoadAll<UnityEngine.Object>(string.Empty);
-            // Keep shared GUI resources referenced while stage bundles are released.
+            // Keep only the shared GUI assets used by this screen referenced.
             if (selectionFrameTexture == null) selectionFrameTexture = Resources.Load<Texture2D>("SelectionUI/Frame");
             if (selectionFont == null) selectionFont = Resources.Load<Font>("SelectionUI/UncialAntiqua-Regular");
             if (ironButtonTexture == null) ironButtonTexture = Resources.Load<Texture2D>("SelectionUI/IronButton");

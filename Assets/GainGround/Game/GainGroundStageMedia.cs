@@ -14,6 +14,8 @@ namespace GainGround.Game
         int pendingPreviewStageIndex = -1;
         float previewChangeTime;
         bool unloadMediaPending;
+        float lastMediaReleaseTime;
+        const float MediaUnloadIdleSeconds = .8f;
         const float StagePreviewDelay = .18f;
         string mediaError = "", loadingStep = "";
         bool selectionPortraitsLoading;
@@ -42,7 +44,13 @@ namespace GainGround.Game
             var files = webStageMedia[stageIndex];
             var target = stages[stageIndex];
             if (target == null) { mediaError = "Dados da fase não encontrados."; yield break; }
-            if ((files.hasBackground && target.background == null) ||
+            if (files.hasBackground && target.background == null)
+            {
+                loadingStep = "Baixando prévia do mapa...";
+                yield return DownloadStagePreview(stageIndex);
+                if (mediaError.Length > 0) yield break;
+            }
+            if ((files.hasPaintedLayout && target.paintedLayout == null) ||
                 (files.hasTerrainAtlas && target.terrainAtlas == null))
             {
                 loadingStep = "Baixando mapa...";
@@ -77,6 +85,30 @@ namespace GainGround.Game
             ReleaseStageMediaExcept(stageIndex);
         }
 
+        IEnumerator DownloadStagePreview(int index)
+        {
+            var files = webStageMedia[index];
+            // Older catalogs stored the preview and layout in the same bundle.
+            if (!files.preview.IsAssigned) { yield return DownloadStageMap(index); yield break; }
+            using (var request = UnityWebRequestAssetBundle.GetAssetBundle(
+                StageBundleUrl(files.preview), Hash128.Parse(files.preview.hash), 0))
+            {
+                yield return request.SendWebRequest();
+                if (request.result != UnityWebRequest.Result.Success)
+                { mediaError = "Falha ao baixar a prévia: " + request.error; yield break; }
+                var bundle = DownloadHandlerAssetBundle.GetContent(request);
+                if (bundle == null) { mediaError = "Bundle da prévia inválido."; yield break; }
+                try
+                {
+                    var load = bundle.LoadAssetAsync<Sprite>("background");
+                    yield return load;
+                    stages[index].background = load.asset as Sprite;
+                    if (stages[index].background == null) mediaError = "Prévia do mapa ausente no bundle.";
+                }
+                finally { bundle.Unload(false); }
+            }
+        }
+
         IEnumerator DownloadStageMap(int index)
         {
             var files = webStageMedia[index];
@@ -90,12 +122,20 @@ namespace GainGround.Game
                 if (bundle == null) { mediaError = "O bundle do mapa está inválido."; yield break; }
                 try
                 {
-                    if (files.hasBackground)
+                    if (files.hasBackground && !files.preview.IsAssigned)
                     {
                         var load = bundle.LoadAssetAsync<Sprite>("background");
                         yield return load;
                         stages[index].background = load.asset as Sprite;
                         if (stages[index].background == null) mediaError = "Imagem do mapa ausente no bundle.";
+                    }
+                    if (files.hasPaintedLayout && mediaError.Length == 0)
+                    {
+                        var load = bundle.LoadAssetAsync<GameObject>("layout");
+                        yield return load;
+                        var layout = load.asset as GameObject;
+                        stages[index].paintedLayout = layout != null ? layout.GetComponent<StagePaintLayout>() : null;
+                        if (stages[index].paintedLayout == null) mediaError = "Layout pintável ausente no bundle.";
                     }
                     if (files.hasTerrainAtlas && mediaError.Length == 0)
                     {
@@ -433,7 +473,7 @@ namespace GainGround.Game
             yield return null;
             var files = webStageMedia[index];
             if (files.hasBackground && stages[index].background == null)
-                yield return DownloadStageMap(index);
+                yield return DownloadStagePreview(index);
             stagePreviewRoutine = null;
             if (state == ScreenState.StageSelect && stageSelectIndex == index)
                 ReleaseStageMediaExcept(index);
@@ -458,7 +498,7 @@ namespace GainGround.Game
             {
                 if (i == keepIndex || stages[i] == null) continue;
                 var item = stages[i];
-                bool hasMedia = item.background != null || item.terrainAtlas != null ||
+                bool hasMedia = item.background != null || item.paintedLayout != null || item.terrainAtlas != null ||
                     item.stageMusic != null || item.victoryMusic != null;
                 if (item.objects != null)
                     foreach (var visual in item.objects)
@@ -472,7 +512,7 @@ namespace GainGround.Game
                     enemy.sprite = null; enemy.modelPrefab = null;
                 }
                 if (!hasMedia) continue;
-                item.background = null; item.terrainAtlas = null; item.stageMusic = null; item.victoryMusic = null;
+                item.background = null; item.paintedLayout = null; item.terrainAtlas = null; item.stageMusic = null; item.victoryMusic = null;
                 released = true;
             }
             if (released)
@@ -484,17 +524,32 @@ namespace GainGround.Game
 
         void RequestUnloadReleasedMedia()
         {
-            if (!isActiveAndEnabled) return;
             unloadMediaPending = true;
-            if (unloadMediaRoutine == null) unloadMediaRoutine = StartCoroutine(UnloadReleasedMedia());
+            lastMediaReleaseTime = Time.unscaledTime;
+            ResumePendingMediaUnload();
+        }
+
+        void ResumePendingMediaUnload()
+        {
+            if (unloadMediaPending && isActiveAndEnabled && unloadMediaRoutine == null)
+                unloadMediaRoutine = StartCoroutine(UnloadReleasedMedia());
+        }
+
+        void SuspendMediaUnload()
+        {
+            if (unloadMediaRoutine == null) return;
+            StopCoroutine(unloadMediaRoutine);
+            unloadMediaRoutine = null;
         }
 
         IEnumerator UnloadReleasedMedia()
         {
             do
             {
+                while (Time.unscaledTime - lastMediaReleaseTime < MediaUnloadIdleSeconds ||
+                    stageMediaRoutine != null)
+                    yield return null;
                 unloadMediaPending = false;
-                yield return null;
                 yield return Resources.UnloadUnusedAssets();
             } while (unloadMediaPending);
             unloadMediaRoutine = null;

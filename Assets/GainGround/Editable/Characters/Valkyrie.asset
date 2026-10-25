@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a5eb2034508c1f4e90fe4962b08330b, type: 3}
   m_Name: Valkyrie
   m_EditorClassIdentifier: 
-  displayName: Aesir
+  displayName: Valkyrie
   sprite: {fileID: 21300000, guid: c54dd0d20abcba94f800ed12050ebe91, type: 3}
   hudPortrait: {fileID: 2800000, guid: f9c8e78e775d0a14fb29b98eaed267ae, type: 3}
   directionalSpriteSheet: {fileID: 0}
-  modelPrefab: {fileID: 3836949723856864748, guid: ba1dc1324092cb348a4ae513bb5d1fff, type: 3}
+  modelPrefab: {fileID: 9091237171529724857, guid: e35354d0a204c8e42903695970704f32, type: 3}
   speed: 3
   shotInterval: 0.32
   projectileSpeed: 8
@@ -26,9 +26,9 @@ MonoBehaviour:
   specialPassesWalls: 0
   normalWeapon:
     label: Pistola
-    fireSound: {fileID: 8300000, guid: 6cdd576e48767c04e90bda42b6aea15a, type: 3}
+    fireSound: {fileID: 8300000, guid: 296cdbedcedf4944f9282710b55513b5, type: 3}
     direction: 0
-    kind: 0
+    kind: 1
     cooldown: 0.32
     speed: 8
     range: 5.5
@@ -54,9 +54,10 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   specialWeapon:
     label: 'Bumerangue: 8 direcoes'
-    fireSound: {fileID: 8300000, guid: f816be56df731c741b9ab49b64233e7b, type: 3}
+    fireSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
     direction: 0
     kind: 1
     cooldown: 0.45
@@ -76,7 +77,7 @@ MonoBehaviour:
     effectSpriteSheet: {fileID: 0}
     projectileVisualPrefab: {fileID: 100000, guid: 15ad7a1d486f4cfaa9405654b188be7b, type: 3}
     projectileFrames: []
-    impactVisualPrefab: {fileID: 100000, guid: 18592ae028ca4c72a55c337fb8a165f2, type: 3}
+    impactVisualPrefab: {fileID: 0}
     impactFrames: []
     impactFramesPerSecond: 45
     effectColumns: 3
@@ -84,11 +85,12 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  normalAttackSound: {fileID: 8300000, guid: 6cdd576e48767c04e90bda42b6aea15a, type: 3}
-  specialAttackSound: {fileID: 8300000, guid: f816be56df731c741b9ab49b64233e7b, type: 3}
+  normalAttackSound: {fileID: 8300000, guid: 296cdbedcedf4944f9282710b55513b5, type: 3}
+  specialAttackSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
   dashSound: {fileID: 0}
-  hitSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: fa1c5d90efe09ac4f8e2ba313bc000a6, type: 3}
   switchSound: {fileID: 0}
   rescueSound: {fileID: 0}
   TempodeCooldown: 2

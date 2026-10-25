@@ -26,7 +26,7 @@ MonoBehaviour:
   specialPassesWalls: 0
   normalWeapon:
     label: Bomba magica
-    fireSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
+    fireSound: {fileID: 8300000, guid: c54204128c166b74995a2db3573dddac, type: 3}
     direction: 0
     kind: 3
     cooldown: 0.4
@@ -58,9 +58,10 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   specialWeapon:
     label: 'Luz: quatro orbes'
-    fireSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
+    fireSound: {fileID: 8300000, guid: aedb0a51276025449b6991a2e0c87ea8, type: 3}
     direction: 0
     kind: 11
     cooldown: 3
@@ -92,11 +93,12 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  normalAttackSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
-  specialAttackSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
+  normalAttackSound: {fileID: 8300000, guid: c54204128c166b74995a2db3573dddac, type: 3}
+  specialAttackSound: {fileID: 8300000, guid: aedb0a51276025449b6991a2e0c87ea8, type: 3}
   dashSound: {fileID: 0}
-  hitSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: 6df93af23f0ba7f4398a367b28cd5bce, type: 3}
   switchSound: {fileID: 0}
   rescueSound: {fileID: 0}
   TempodeCooldown: 2

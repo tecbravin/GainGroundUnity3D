@@ -12,6 +12,7 @@ namespace GainGround.Game
     }
     [Serializable] public sealed class HazardSpawn
     {
+        [HideInInspector] public string editorId;
         public Rect area;
         public Sprite sprite;
         public GameObject prefab;
@@ -24,6 +25,8 @@ namespace GainGround.Game
         public Rect area;
         [Tooltip("Matching positive IDs form a pair of teleport tiles. Zero is visual only.")]
         public int teleportGroup;
+        [Min(0), Tooltip("Positive values make this object a destructible obstacle.")]
+        public int health;
     }
     [Serializable] public sealed class EnemySpawn
     {
@@ -31,6 +34,8 @@ namespace GainGround.Game
         [Min(1)] public int health = 2;
         [Min(0)] public float speed = 0.7f;
         [Min(0.3f)] public float shotInterval = 2.2f;
+        [Min(0), Tooltip("Tempo até o primeiro disparo. Zero usa o escalonamento padrão da fase.")]
+        public float initialShotDelay;
         public bool sentry;
         public bool elevated;
         public bool melee;
@@ -78,6 +83,8 @@ namespace GainGround.Game
         public Vector2 rescuePosition = new Vector2(-6, 2);
         [Header("Complete Mega Drive campaign")]
         public Sprite background;
+        [Tooltip("Layout Tilemap usado durante o jogo. A imagem de fundo fica apenas como prévia no seletor.")]
+        public StagePaintLayout paintedLayout;
         public bool noExit;
         public Rect[] additionalExits = new Rect[0];
         public CaptiveSpawn[] additionalCaptives = new CaptiveSpawn[0];

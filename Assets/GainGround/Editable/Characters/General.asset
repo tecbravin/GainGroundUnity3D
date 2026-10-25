@@ -26,7 +26,7 @@ MonoBehaviour:
   specialPassesWalls: 0
   normalWeapon:
     label: Pistola
-    fireSound: {fileID: 8300000, guid: 6cdd576e48767c04e90bda42b6aea15a, type: 3}
+    fireSound: {fileID: 8300000, guid: ae62f0fce3b4501448271ab4d5be8faa, type: 3}
     direction: 0
     kind: 0
     cooldown: 0.32
@@ -54,9 +54,10 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   specialWeapon:
     label: Lanca-chamas
-    fireSound: {fileID: 8300000, guid: 8f382feb7624c6b439d0ef3ec5817a01, type: 3}
+    fireSound: {fileID: 8300000, guid: 7f8cb2ddd4329c149833fa904860575d, type: 3}
     direction: 0
     kind: 6
     cooldown: 0.15
@@ -86,11 +87,12 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  normalAttackSound: {fileID: 8300000, guid: 6cdd576e48767c04e90bda42b6aea15a, type: 3}
-  specialAttackSound: {fileID: 8300000, guid: 8f382feb7624c6b439d0ef3ec5817a01, type: 3}
+  normalAttackSound: {fileID: 8300000, guid: ae62f0fce3b4501448271ab4d5be8faa, type: 3}
+  specialAttackSound: {fileID: 8300000, guid: 7f8cb2ddd4329c149833fa904860575d, type: 3}
   dashSound: {fileID: 0}
-  hitSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: 1b90bb2b62b02f84899e66960a5b3429, type: 3}
   switchSound: {fileID: 0}
   rescueSound: {fileID: 0}
   TempodeCooldown: 2

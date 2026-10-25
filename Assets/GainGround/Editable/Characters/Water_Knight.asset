@@ -16,7 +16,7 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 85bfa90d8d89fca44bcc1453fc6c3149, type: 3}
   hudPortrait: {fileID: 2800000, guid: 8fe783ec2f00afc4f85876a6037932f6, type: 3}
   directionalSpriteSheet: {fileID: 0}
-  modelPrefab: {fileID: 9091237171529724857, guid: e35354d0a204c8e42903695970704f32, type: 3}
+  modelPrefab: {fileID: 3836949723856864748, guid: ba1dc1324092cb348a4ae513bb5d1fff, type: 3}
   speed: 3
   shotInterval: 0.4
   projectileSpeed: 7
@@ -26,7 +26,7 @@ MonoBehaviour:
   specialPassesWalls: 0
   normalWeapon:
     label: Bomba magica
-    fireSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
+    fireSound: {fileID: 8300000, guid: 9de397a258bcba1498685e223b9b41c5, type: 3}
     direction: 0
     kind: 3
     cooldown: 0.4
@@ -58,9 +58,10 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   specialWeapon:
     label: 'Agua: imobiliza'
-    fireSound: {fileID: 8300000, guid: 50faef9d7c3480c40a6e359d4a52a279, type: 3}
+    fireSound: {fileID: 8300000, guid: 27df425d2b984dc419c92b6f5dfc8008, type: 3}
     direction: 0
     kind: 10
     cooldown: 1.2
@@ -78,16 +79,22 @@ MonoBehaviour:
     mode: 0
     arcDegrees: 120
     effectSpriteSheet: {fileID: 0}
+    projectileVisualPrefab: {fileID: 0}
+    projectileFrames: []
+    impactVisualPrefab: {fileID: 0}
+    impactFrames: []
+    impactFramesPerSecond: 45
     effectColumns: 3
     effectRows: 2
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  normalAttackSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
-  specialAttackSound: {fileID: 8300000, guid: 50faef9d7c3480c40a6e359d4a52a279, type: 3}
+  normalAttackSound: {fileID: 8300000, guid: 9de397a258bcba1498685e223b9b41c5, type: 3}
+  specialAttackSound: {fileID: 8300000, guid: 27df425d2b984dc419c92b6f5dfc8008, type: 3}
   dashSound: {fileID: 0}
-  hitSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: 1e858cdcc53f9214387aa3385ff52aa6, type: 3}
   switchSound: {fileID: 0}
   rescueSound: {fileID: 0}
   TempodeCooldown: 1.5

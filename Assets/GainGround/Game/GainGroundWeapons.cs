@@ -137,6 +137,16 @@ namespace GainGround.Game
         {
             Vector2 facing = p.facing.sqrMagnitude > .001f ? p.facing.normalized : Vector2.up;
             float minDot = Mathf.Cos(Mathf.Clamp(weapon.arcDegrees, 1, 360) * .5f * Mathf.Deg2Rad);
+            for (int i = destructibleObjects.Count - 1; i >= 0; i--)
+            {
+                var item = destructibleObjects[i];
+                Vector2 point = new Vector2(Mathf.Clamp(p.position.x, item.data.area.xMin, item.data.area.xMax),
+                    Mathf.Clamp(p.position.y, item.data.area.yMin, item.data.area.yMax));
+                Vector2 offset = point - p.position;
+                if (offset.sqrMagnitude > weapon.range * weapon.range ||
+                    offset.sqrMagnitude < .0001f || Vector2.Dot(facing, offset.normalized) < minDot) continue;
+                DamageStageObject(item, weapon.damage);
+            }
             for (int i = enemies.Count - 1; i >= 0; i--)
             {
                 var enemy = enemies[i];
@@ -297,6 +307,12 @@ namespace GainGround.Game
                     else shot.position += shot.velocity * step;
                     shot.remaining -= w.speed * step; shot.travel += w.speed * step;
                 }
+                if (!zone && !orbit && StageObjectBlocks(shot.position))
+                {
+                    if (w.blastRadius > 0) Explode(shot);
+                    else TryDamageStageObject(shot.position, w.damage);
+                    return true;
+                }
                 bool blocked = false;
                 if (!w.lobbed && !zone) blocked = ProjectileWallBlocked(shot.position);
                 bool outside = Mathf.Abs(shot.position.x) > stage.size.x / 2 || Mathf.Abs(shot.position.y) > stage.size.y / 2;
@@ -345,6 +361,7 @@ namespace GainGround.Game
             float angle = Mathf.Atan2(shot.velocity.y, shot.velocity.x) * Mathf.Rad2Deg - 90;
             if (w.kind == ProjectileKind.Boomerang || w.kind == ProjectileKind.Orbit) angle = shot.age * 720;
             if (zone || w.kind == ProjectileKind.Tornado) angle = 0;
+            if (w.projectileSpinDegreesPerSecond != 0) angle += shot.age * w.projectileSpinDegreesPerSecond;
             shot.visual.transform.rotation = Quaternion.Euler(0, 0, angle);
             if (w.kind == ProjectileKind.WaterTrap) AnimateWater(shot);
             else if (shot.animationFrames != null && shot.animationFrames.Length > 0)
@@ -392,6 +409,7 @@ namespace GainGround.Game
             if (w.blastRadius <= 0) return;
             PlaySfx(explosionSound);
             float damageRadius = Mathf.Max(w.blastRadius, ShotHitRadius(w));
+            DamageStageObjectsInRadius(shot.position, damageRadius, w.damage);
             if (!HasProjectileEnemyNearby(shot.position, damageRadius))
             { SpawnBlast(shot.position, w.blastRadius); return; }
             float progress = Mathf.Clamp01(shot.travel / w.range);
@@ -411,8 +429,12 @@ namespace GainGround.Game
         {
             int steps = Mathf.Max(1, Mathf.CeilToInt(Vector2.Distance(a, b) / .08f));
             for (int i = 1; i <= steps; i++)
+            {
+                Vector2 point = Vector2.Lerp(a, b, (float)i / steps);
+                if (StageObjectBlocks(point)) return true;
                 foreach (var wall in stage.walls)
-                    if (wall.Contains(Vector2.Lerp(a, b, (float)i / steps))) return true;
+                    if (wall.Contains(point)) return true;
+            }
             return false;
         }
 

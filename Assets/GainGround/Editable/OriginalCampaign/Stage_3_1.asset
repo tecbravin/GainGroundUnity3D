@@ -49,6 +49,9 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: -1.75, y: 5.25}
     health: 1
     speed: 0
@@ -66,6 +69,9 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: -0.25, y: 5.25}
     health: 1
     speed: 0
@@ -83,6 +89,9 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: 1.25, y: 5.25}
     health: 1
     speed: 0
@@ -100,6 +109,9 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: -3, y: 1.25}
     health: 1
     speed: 0.6
@@ -117,6 +129,9 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: 2.5, y: -1.25}
     health: 1
     speed: 0.6
@@ -134,6 +149,9 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: -0.5, y: -3.25}
     health: 1
     speed: 0.6
@@ -151,10 +169,15 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   rescue: {fileID: 11400000, guid: 8f72206effbc0f048b957ae91ac61162, type: 2}
   rescuePosition: {x: -5, y: 4.5}
   background: {fileID: 21300000, guid: 083efd955b078304fae740dd36386f6b, type: 3}
+  paintedLayout: {fileID: 8347589196944451220, guid: 803d39fafeceb0b4a8f1260d90a23218, type: 3}
   noExit: 0
   additionalExits: []
   additionalCaptives: []
+  objects: []
   hazards: []

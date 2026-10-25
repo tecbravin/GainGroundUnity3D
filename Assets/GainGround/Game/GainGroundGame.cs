@@ -23,6 +23,9 @@ namespace GainGround.Game
         public Sprite floorSprite, wallSprite, enemySprite, projectileSprite, exitSprite;
         public Camera gameCamera;
         public AudioClip titleMusic;
+        [Header("Sequência final")]
+        [Tooltip("Cartões narrativos antes da mensagem de conclusão. O asset em Resources/EndingSequence é usado se vazio.")]
+        public GainGroundEndingSequence endingSequence;
 
         enum ScreenState { Title, Options, StageSelect, Loading, Playing, Cleared, Defeat, Victory, GameOver }
         sealed class Member { public CharacterDefinition definition; public bool lost, escaped; public float dashCooldown; }
@@ -65,6 +68,7 @@ namespace GainGround.Game
             public PlayerState lastHitPlayer;
             public PS2EnemyVisual model;
             public float cooldown, frozen, age, confusionAngle;
+            public float nextLaserSphereVolley = 8f;
             public bool vulnerable = true, triggered, waterConfused;
             public SpriteRenderer visual;
         }
@@ -75,6 +79,8 @@ namespace GainGround.Game
             public float remaining, age, orbitAngle, travel;
             public bool hostile, elevated, special, returning;
             public bool directionalSprite;
+            public bool computerLaserSphere;
+            public float nextLaserSphereTurn;
             public int damage;
             public SpriteRenderer visual;
             public WeaponDefinition weapon;
@@ -110,13 +116,17 @@ namespace GainGround.Game
         string message = "";
         GUIStyle titleStyle, labelStyle, smallStyle, controlStyle;
         AudioSource musicSource;
-        UnityEngine.Object[] persistentResources;
         bool restartMusic, musicPaused;
 #if UNITY_WEBGL && !UNITY_EDITOR
         bool titleMusicInteractionHandled;
 #endif
         public int EnemyCount => enemies.Count;
         public bool IsPlaying => state == ScreenState.Playing;
+
+        void OnEnable()
+        {
+            ResumePendingMediaUnload();
+        }
 
         void Start()
         {
@@ -233,7 +243,15 @@ namespace GainGround.Game
                 p.position = SpawnPosition(p); p.facing = Vector2.up;
                 p.teleportArmed = true;
             }
-            if (stage.background != null) Visual("Original stage terrain", stage.background, Vector2.zero, stage.size, Color.white, -10);
+            if (stage.paintedLayout != null)
+            {
+                var painted = Instantiate(stage.paintedLayout, arena);
+                painted.name = stage.displayName + " Tilemap";
+                if (painted.collision != null) painted.collision.gameObject.SetActive(false);
+                foreach (var marker in painted.GetComponentsInChildren<StagePaintMarker>(true))
+                    marker.gameObject.SetActive(false);
+            }
+            else if (stage.background != null) Visual("Original stage terrain", stage.background, Vector2.zero, stage.size, Color.white, -10);
             else if (stage.terrainAtlas != null) arena.gameObject.AddComponent<OriginalStageTerrain>().Build(stage);
             else
             {
@@ -246,7 +264,7 @@ namespace GainGround.Game
             }
             foreach (var spawn in stage.enemies)
             {
-                var enemy = new Enemy { position = spawn.position, data = spawn, health = DifficultyRules.EnemyHealth(campaignDifficulty, spawn.health, spawn.boss), cooldown = 1 + enemies.Count * .17f, spawnIndex = enemies.Count };
+                var enemy = new Enemy { position = spawn.position, data = spawn, health = DifficultyRules.EnemyHealth(campaignDifficulty, spawn.health, spawn.boss), cooldown = spawn.initialShotDelay > 0 ? spawn.initialShotDelay : 1 + enemies.Count * .17f, spawnIndex = enemies.Count };
                 enemy.visual = Visual(spawn.boss ? "Boss " + spawn.behavior : spawn.behavior.ToString(), spawn.sprite != null ? spawn.sprite : enemySprite,
                     enemy.position, spawn.sprite != null ? spawn.visualSize : new Vector2(.65f, .8f),
                     spawn.sprite != null ? Color.white : spawn.elevated ? new Color(.6f, .8f, 1) : spawn.melee ? Color.white : new Color(1, .75f, .35f), 2);
@@ -330,7 +348,10 @@ namespace GainGround.Game
             if (titleView != null) { Destroy(titleView.gameObject); titleView = null; }
             if (stageSelectView != null) { Destroy(stageSelectView.gameObject); stageSelectView = null; }
             CancelStageMediaRequests();
+            SuspendMediaUnload();
             ResetMobileInput();
+            if (endingBurst != null) Destroy(endingBurst);
+            endingBurst = null;
             if (swordSliderTexture != null) Destroy(swordSliderTexture);
             swordSliderTexture = null;
             if (carouselArrowLeft != null) Destroy(carouselArrowLeft);
@@ -380,6 +401,7 @@ namespace GainGround.Game
             shot.position = shot.velocity = shot.origin = shot.launchDirection = Vector2.zero;
             shot.boomerangSide = shot.remaining = shot.age = shot.orbitAngle = shot.travel = 0;
             shot.hostile = shot.elevated = shot.special = shot.returning = shot.directionalSprite = false;
+            shot.computerLaserSphere = false; shot.nextLaserSphereTurn = 0;
             shot.damage = 0; shot.visual = null; shot.weapon = null;
             shot.animationFrames = null; shot.animationFramesPerSecond = 0;
             shot.impactSprite = null; shot.impactFrames = null;
@@ -462,6 +484,7 @@ namespace GainGround.Game
 
         bool ProjectileWallBlocked(Vector2 position)
         {
+            if (StageObjectBlocks(position)) return true;
             if (!projectileWallCells.TryGetValue(ProjectileCellKey(Mathf.FloorToInt(position.x),
                 Mathf.FloorToInt(position.y)), out var cells)) return false;
             foreach (var wall in cells)
@@ -531,6 +554,7 @@ namespace GainGround.Game
                 if (pendingEndingScore) return;
             }
             if (endingAnimationPlaying) { TickEndingAnimation(Time.unscaledDeltaTime); return; }
+            if (endingSequencePlaying) { TickEndingSequence(Time.unscaledDeltaTime); return; }
             if (state == ScreenState.Victory && !pendingEndingScore)
             {
                 endingMessageElapsed += Time.unscaledDeltaTime;
@@ -913,18 +937,32 @@ namespace GainGround.Game
                 }
                 int steps = Mathf.Max(1, Mathf.CeilToInt(shot.velocity.magnitude * dt / .08f));
                 shot.age += dt;
+                if (shot.hostile && shot.computerLaserSphere && shot.age < 4f &&
+                    shot.age >= shot.nextLaserSphereTurn)
+                {
+                    var target = ClosestPlayer(shot.position);
+                    if (target != null)
+                    {
+                        Vector2 direction = target.position - shot.position;
+                        if (direction.sqrMagnitude > .0001f)
+                            shot.velocity = direction.normalized * shot.velocity.magnitude;
+                    }
+                    shot.nextLaserSphereTurn = shot.age + .2f;
+                }
                 Vector2 delta = shot.velocity * dt / steps;
                 for (int s = 0; s < steps && !remove; s++)
                 {
                     shot.position += delta; shot.remaining -= delta.magnitude;
                     if (shot.hostile && TryReflectEnemyShot(shot)) delta = shot.velocity * dt / steps;
                     remove = shot.remaining <= 0 || Mathf.Abs(shot.position.x) > stage.size.x / 2 || Mathf.Abs(shot.position.y) > stage.size.y / 2;
+                    if (!shot.hostile && TryDamageStageObject(shot.position, shot.damage)) remove = true;
                     if (!shot.elevated && ProjectileWallBlocked(shot.position)) remove = true;
                     if (remove) break;
                     if (shot.hostile)
                     {
                         foreach (var p in players)
-                            if (p.HasActive && (shot.position - p.position).sqrMagnitude < .09f)
+                            if (p.HasActive && (shot.position - p.position).sqrMagnitude <
+                                (shot.computerLaserSphere ? .16f : .09f))
                             { HitPlayer(p); remove = true; break; }
                     }
                     else if (HasProjectileEnemyNearby(shot.position, .12f)) for (int e = enemies.Count - 1; e >= 0; e--)

@@ -42,6 +42,8 @@ namespace GainGround.Game
         [Min(0)] public float effectDuration;
         [Min(.1f)] public float effectScale = 1;
         [Min(1)] public float projectileFramesPerSecond = 12;
+        [Tooltip("Rotação do projétil no plano da tela, em graus por segundo. Zero mantém a direção do voo.")]
+        public float projectileSpinDegreesPerSecond;
 
         public int ProjectileCount => direction == WeaponDirection.SixWay ? 6 :
             kind == ProjectileKind.Orbit ? 4 : direction == WeaponDirection.Horizontal ? 2 : 1;

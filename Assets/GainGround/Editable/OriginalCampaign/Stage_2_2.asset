@@ -56,6 +56,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 1
     melee: 0
@@ -69,10 +70,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: -3.75, y: 6.5}
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 1
     melee: 0
@@ -86,10 +91,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: 3.75, y: 6.5}
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 1
     melee: 0
@@ -103,10 +112,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: 5.25, y: 6.5}
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 1
     melee: 0
@@ -120,10 +133,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: -0.75, y: 3.5}
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -137,10 +154,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: 0.75, y: 3.5}
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -154,10 +175,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: -0.75, y: 2}
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -171,10 +196,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: 0.75, y: 2}
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -188,10 +217,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: -0.75, y: 0.5}
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -205,10 +238,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: 0.75, y: 0.5}
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -222,10 +259,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: -5.25, y: 1}
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -239,10 +280,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: 5.25, y: 1}
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -256,10 +301,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: -5.25, y: 4}
     health: 1
     speed: 1.1
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 0
     elevated: 0
     melee: 1
@@ -273,10 +322,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: -3.75, y: 4}
     health: 1
     speed: 1.1
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 0
     elevated: 0
     melee: 1
@@ -290,10 +343,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: 3.75, y: 4}
     health: 1
     speed: 1.1
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 0
     elevated: 0
     melee: 1
@@ -307,10 +364,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: 5.25, y: 4}
     health: 1
     speed: 1.1
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 0
     elevated: 0
     melee: 1
@@ -324,10 +385,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: -3.75, y: 2.5}
     health: 1
     speed: 1.1
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 0
     elevated: 0
     melee: 1
@@ -341,10 +406,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: 3.75, y: 2.5}
     health: 1
     speed: 1.1
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 0
     elevated: 0
     melee: 1
@@ -358,10 +427,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: -3.75, y: 1}
     health: 1
     speed: 1.1
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 0
     elevated: 0
     melee: 1
@@ -375,10 +448,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: 3.75, y: 1}
     health: 1
     speed: 1.1
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 0
     elevated: 0
     melee: 1
@@ -392,10 +469,15 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   rescue: {fileID: 0}
   rescuePosition: {x: -6, y: 2}
-  background: {fileID: 21300000, guid: 9c3c93ba158a80a4795b0f40d243ae14, type: 3}
+  background: {fileID: 21300000, guid: 53089ac09eb94184aaf3817a16d0fb68, type: 3}
+  paintedLayout: {fileID: 1564869055824142497, guid: 1625d42e929cdcd429cdb361d677c2b6, type: 3}
   noExit: 0
   additionalExits: []
   additionalCaptives: []
+  objects: []
   hazards: []

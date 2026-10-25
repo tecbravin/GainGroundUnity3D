@@ -2263,6 +2263,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 73aabda24a7528a4ab004362c56370d2, type: 2}
   rig: {fileID: 1073781678103056741}
+  viewPitchDegrees: 35
   bones:
   - {fileID: 3490663527165890665}
   - {fileID: 2683822009609410209}
@@ -2661,9 +2662,10 @@ MonoBehaviour:
   - {fileID: 2096647583237645182}
   - {fileID: 3372137985888848281}
   turnWithTarget: 1
+  fixedRotationPart: {fileID: 0}
   walkClip: 1
   attackClip: 2
-  projectileSprite: {fileID: 21300000, guid: 8e5b4151da19838408180c2122b38bf9, type: 3}
+  projectileSprite: {fileID: 21300000, guid: 082489d3b8fb4c51976973340a2e264f, type: 3}
   projectileVisualPrefab: {fileID: 100000, guid: 8942790e381e4a7b877facbc04422ff1, type: 3}
   projectileFrames:
   - {fileID: 21300000, guid: 4a8b23dfcabe4c56a8fafaabccbe9740, type: 3}
@@ -2671,9 +2673,10 @@ MonoBehaviour:
   projectileFramesPerSecond: 12
   projectileSize: {x: 0, y: 0}
   projectileTint: {r: 1, g: 1, b: 1, a: 1}
+  laserSphereSprite: {fileID: 0}
   muzzleFlashSprite: {fileID: 0}
-  muzzleVisualPrefab: {fileID: 0}
   impactSprite: {fileID: 0}
+  muzzleVisualPrefab: {fileID: 0}
   impactVisualPrefab: {fileID: 100000, guid: c68463aed61f4403912d3d3e0852eb39, type: 3}
   impactFrames:
   - {fileID: 21300000, guid: 434d42aac44a4327b4906b7bf2adeb6d, type: 3}
@@ -2690,6 +2693,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ce1e51c941a5457a9ad636fb31a0356d, type: 3}
   impactFramesPerSecond: 45
   effectSize: {x: 0.35, y: 0.35}
+  attackSound: {fileID: 0}
+  hitSound: {fileID: 0}
+  deathSound: {fileID: 8300000, guid: ef7dab599544b22468ed4e817a1c9973, type: 3}
 --- !u!1 &5442855135877002696
 GameObject:
   m_ObjectHideFlags: 0
@@ -2918,6 +2924,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 7dd4d00510135f542b2422d8a5972edf, type: 2}
   rig: {fileID: 8385971657908385438}
+  viewPitchDegrees: 35
   bones:
   - {fileID: 4296086354125187500}
   - {fileID: 6840640369024700884}
@@ -4227,6 +4234,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 5c4a1d8776f2e964383b0340a8b3b3bb, type: 2}
   rig: {fileID: 2313203997149853161}
+  viewPitchDegrees: 35
   bones:
   - {fileID: 7855794186737409348}
   - {fileID: 5589654503510007852}

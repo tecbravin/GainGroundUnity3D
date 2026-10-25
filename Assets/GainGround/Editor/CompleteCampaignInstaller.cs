@@ -67,6 +67,10 @@ public static class CompleteCampaignInstaller
             s.exit=s.noExit ? new Rect() : map.exits[0].WorldRect;
             s.additionalExits=map.exits.Skip(1).Select(a=>a.WorldRect).ToArray();
             s.enemies=map.enemies.Select(Enemy).ToArray();
+            if (map.round == 1 && map.number == 10)
+                foreach (var enemy in s.enemies)
+                    if (enemy.behavior == EnemyBehavior.Giant && !enemy.boss)
+                        enemy.initialShotDelay = enemy.position.y < 0 ? 1f : 2f;
             s.rescue=map.captives.Length==0 ? null : CharacterAssets.Load(map.captives[0].name);
             if(s.rescue!=null) s.rescuePosition=map.captives[0].World;
             s.additionalCaptives=map.captives.Skip(1).Select(c=>new CaptiveSpawn {

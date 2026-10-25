@@ -6,6 +6,8 @@ namespace GainGround.Game
     public sealed partial class GainGroundGame
     {
         const float StageScorePresentationDuration = 2.4f;
+        const float StageScoreEntryDuration = .52f;
+        const float StageScoreEntryInterval = .57f;
 
         struct StageScoreEntry
         {
@@ -69,13 +71,24 @@ namespace GainGround.Game
 
             for (int i = 0; i < stageScoreEntries.Count; i++)
                 if (stageScoreEntries[i].points > 0)
-                    scoreCountEndTime = i * .22f + .8f;
+                    scoreCountEndTime = i * StageScoreEntryInterval + StageScoreEntryDuration;
         }
 
         void TickScoreCountSound()
         {
             if (scoreCountSound == null || stageScoreElapsed >= scoreCountEndTime ||
                 stageScoreElapsed < nextScoreCountSound) return;
+            bool counting = false;
+            for (int i = 0; i < stageScoreEntries.Count; i++)
+            {
+                float elapsed = stageScoreElapsed - i * StageScoreEntryInterval;
+                if (stageScoreEntries[i].points > 0 && elapsed >= 0 && elapsed < StageScoreEntryDuration)
+                {
+                    counting = true;
+                    break;
+                }
+            }
+            if (!counting) return;
             PlaySfx(scoreCountSound);
             nextScoreCountSound = stageScoreElapsed + .06f;
         }
@@ -83,7 +96,8 @@ namespace GainGround.Game
         string StageScorePoints(int index)
         {
             var entry = stageScoreEntries[index];
-            float progress = Mathf.Clamp01((stageScoreElapsed - index * .22f) / .8f);
+            float progress = Mathf.Clamp01((stageScoreElapsed - index * StageScoreEntryInterval) /
+                StageScoreEntryDuration);
             int displayed = Mathf.RoundToInt(entry.points * Mathf.SmoothStep(0, 1, progress));
             return "+" + displayed.ToString("N0");
         }

@@ -26,7 +26,7 @@ MonoBehaviour:
   specialPassesWalls: 0
   normalWeapon:
     label: Tajo de espada
-    fireSound: {fileID: 8300000, guid: 6cdd576e48767c04e90bda42b6aea15a, type: 3}
+    fireSound: {fileID: 8300000, guid: f816be56df731c741b9ab49b64233e7b, type: 3}
     direction: 0
     kind: 0
     cooldown: 0.42
@@ -44,6 +44,11 @@ MonoBehaviour:
     mode: 1
     arcDegrees: 120
     effectSpriteSheet: {fileID: 2800000, guid: f6b1eabfd2b441518f1438fe4bf0c9d5, type: 3}
+    projectileVisualPrefab: {fileID: 0}
+    projectileFrames: []
+    impactVisualPrefab: {fileID: 0}
+    impactFrames: []
+    impactFramesPerSecond: 45
     effectColumns: 3
     effectRows: 2
     effectDuration: 0.24
@@ -51,7 +56,7 @@ MonoBehaviour:
     projectileFramesPerSecond: 12
   specialWeapon:
     label: Giro refletor
-    fireSound: {fileID: 8300000, guid: 6cdd576e48767c04e90bda42b6aea15a, type: 3}
+    fireSound: {fileID: 8300000, guid: f816be56df731c741b9ab49b64233e7b, type: 3}
     direction: 0
     kind: 0
     cooldown: 1.8
@@ -69,14 +74,19 @@ MonoBehaviour:
     mode: 2
     arcDegrees: 180
     effectSpriteSheet: {fileID: 2800000, guid: 8121ca6bd3d64f7094a2c6f1d114d391, type: 3}
+    projectileVisualPrefab: {fileID: 0}
+    projectileFrames: []
+    impactVisualPrefab: {fileID: 0}
+    impactFrames: []
+    impactFramesPerSecond: 45
     effectColumns: 3
     effectRows: 2
     effectDuration: 0.3692308
     effectScale: 0.7
     projectileFramesPerSecond: 12
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  normalAttackSound: {fileID: 0}
-  specialAttackSound: {fileID: 0}
+  normalAttackSound: {fileID: 8300000, guid: f816be56df731c741b9ab49b64233e7b, type: 3}
+  specialAttackSound: {fileID: 8300000, guid: f816be56df731c741b9ab49b64233e7b, type: 3}
   dashSound: {fileID: 0}
   hitSound: {fileID: 0}
   switchSound: {fileID: 0}

@@ -26,7 +26,7 @@ MonoBehaviour:
   specialPassesWalls: 0
   normalWeapon:
     label: Bomba de fogo
-    fireSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
+    fireSound: {fileID: 8300000, guid: 21485a27bb24f334b9e6a281c7ce7109, type: 3}
     direction: 0
     kind: 3
     cooldown: 0.4
@@ -44,14 +44,20 @@ MonoBehaviour:
     mode: 0
     arcDegrees: 120
     effectSpriteSheet: {fileID: 2800000, guid: ca21aadfb1cd404428389f51e603f124, type: 3}
+    projectileVisualPrefab: {fileID: 0}
+    projectileFrames: []
+    impactVisualPrefab: {fileID: 0}
+    impactFrames: []
+    impactFramesPerSecond: 45
     effectColumns: 4
     effectRows: 2
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 14
+    projectileSpinDegreesPerSecond: 0
   specialWeapon:
     label: 'Fogo: armadilha frontal'
-    fireSound: {fileID: 8300000, guid: 8f382feb7624c6b439d0ef3ec5817a01, type: 3}
+    fireSound: {fileID: 8300000, guid: 2267106fef55c5e468e208d596fc0c81, type: 3}
     direction: 1
     kind: 9
     cooldown: 1.2
@@ -69,16 +75,22 @@ MonoBehaviour:
     mode: 0
     arcDegrees: 120
     effectSpriteSheet: {fileID: 2800000, guid: ca21aadfb1cd404428389f51e603f124, type: 3}
+    projectileVisualPrefab: {fileID: 0}
+    projectileFrames: []
+    impactVisualPrefab: {fileID: 0}
+    impactFrames: []
+    impactFramesPerSecond: 45
     effectColumns: 4
     effectRows: 2
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 11
+    projectileSpinDegreesPerSecond: 0
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  normalAttackSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
-  specialAttackSound: {fileID: 8300000, guid: 8f382feb7624c6b439d0ef3ec5817a01, type: 3}
+  normalAttackSound: {fileID: 8300000, guid: 21485a27bb24f334b9e6a281c7ce7109, type: 3}
+  specialAttackSound: {fileID: 8300000, guid: 2267106fef55c5e468e208d596fc0c81, type: 3}
   dashSound: {fileID: 0}
-  hitSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: 6df93af23f0ba7f4398a367b28cd5bce, type: 3}
   switchSound: {fileID: 0}
   rescueSound: {fileID: 0}
   TempodeCooldown: 1.5

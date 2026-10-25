@@ -26,7 +26,7 @@ MonoBehaviour:
   specialPassesWalls: 1
   normalWeapon:
     label: Lanca
-    fireSound: {fileID: 8300000, guid: 5643289c2507c244f8c8da87c7979fc3, type: 3}
+    fireSound: {fileID: 8300000, guid: 296cdbedcedf4944f9282710b55513b5, type: 3}
     direction: 0
     kind: 1
     cooldown: 0.4
@@ -46,7 +46,7 @@ MonoBehaviour:
     effectSpriteSheet: {fileID: 0}
     projectileVisualPrefab: {fileID: 100000, guid: 15ad7a1d486f4cfaa9405654b188be7b, type: 3}
     projectileFrames: []
-    impactVisualPrefab: {fileID: 100000, guid: 18592ae028ca4c72a55c337fb8a165f2, type: 3}
+    impactVisualPrefab: {fileID: 0}
     impactFrames: []
     impactFramesPerSecond: 45
     effectColumns: 3
@@ -54,9 +54,10 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   specialWeapon:
     label: Lanca em arco
-    fireSound: {fileID: 8300000, guid: 5643289c2507c244f8c8da87c7979fc3, type: 3}
+    fireSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
     direction: 0
     kind: 1
     cooldown: 0.65
@@ -76,7 +77,7 @@ MonoBehaviour:
     effectSpriteSheet: {fileID: 0}
     projectileVisualPrefab: {fileID: 100000, guid: 15ad7a1d486f4cfaa9405654b188be7b, type: 3}
     projectileFrames: []
-    impactVisualPrefab: {fileID: 100000, guid: 18592ae028ca4c72a55c337fb8a165f2, type: 3}
+    impactVisualPrefab: {fileID: 0}
     impactFrames: []
     impactFramesPerSecond: 45
     effectColumns: 3
@@ -84,9 +85,14 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  specialAttackSound: {fileID: 8300000, guid: 5643289c2507c244f8c8da87c7979fc3, type: 3}
-  normalAttackSound: {fileID: 8300000, guid: 5643289c2507c244f8c8da87c7979fc3, type: 3}
+  normalAttackSound: {fileID: 8300000, guid: 296cdbedcedf4944f9282710b55513b5, type: 3}
+  specialAttackSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
+  dashSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: 3cae9377827d0004a8cf319267dd65b6, type: 3}
+  switchSound: {fileID: 0}
+  rescueSound: {fileID: 0}
   TempodeCooldown: 2
   Distancia: 0
   Invencivel: 0

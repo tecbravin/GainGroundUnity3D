@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Zaemon
   sprite: {fileID: 21300000, guid: 85bfa90d8d89fca44bcc1453fc6c3149, type: 3}
   hudPortrait: {fileID: 2800000, guid: 64d15e345c3a2e34f8aa84f68a26090f, type: 3}
+  directionalSpriteSheet: {fileID: 0}
   modelPrefab: {fileID: 2880083659513738051, guid: fc6ad15415e032d46914b744e1496b61, type: 3}
   speed: 3
   shotInterval: 0.4
@@ -25,7 +26,7 @@ MonoBehaviour:
   specialPassesWalls: 0
   normalWeapon:
     label: Bomba magica
-    fireSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
+    fireSound: {fileID: 8300000, guid: 9de397a258bcba1498685e223b9b41c5, type: 3}
     direction: 0
     kind: 3
     cooldown: 0.4
@@ -40,6 +41,20 @@ MonoBehaviour:
     freezeSeconds: 0
     duration: 2
     color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    mode: 0
+    arcDegrees: 120
+    effectSpriteSheet: {fileID: 0}
+    projectileVisualPrefab: {fileID: 0}
+    projectileFrames: []
+    impactVisualPrefab: {fileID: 0}
+    impactFrames: []
+    impactFramesPerSecond: 45
+    effectColumns: 3
+    effectRows: 2
+    effectDuration: 0
+    effectScale: 1
+    projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   specialWeapon:
     label: 'Vento: tornado com ricochete'
     fireSound: {fileID: 8300000, guid: 314cfefdadea88649b010e9ca28ed6ba, type: 3}
@@ -57,9 +72,27 @@ MonoBehaviour:
     freezeSeconds: 0
     duration: 5
     color: {r: 0.5, g: 1, b: 0.65, a: 1}
+    mode: 0
+    arcDegrees: 120
+    effectSpriteSheet: {fileID: 0}
+    projectileVisualPrefab: {fileID: 0}
+    projectileFrames: []
+    impactVisualPrefab: {fileID: 0}
+    impactFrames: []
+    impactFramesPerSecond: 45
+    effectColumns: 3
+    effectRows: 2
+    effectDuration: 0
+    effectScale: 1
+    projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   characterTint: {r: 1, g: 1, b: 1, a: 1}
+  normalAttackSound: {fileID: 8300000, guid: 9de397a258bcba1498685e223b9b41c5, type: 3}
   specialAttackSound: {fileID: 8300000, guid: 314cfefdadea88649b010e9ca28ed6ba, type: 3}
-  normalAttackSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
+  dashSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: 6df93af23f0ba7f4398a367b28cd5bce, type: 3}
+  switchSound: {fileID: 0}
+  rescueSound: {fileID: 0}
   TempodeCooldown: 2
   Distancia: 2.5
   Invencivel: 1

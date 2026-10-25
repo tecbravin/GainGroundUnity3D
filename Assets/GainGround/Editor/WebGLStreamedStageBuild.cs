@@ -22,6 +22,8 @@ public static class WebGLStreamedStageBuild
         if (source == null) throw new FileNotFoundException("Cena principal não encontrada", SourceScene);
 
         var originalStages = ReadStageList();
+        if (AssetDatabase.IsValidFolder(GeneratedFolder)) AssetDatabase.DeleteAsset(GeneratedFolder);
+        AssetDatabase.CreateFolder("Assets/GainGround", "GeneratedWebGL");
         string projectRoot = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
         string output = Path.GetFullPath(Path.Combine(projectRoot, OutputFolder));
         string candidate = Path.GetFullPath(Path.Combine(projectRoot, "Build", "WebGLStreamingNext"));
@@ -35,6 +37,7 @@ public static class WebGLStreamedStageBuild
         Directory.CreateDirectory(content);
 
         var builds = new List<AssetBundleBuild>();
+        var previewNames = new string[originalStages.Length];
         var mapNames = new string[originalStages.Length];
         var musicNames = new string[originalStages.Length];
         var victoryNames = new string[originalStages.Length];
@@ -48,15 +51,32 @@ public static class WebGLStreamedStageBuild
         {
             var stage = originalStages[i];
             if (stage == null) throw new InvalidOperationException("Fase " + i + " não atribuída na cena.");
-            var mapAsset = stage.background != null ? (UnityEngine.Object)stage.background : stage.terrainAtlas;
-            if (mapAsset != null)
+            if (stage.background != null)
             {
-                string assetPath = RequireAssetPath(mapAsset);
+                string name = "stage-" + (i + 1).ToString("D2") + "-preview";
+                string previewPath = stage.paintedLayout != null ?
+                    WebGLStageAtlasGenerator.CreatePreview(stage, i) : RequireAssetPath(stage.background);
+                builds.Add(new AssetBundleBuild { assetBundleName = name,
+                    assetNames = new[] { previewPath },
+                    addressableNames = new[] { "background" } });
+                previewNames[i] = name;
+            }
+            var mapAssets = new List<string>();
+            var mapAddresses = new List<string>();
+            if (stage.paintedLayout != null)
+            {
+                mapAssets.Add(WebGLStageAtlasGenerator.Create(stage, i));
+                mapAddresses.Add("layout");
+            }
+            if (stage.background == null && stage.terrainAtlas != null)
+            { mapAssets.Add(RequireAssetPath(stage.terrainAtlas)); mapAddresses.Add("terrain"); }
+            if (mapAssets.Count > 0)
+            {
                 string bundleName = "stage-" + (i + 1).ToString("D2") + "-map";
                 builds.Add(new AssetBundleBuild {
                     assetBundleName = bundleName,
-                    assetNames = new[] { assetPath },
-                    addressableNames = new[] { stage.background != null ? "background" : "terrain" }
+                    assetNames = mapAssets.ToArray(),
+                    addressableNames = mapAddresses.ToArray()
                 });
                 mapNames[i] = bundleName;
             }
@@ -69,13 +89,14 @@ public static class WebGLStreamedStageBuild
                 out objectAddresses[i], out hazardAddresses[i]);
         }
 
-        var portraitNames = new Dictionary<CharacterDefinition, string>();
+        var portraitNames = new Dictionary<string, string>();
         var portraitByPath = new Dictionary<string, string>();
         foreach (string path in AssetDatabase.GetDependencies(SourceScene, true))
         {
             var character = AssetDatabase.LoadAssetAtPath<CharacterDefinition>(path);
-            if (character != null && !portraitNames.ContainsKey(character))
-                portraitNames.Add(character, AddPortraitBundle(character.hudPortrait, builds, portraitByPath));
+            if (character != null && !portraitNames.ContainsKey(path) &&
+                !path.StartsWith(GeneratedFolder + "/", StringComparison.Ordinal))
+                portraitNames.Add(path, AddPortraitBundle(character.hudPortrait, builds, portraitByPath));
         }
 
         EnsureResourcesStayInPlayer(builds);
@@ -94,7 +115,9 @@ public static class WebGLStreamedStageBuild
             files.Add(name, new StageBundleFile { fileName = fileName, hash = hash });
         }
 
-        GenerateLightweightScene(originalStages, mapNames, musicNames, victoryNames,
+        // Building bundles can reload imported assets. Resolve fresh references before cloning them.
+        originalStages = ReadStageList();
+        GenerateLightweightScene(originalStages, previewNames, mapNames, musicNames, victoryNames,
             enemyNames, objectNames, objectAddresses, hazardAddresses, portraitNames, files);
         var options = new BuildPlayerOptions {
             scenes = new[] { GeneratedScene },
@@ -251,19 +274,19 @@ public static class WebGLStreamedStageBuild
         return alias;
     }
 
-    static void GenerateLightweightScene(StageDefinition[] originals, string[] maps, string[] music,
+    static void GenerateLightweightScene(StageDefinition[] originals, string[] previews, string[] maps, string[] music,
         string[] victory, string[][] enemies, string[] objects, string[][] objectAddresses,
-        string[][] hazardAddresses, Dictionary<CharacterDefinition, string> portraits,
+        string[][] hazardAddresses, Dictionary<string, string> portraits,
         Dictionary<string, StageBundleFile> files)
     {
-        if (AssetDatabase.IsValidFolder(GeneratedFolder)) AssetDatabase.DeleteAsset(GeneratedFolder);
-        AssetDatabase.CreateFolder("Assets/GainGround", "GeneratedWebGL");
-        var characterCopies = new Dictionary<CharacterDefinition, CharacterDefinition>();
+        var characterCopies = new Dictionary<string, CharacterDefinition>();
         var portraitFiles = new List<CharacterPortraitFiles>();
         foreach (var entry in portraits)
         {
-            var copy = UnityEngine.Object.Instantiate(entry.Key);
-            copy.name = entry.Key.name;
+            var original = AssetDatabase.LoadAssetAtPath<CharacterDefinition>(entry.Key);
+            if (original == null) throw new InvalidOperationException("Personagem de origem ausente: " + entry.Key);
+            var copy = UnityEngine.Object.Instantiate(original);
+            copy.name = original.name;
             copy.hudPortrait = null;
             AssetDatabase.CreateAsset(copy, GeneratedFolder + "/Character_" + characterCopies.Count.ToString("D2") + ".asset");
             characterCopies.Add(entry.Key, copy);
@@ -276,6 +299,7 @@ public static class WebGLStreamedStageBuild
             var copy = UnityEngine.Object.Instantiate(originals[i]);
             copy.name = originals[i].name;
             copy.background = null;
+            copy.paintedLayout = null;
             copy.terrainAtlas = null;
             copy.stageMusic = null;
             copy.victoryMusic = null;
@@ -302,11 +326,13 @@ public static class WebGLStreamedStageBuild
             AssetDatabase.CreateAsset(copy, GeneratedFolder + "/Stage_" + (i + 1).ToString("D2") + ".asset");
             clones[i] = copy;
             media[i] = new StageMediaFiles {
+                preview = Resolve(previews[i], files),
                 map = Resolve(maps[i], files),
                 objects = Resolve(objects[i], files),
                 music = Resolve(music[i], files),
                 victoryMusic = Resolve(victory[i], files),
                 hasBackground = originals[i].background != null,
+                hasPaintedLayout = originals[i].paintedLayout != null,
                 hasTerrainAtlas = originals[i].background == null && originals[i].terrainAtlas != null,
                 enemyVisuals = enemyFiles,
                 objectAddresses = objectAddresses[i],
@@ -346,16 +372,17 @@ public static class WebGLStreamedStageBuild
     }
 
     static CharacterDefinition Remap(CharacterDefinition original,
-        Dictionary<CharacterDefinition, CharacterDefinition> copies)
+        Dictionary<string, CharacterDefinition> copies)
     {
         if (original == null) return null;
-        if (!copies.TryGetValue(original, out var copy))
+        string path = AssetDatabase.GetAssetPath(original);
+        if (!copies.TryGetValue(path, out var copy))
             throw new InvalidOperationException("Personagem sem cópia WebGL: " + original.name);
         return copy;
     }
 
     static CharacterDefinition[] Remap(CharacterDefinition[] originals,
-        Dictionary<CharacterDefinition, CharacterDefinition> copies)
+        Dictionary<string, CharacterDefinition> copies)
     {
         if (originals == null) return null;
         var result = new CharacterDefinition[originals.Length];

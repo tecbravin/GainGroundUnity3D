@@ -1207,17 +1207,19 @@ MonoBehaviour:
   parts:
   - {fileID: 5084401393164487194}
   turnWithTarget: 1
+  fixedRotationPart: {fileID: 0}
   walkClip: 1
   attackClip: 2
   projectileSprite: {fileID: 21300000, guid: 8e5b4151da19838408180c2122b38bf9, type: 3}
   projectileVisualPrefab: {fileID: 100000, guid: 6b7b90502872423e8b6796c8719c0191, type: 3}
   projectileFrames: []
   projectileFramesPerSecond: 12
-  projectileSize: {x: 0, y: 0}
+  projectileSize: {x: 1, y: 1}
   projectileTint: {r: 1, g: 1, b: 1, a: 1}
+  laserSphereSprite: {fileID: 0}
   muzzleFlashSprite: {fileID: 0}
-  muzzleVisualPrefab: {fileID: 0}
   impactSprite: {fileID: 0}
+  muzzleVisualPrefab: {fileID: 0}
   impactVisualPrefab: {fileID: 100000, guid: 5ff1e66b6551470d9fb83c388c779e8b, type: 3}
   impactFrames:
   - {fileID: 21300000, guid: 6d60f8e2627a466694be039c91ed1961, type: 3}
@@ -1226,6 +1228,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 6e9c111183764b2eb0c9a6299dcceb72, type: 3}
   impactFramesPerSecond: 45
   effectSize: {x: 0.35, y: 0.35}
+  attackSound: {fileID: 0}
+  hitSound: {fileID: 0}
+  deathSound: {fileID: 8300000, guid: 1b3de3587b39869468b4aa786407ee46, type: 3}
 --- !u!1 &6665163853892351045
 GameObject:
   m_ObjectHideFlags: 0
@@ -1683,6 +1688,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: b4c4f1d1c0a939847913738d9d16c078, type: 2}
   rig: {fileID: 83141338677311615}
+  viewPitchDegrees: 35
   bones:
   - {fileID: 7792102154786035547}
   - {fileID: 6754978220159053061}

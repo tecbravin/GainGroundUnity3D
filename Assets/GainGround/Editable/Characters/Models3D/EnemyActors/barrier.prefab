@@ -83,17 +83,22 @@ MonoBehaviour:
   turnWithTarget: 0
   walkClip: 1
   attackClip: 2
-  projectileSprite: {fileID: 21300000, guid: 8e5b4151da19838408180c2122b38bf9, type: 3}
+  projectileSprite: {fileID: 21300000, guid: cdaa16d63fef4a04597aa0070e36d326, type: 3}
+  projectileVisualPrefab: {fileID: 0}
   projectileFrames: []
   projectileFramesPerSecond: 12
   projectileSize: {x: 0, y: 0}
   projectileTint: {r: 1, g: 1, b: 1, a: 1}
   muzzleFlashSprite: {fileID: 0}
   impactSprite: {fileID: 0}
+  muzzleVisualPrefab: {fileID: 0}
+  impactVisualPrefab: {fileID: 0}
+  impactFrames: []
+  impactFramesPerSecond: 45
   effectSize: {x: 0.35, y: 0.35}
   attackSound: {fileID: 0}
   hitSound: {fileID: 0}
-  deathSound: {fileID: 0}
+  deathSound: {fileID: 8300000, guid: b7d503a9ef5133f4a890ef747cf2f20f, type: 3}
 --- !u!1 &1155728623860602548
 GameObject:
   m_ObjectHideFlags: 0
@@ -198,7 +203,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4832967436783487847}
-  m_Mesh: {fileID: 4300000, guid: cda302a08a617ae4ebd260489854365f, type: 2}
+  m_Mesh: {fileID: 4300000, guid: 60c17e986326fb142ab14dd207ffba69, type: 2}
 --- !u!23 &4604945091368752320
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -288,6 +293,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: e8bbba751a983914e8e3f93a8919b093, type: 2}
   rig: {fileID: 2433676117806361055}
+  viewPitchDegrees: 35
   bones:
   - {fileID: 8186637461884794200}
   renderers:

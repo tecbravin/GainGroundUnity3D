@@ -14,17 +14,30 @@ namespace GainGround.Game
             public bool secured;
         }
         sealed class HazardState { public HazardSpawn data; public SpriteRenderer visual; }
+        sealed class DestructibleStageObject
+        {
+            public StageObjectSpawn data;
+            public SpriteRenderer visual;
+            public int health;
+        }
         readonly List<RescueState> extraCaptives = new List<RescueState>();
         readonly List<HazardState> hazardStates = new List<HazardState>();
+        readonly List<DestructibleStageObject> destructibleObjects = new List<DestructibleStageObject>();
         Rect[] movementWalls = new Rect[0];
 
         void BuildCampaignObjects()
         {
-            RebuildMovementWalls();
+            destructibleObjects.Clear();
             if (stage.objects != null)
                 foreach (var item in stage.objects)
                     if (item != null && item.prefab != null)
-                        SpawnStageObject(item.prefab, item.area);
+                    {
+                        var visual = SpawnStageObject(item.prefab, item.area);
+                        if (item.health > 0)
+                            destructibleObjects.Add(new DestructibleStageObject {
+                                data = item, visual = visual, health = item.health });
+                    }
+            RebuildMovementWalls();
             foreach (var enemy in enemies)
                 if (enemy.data.behavior == EnemyBehavior.Computer)
                     enemy.vulnerable = !enemies.Exists(other => other.data.behavior == EnemyBehavior.Barrier);
@@ -98,10 +111,59 @@ namespace GainGround.Game
         void RebuildMovementWalls()
         {
             var walls = new List<Rect>(stage.walls);
+            foreach (var item in destructibleObjects)
+                if (item.health > 0) walls.Add(item.data.area);
             foreach (var e in enemies)
                 if (e.health > 0 && e.data.obstacleSize.sqrMagnitude > 0)
                     walls.Add(new Rect(e.position - e.data.obstacleSize / 2, e.data.obstacleSize));
             movementWalls = walls.ToArray();
+        }
+
+        bool TryDamageStageObject(Vector2 point, int damage)
+        {
+            if (damage <= 0) return false;
+            for (int i = destructibleObjects.Count - 1; i >= 0; i--)
+            {
+                var item = destructibleObjects[i];
+                if (item.health <= 0 || !ArenaRules.Intersects(item.data.area, point, .08f)) continue;
+                DamageStageObject(item, damage);
+                return true;
+            }
+            return false;
+        }
+
+        bool StageObjectBlocks(Vector2 point)
+        {
+            foreach (var item in destructibleObjects)
+                if (item.health > 0 && ArenaRules.Intersects(item.data.area, point, .06f)) return true;
+            return false;
+        }
+
+        void DamageStageObject(DestructibleStageObject item, int damage)
+        {
+            item.health -= damage;
+            PlaySfx(impactSound);
+            if (item.health <= 0)
+            {
+                if (item.visual != null) Destroy(item.visual.gameObject);
+                destructibleObjects.Remove(item);
+                RebuildMovementWalls();
+            }
+            else if (item.visual != null)
+                item.visual.color = Color.Lerp(new Color(.75f, .48f, .38f), Color.white,
+                    (float)item.health / Mathf.Max(1, item.data.health));
+        }
+
+        void DamageStageObjectsInRadius(Vector2 center, float radius, int damage)
+        {
+            if (damage <= 0) return;
+            for (int i = destructibleObjects.Count - 1; i >= 0; i--)
+            {
+                var item = destructibleObjects[i];
+                Vector2 nearest = new Vector2(Mathf.Clamp(center.x, item.data.area.xMin, item.data.area.xMax),
+                    Mathf.Clamp(center.y, item.data.area.yMin, item.data.area.yMax));
+                if ((nearest - center).sqrMagnitude <= radius * radius) DamageStageObject(item, damage);
+            }
         }
 
         void UpdateAdditionalRescues(PlayerState p)
@@ -224,6 +286,11 @@ namespace GainGround.Game
                 }
             }
             e.visual.transform.position=e.position;
+            if (behavior == EnemyBehavior.Computer && e.age >= e.nextLaserSphereVolley)
+            {
+                ShootComputerLaserSpheres(e);
+                e.nextLaserSphereVolley = e.age + 8f;
+            }
             e.cooldown-=dt;
             if (!e.data.melee && e.cooldown<=0 && e.triggered)
             {
@@ -234,7 +301,7 @@ namespace GainGround.Game
                     case EnemyBehavior.Dragon: case EnemyBehavior.Sorcerer: count=5; spread=14; break;
                     case EnemyBehavior.Giant: count=7; spread=12; break;
                     case EnemyBehavior.Tank: case EnemyBehavior.Orb: count=8; radial=true; break;
-                    case EnemyBehavior.Computer: count=e.vulnerable?8:3; radial=e.vulnerable; spread=20; break;
+                    case EnemyBehavior.Computer: count=8; radial=e.vulnerable; spread=20; break;
                 }
                 ShootFan(e,direction,count,spread,radial);
                 if(e.model != null)e.model.Attack();
@@ -256,6 +323,37 @@ namespace GainGround.Game
                 var d=(Vector2)(Quaternion.Euler(0,0,angle)*(radial?Vector2.up:direction));
                 Fire(e.position,d,true,e.data.elevated,e.data.boss?3.6f:3.2f,22,1,
                     e.data.behavior==EnemyBehavior.Orb?Color.cyan:new Color(1,.35f,.15f),e);
+            }
+        }
+
+        void ShootComputerLaserSpheres(Enemy computer)
+        {
+            PlayEnemyAttackSound(computer);
+            float sideOffset = computer.data.visualSize.x * .5f + .25f;
+            for (int side = -1; side <= 1; side += 2)
+            {
+                // The side platforms occupy y >= 5; launch just below them so the spheres
+                // do not collide with the boss arena walls on their first frame.
+                Vector2 origin = computer.position + Vector2.right * (side * sideOffset) +
+                    Vector2.down * .5f;
+                var target = ClosestPlayer(origin);
+                if (target == null) continue;
+                Vector2 direction = (target.position - origin).normalized;
+                if (direction.sqrMagnitude < .0001f) direction = Vector2.down;
+                Fire(origin, direction, true, false, 1.6f, 24f, 1, Color.white, computer);
+                var shot = shots[shots.Count - 1];
+                shot.computerLaserSphere = true;
+                shot.nextLaserSphereTurn = .2f;
+                shot.directionalSprite = false;
+                shot.animationFrames = null;
+                var sprite = computer.model != null ? computer.model.laserSphereSprite : null;
+                if (sprite != null)
+                {
+                    shot.visual.sprite = sprite;
+                    shot.visual.color = Color.white;
+                    shot.visual.transform.localScale = new Vector3(
+                        .65f / sprite.bounds.size.x, .65f / sprite.bounds.size.y, 1);
+                }
             }
         }
     }

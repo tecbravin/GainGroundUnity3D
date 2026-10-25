@@ -6,6 +6,8 @@ namespace GainGround.Game
   public Transform rig;
   public PS2CharacterModel[] parts;
   public bool turnWithTarget=true;
+  [Tooltip("Optional mesh that keeps its initial rotation and position relative to this enemy while its bones animate.")]
+  public Transform fixedRotationPart;
   public int walkClip=1, attackClip=2;
   [Header("Generated enemy effects")]
   public Sprite projectileSprite;
@@ -15,6 +17,8 @@ namespace GainGround.Game
   [Min(1)] public float projectileFramesPerSecond=12;
   public Vector2 projectileSize=new Vector2(.16f,.16f);
   public Color projectileTint=Color.white;
+  [Tooltip("Sprite used by the two homing laser spheres fired by the final computer boss.")]
+  public Sprite laserSphereSprite;
   public Sprite muzzleFlashSprite;
   public Sprite impactSprite;
   public GameObject muzzleVisualPrefab;
@@ -33,6 +37,9 @@ namespace GainGround.Game
   SpriteRenderer anchor;
   Camera viewCamera;
   float frame,attackTime,nextOffscreenSample;
+  Quaternion fixedRotation;
+  Vector3 fixedLocalPosition;
+  bool fixedRotationCaptured;
   public static PS2EnemyVisual Bind(SpriteRenderer anchor,EnemySpawn spawn)
   {
    if(spawn.modelPrefab==null)return null;
@@ -45,7 +52,9 @@ namespace GainGround.Game
    float height=Mathf.Max(.5f,spawn.visualSize.y);
    view.transform.localScale=new Vector3(height/scale.x,height/scale.y,height/scale.z);
    view.transform.localPosition=new Vector3(0,-height*.4f/scale.y,-.4f/scale.z);
-   view.Tick(0,Vector2.down,false);return view;
+   view.Tick(0,Vector2.down,false);
+   view.CaptureFixedRotation();
+   return view;
   }
   public void Attack(){attackTime=.45f;frame=0;}
   public void Tick(float dt,Vector2 facing,bool moving)
@@ -74,7 +83,21 @@ namespace GainGround.Game
     if(renderer.sortingOrder!=anchor.sortingOrder)renderer.sortingOrder=anchor.sortingOrder;
    }
   }
-  void LateUpdate(){Sync();}
+  void CaptureFixedRotation()
+  {
+   if(fixedRotationPart==null)return;
+   fixedRotation=fixedRotationPart.rotation;
+   fixedLocalPosition=transform.InverseTransformPoint(fixedRotationPart.position);
+   fixedRotationCaptured=true;
+  }
+  void LateUpdate()
+  {
+   Sync();
+   if(fixedRotationPart==null)return;
+   if(!fixedRotationCaptured)CaptureFixedRotation();
+   fixedRotationPart.position=transform.TransformPoint(fixedLocalPosition);
+   fixedRotationPart.rotation=fixedRotation;
+  }
  }
 }
 

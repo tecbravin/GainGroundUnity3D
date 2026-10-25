@@ -19,6 +19,37 @@ MAPS = ROOT / "Assets/GainGround/Editable/OriginalCampaign/Complete/Maps"
 STAGES = ROOT / "Assets/GainGround/Editable/OriginalCampaign"
 PROVENANCE = ROOT / "Analysis/PS2Stages/complete_maps_provenance.json"
 
+# A TIM2 often holds several unrelated surfaces. These bounds identify the
+# repeatable part used for a background or a collision wall; props remain in
+# the editable stage objects. Coordinates refer to the unscaled source atlas.
+FLOOR_REGIONS = {
+    (2, 1): (0, 0, 128, 128),
+    (2, 5): (144, 16, 240, 112),
+    (2, 8): (128, 0, 256, 128),
+    (3, 6): (0, 0, 128, 128),
+    (3, 8): (0, 0, 128, 128),
+    **{(4, stage): (0, 0, 64, 64) for stage in range(1, 5)},
+    **{(4, stage): (32, 32, 64, 64) for stage in range(5, 10)},
+    (4, 10): (0, 128, 128, 256),
+}
+WALL_REGIONS = {
+    (2, 1): ("b", (16, 128, 128, 240)),
+    (2, 5): ("b", (0, 0, 128, 128)),
+    (2, 8): ("b", (16, 160, 112, 256)),
+    (3, 6): ("b", (0, 64, 72, 224)),
+    (3, 8): ("a", (256, 384, 384, 512)),
+    (3, 10): ("b", (8, 58, 128, 176)),
+    **{(4, stage): ("b", (0, 0, 96, 96)) for stage in (3, 4, 5, 9)},
+    (4, 7): ("b", (0, 0, 96, 96)),
+}
+
+
+def surface_region(atlas, bounds, label):
+    left, top, right, bottom = bounds
+    if not (0 <= left < right <= atlas.width and 0 <= top < bottom <= atlas.height):
+        raise ValueError(f"Invalid {label} atlas region {bounds} for {atlas.size}")
+    return atlas.crop(bounds)
+
 
 def archive_textures(archive, round_number, stage_number):
     prefix = f"r{round_number}s{stage_number:02}"
@@ -67,7 +98,9 @@ def compose(round_number, stage_number, textures, banner):
     width, height, walls, exits = stage_geometry(round_number, stage_number)
     size = (round(width * PPU), round(height * PPU))
     ground = textures[f"{prefix}_c.tm2"]
-    if round_number == 1 and stage_number == 2:
+    if (round_number, stage_number) in FLOOR_REGIONS:
+        ground = surface_region(ground, FLOOR_REGIONS[(round_number, stage_number)], "floor")
+    elif round_number == 1 and stage_number == 2:
         ground = ground.crop((0, 0, 256, 128))
     elif round_number == 2:
         ground = ground.crop((0, 0, 256, 128))
@@ -77,6 +110,9 @@ def compose(round_number, stage_number, textures, banner):
     stone = textures.get(f"{prefix}_b.tm2")
     if stone is None:
         stone = textures[f"{prefix}_a.tm2"].crop((0, 48, 192, 216))
+    if (round_number, stage_number) in WALL_REGIONS:
+        source, bounds = WALL_REGIONS[(round_number, stage_number)]
+        stone = surface_region(textures[f"{prefix}_{source}.tm2"], bounds, "wall")
 
     shadow = Image.new("RGBA", size)
     draw = ImageDraw.Draw(shadow)
