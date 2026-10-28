@@ -12,26 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a5eb2034508c1f4e90fe4962b08330b, type: 3}
   m_Name: Character_16
   m_EditorClassIdentifier: 
-  displayName: Babalu
-  sprite: {fileID: 21300000, guid: e4985465c5398ac4ea8c15184f58c1ec, type: 3}
+  displayName: Athra
+  sprite: {fileID: 21300000, guid: c54dd0d20abcba94f800ed12050ebe91, type: 3}
   hudPortrait: {fileID: 0}
   directionalSpriteSheet: {fileID: 0}
-  modelPrefab: {fileID: 8537331716817211574, guid: 65f1653248da7b94081052cdb4ebe0c1, type: 3}
-  speed: 2.9
-  shotInterval: 0.32
-  projectileSpeed: 9
-  range: 8
+  modelPrefab: {fileID: 4266932886503673140, guid: 664c13a307604cb46ae21d79e6c87a05, type: 3}
+  speed: 3.8
+  shotInterval: 0.4
+  projectileSpeed: 7
+  range: 3.4
   damage: 1
-  shotColor: {r: 0.95, g: 0.42, b: 0.4, a: 1}
+  shotColor: {r: 0.95, g: 0.65, b: 0.22, a: 1}
   specialPassesWalls: 1
   normalWeapon:
-    label: Flecha
-    fireSound: {fileID: 8300000, guid: 5643289c2507c244f8c8da87c7979fc3, type: 3}
+    label: Lanca
+    fireSound: {fileID: 8300000, guid: 296cdbedcedf4944f9282710b55513b5, type: 3}
     direction: 0
-    kind: 2
-    cooldown: 0.32
-    speed: 9
-    range: 8
+    kind: 1
+    cooldown: 0.4
+    speed: 7
+    range: 3.4
     damage: 1
     radius: 0.12
     maxActive: 3
@@ -44,9 +44,9 @@ MonoBehaviour:
     mode: 0
     arcDegrees: 120
     effectSpriteSheet: {fileID: 0}
-    projectileVisualPrefab: {fileID: 100000, guid: f217119c4ff14c28a67e3467695ac7b6, type: 3}
+    projectileVisualPrefab: {fileID: 100000, guid: 15ad7a1d486f4cfaa9405654b188be7b, type: 3}
     projectileFrames: []
-    impactVisualPrefab: {fileID: 100000, guid: 18592ae028ca4c72a55c337fb8a165f2, type: 3}
+    impactVisualPrefab: {fileID: 0}
     impactFrames: []
     impactFramesPerSecond: 45
     effectColumns: 3
@@ -54,29 +54,30 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   specialWeapon:
-    label: Flecha em arco
-    fireSound: {fileID: 8300000, guid: 5643289c2507c244f8c8da87c7979fc3, type: 3}
+    label: Lanca em arco
+    fireSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
     direction: 0
-    kind: 2
-    cooldown: 0.6
-    speed: 6
-    range: 9
+    kind: 1
+    cooldown: 0.65
+    speed: 5
+    range: 4
     damage: 1
-    radius: 0.52
+    radius: 0.12
     maxActive: 3
     lobbed: 1
     pierces: 0
-    blastRadius: 0.1
+    blastRadius: 0
     freezeSeconds: 0
     duration: 2
     color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
     mode: 0
     arcDegrees: 120
     effectSpriteSheet: {fileID: 0}
-    projectileVisualPrefab: {fileID: 100000, guid: f217119c4ff14c28a67e3467695ac7b6, type: 3}
+    projectileVisualPrefab: {fileID: 100000, guid: 15ad7a1d486f4cfaa9405654b188be7b, type: 3}
     projectileFrames: []
-    impactVisualPrefab: {fileID: 100000, guid: 18592ae028ca4c72a55c337fb8a165f2, type: 3}
+    impactVisualPrefab: {fileID: 0}
     impactFrames: []
     impactFramesPerSecond: 45
     effectColumns: 3
@@ -84,13 +85,14 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  normalAttackSound: {fileID: 8300000, guid: 5643289c2507c244f8c8da87c7979fc3, type: 3}
-  specialAttackSound: {fileID: 8300000, guid: 5643289c2507c244f8c8da87c7979fc3, type: 3}
+  normalAttackSound: {fileID: 8300000, guid: 296cdbedcedf4944f9282710b55513b5, type: 3}
+  specialAttackSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
   dashSound: {fileID: 0}
-  hitSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: 3cae9377827d0004a8cf319267dd65b6, type: 3}
   switchSound: {fileID: 0}
   rescueSound: {fileID: 0}
   TempodeCooldown: 2
-  Distancia: 2.5
-  Invencivel: 1
+  Distancia: 0
+  Invencivel: 0

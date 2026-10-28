@@ -91,6 +91,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -111,6 +112,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -131,6 +133,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -151,6 +154,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -171,6 +175,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -191,6 +196,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -207,6 +213,7 @@ MonoBehaviour:
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
+  introCameraTargets: []
   rescue: {fileID: 11400000, guid: 6eb5251a79305d64696f1739f58a5ca1, type: 2}
   rescuePosition: {x: -1.5, y: 1.5}
   background: {fileID: 21300000, guid: 89289c1c4935a454f9a84ee252610a5a, type: 3}
@@ -215,84 +222,112 @@ MonoBehaviour:
   additionalExits: []
   additionalCaptives: []
   objects:
+  - id: PS2:NativePerimeter
+    prefab: {fileID: 2040147254732441315, guid: 68ee51d4726bb564fa04ee74762e2bcc, type: 3}
+    area:
+      serializedVersion: 2
+      x: -6
+      y: -7
+      width: 12
+      height: 14
+    rotationDegrees: 0
+    modelScale: {x: 1.75, y: 1.6, z: 1}
+    teleportGroup: 0
+    health: 0
   - id: PAINT:STAGE11_ROCK_0
-    prefab: {fileID: 4521625166107482232, guid: 3666a04456c40bf4bafb447bf7c2200f, type: 3}
+    prefab: {fileID: 5926652339606156655, guid: 9c25cfc3bf2e1ed4799073c811ed8419, type: 3}
     area:
       serializedVersion: 2
       x: -5.4
       y: -4.75
       width: 1.2
       height: 1.1
+    rotationDegrees: 0
+    modelScale: {x: 0, y: 0, z: 0}
     teleportGroup: 0
     health: 0
   - id: PAINT:STAGE11_ROCK_1
-    prefab: {fileID: 4521625166107482232, guid: 3666a04456c40bf4bafb447bf7c2200f, type: 3}
+    prefab: {fileID: 1226022352042953060, guid: 2373f0b06d68ae349af8e31d7bdcf36d, type: 3}
     area:
       serializedVersion: 2
       x: 4.2000003
       y: -4.75
       width: 1.2
       height: 1.1
+    rotationDegrees: 0
+    modelScale: {x: 0, y: 0, z: 0}
     teleportGroup: 0
     health: 0
   - id: PAINT:STAGE11_ROCK_2
-    prefab: {fileID: 4521625166107482232, guid: 3666a04456c40bf4bafb447bf7c2200f, type: 3}
+    prefab: {fileID: 6096249225156429301, guid: b70fc8da69030104fa6b1d8a60883b38, type: 3}
     area:
       serializedVersion: 2
       x: -5.4
       y: -1.8499999
       width: 1.2
       height: 1.1
+    rotationDegrees: 0
+    modelScale: {x: 0, y: 0, z: 0}
     teleportGroup: 0
     health: 0
   - id: PAINT:STAGE11_ROCK_3
-    prefab: {fileID: 4521625166107482232, guid: 3666a04456c40bf4bafb447bf7c2200f, type: 3}
+    prefab: {fileID: 5111967377015478748, guid: 272c724392397ee4289382fdaf16793f, type: 3}
     area:
       serializedVersion: 2
       x: 4.2000003
       y: 2.25
       width: 1.2
       height: 1.1
+    rotationDegrees: 0
+    modelScale: {x: 0, y: 0, z: 0}
     teleportGroup: 0
     health: 0
   - id: PAINT:STAGE11_BUSH_0
-    prefab: {fileID: 269035149269855540, guid: c514b006760d93d499dd8e307c144831, type: 3}
+    prefab: {fileID: 6745774103705887472, guid: feb10564659f4704ab1cdcfcecbe1221, type: 3}
     area:
       serializedVersion: 2
       x: -5.5249996
       y: -3.1000001
       width: 0.65
       height: 0.8
+    rotationDegrees: 0
+    modelScale: {x: 0, y: 0, z: 0}
     teleportGroup: 0
     health: 0
   - id: PAINT:STAGE11_BUSH_1
-    prefab: {fileID: 269035149269855540, guid: c514b006760d93d499dd8e307c144831, type: 3}
+    prefab: {fileID: 2728884035278626586, guid: bb97c6fed8ea2cf49b1f412b7cb1606d, type: 3}
     area:
       serializedVersion: 2
       x: 4.8250003
       y: -3.1000001
       width: 0.65
       height: 0.8
+    rotationDegrees: 0
+    modelScale: {x: 0, y: 0, z: 0}
     teleportGroup: 0
     health: 0
   - id: PAINT:STAGE11_BUSH_2
-    prefab: {fileID: 269035149269855540, guid: c514b006760d93d499dd8e307c144831, type: 3}
+    prefab: {fileID: 6745774103705887472, guid: feb10564659f4704ab1cdcfcecbe1221, type: 3}
     area:
       serializedVersion: 2
       x: -5.4249997
       y: 1.8000001
       width: 0.65
       height: 0.8
+    rotationDegrees: 0
+    modelScale: {x: 0, y: 0, z: 0}
     teleportGroup: 0
     health: 0
   - id: PAINT:STAGE11_BUSH_3
-    prefab: {fileID: 269035149269855540, guid: c514b006760d93d499dd8e307c144831, type: 3}
+    prefab: {fileID: 2728884035278626586, guid: bb97c6fed8ea2cf49b1f412b7cb1606d, type: 3}
     area:
       serializedVersion: 2
       x: 4.775
       y: 4.2999997
       width: 0.65
       height: 0.8
+    rotationDegrees: 0
+    modelScale: {x: 0, y: 0, z: 0}
     teleportGroup: 0
     health: 0
   hazards: []

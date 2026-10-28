@@ -41,7 +41,11 @@ namespace GainGround.Game
 
         void BackFromStageSelection()
         {
-            if (state == ScreenState.StageSelect) state = ScreenState.Title;
+            if (state == ScreenState.StageSelect)
+            {
+                stageIntroRequested = false;
+                state = ScreenState.Title;
+            }
         }
 
         void RefreshStageSelectUI()

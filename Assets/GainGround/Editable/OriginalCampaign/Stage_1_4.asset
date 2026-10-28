@@ -604,6 +604,7 @@ MonoBehaviour:
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
+  introCameraTargets: []
   rescue: {fileID: 0}
   rescuePosition: {x: -6, y: 2}
   background: {fileID: 21300000, guid: bde0bbbbdbed83a43bf76699c5a02d28, type: 3}
@@ -611,5 +612,29 @@ MonoBehaviour:
   noExit: 0
   additionalExits: []
   additionalCaptives: []
-  objects: []
+  objects:
+  - id: PS2:Native:Stage14HillLeft
+    prefab: {fileID: 7094570394029682445, guid: eccc226b5e11ebe4ca7991ea5924e422, type: 3}
+    area:
+      serializedVersion: 2
+      x: -6
+      y: 4.5
+      width: 4
+      height: 2.5
+    rotationDegrees: 0
+    modelScale: {x: 1.5, y: 1.15, z: 1}
+    teleportGroup: 0
+    health: 0
+  - id: PS2:Native:Stage14HillRight
+    prefab: {fileID: 7189108805843119842, guid: b5043d0f3a3a2b849a1ec8a6700f3754, type: 3}
+    area:
+      serializedVersion: 2
+      x: 2
+      y: 4.5
+      width: 4
+      height: 2.5
+    rotationDegrees: 0
+    modelScale: {x: 1.4, y: 1.15, z: 1}
+    teleportGroup: 0
+    health: 0
   hazards: []

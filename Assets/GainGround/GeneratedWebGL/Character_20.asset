@@ -12,27 +12,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a5eb2034508c1f4e90fe4962b08330b, type: 3}
   m_Name: Character_20
   m_EditorClassIdentifier: 
-  displayName: Gaston
-  sprite: {fileID: 21300000, guid: c54dd0d20abcba94f800ed12050ebe91, type: 3}
+  displayName: Zaemon
+  sprite: {fileID: 21300000, guid: 85bfa90d8d89fca44bcc1453fc6c3149, type: 3}
   hudPortrait: {fileID: 0}
   directionalSpriteSheet: {fileID: 0}
-  modelPrefab: {fileID: 4622336896041716183, guid: df39a520890967d4e910c1da818a13b7, type: 3}
-  speed: 3.8
+  modelPrefab: {fileID: 2880083659513738051, guid: fc6ad15415e032d46914b744e1496b61, type: 3}
+  speed: 3
   shotInterval: 0.4
   projectileSpeed: 7
-  range: 3.4
-  damage: 1
+  range: 6
+  damage: 2
   shotColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  specialPassesWalls: 1
+  specialPassesWalls: 0
   normalWeapon:
-    label: Lanca
-    fireSound: {fileID: 8300000, guid: 5643289c2507c244f8c8da87c7979fc3, type: 3}
+    label: Bomba magica
+    fireSound: {fileID: 8300000, guid: 9de397a258bcba1498685e223b9b41c5, type: 3}
     direction: 0
-    kind: 1
+    kind: 3
     cooldown: 0.4
     speed: 7
-    range: 3.4
-    damage: 1
+    range: 6
+    damage: 2
     radius: 0.12
     maxActive: 3
     lobbed: 0
@@ -44,9 +44,9 @@ MonoBehaviour:
     mode: 0
     arcDegrees: 120
     effectSpriteSheet: {fileID: 0}
-    projectileVisualPrefab: {fileID: 100000, guid: 15ad7a1d486f4cfaa9405654b188be7b, type: 3}
+    projectileVisualPrefab: {fileID: 0}
     projectileFrames: []
-    impactVisualPrefab: {fileID: 100000, guid: 18592ae028ca4c72a55c337fb8a165f2, type: 3}
+    impactVisualPrefab: {fileID: 0}
     impactFrames: []
     impactFramesPerSecond: 45
     effectColumns: 3
@@ -54,29 +54,30 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   specialWeapon:
-    label: Lanca em arco
-    fireSound: {fileID: 8300000, guid: 5643289c2507c244f8c8da87c7979fc3, type: 3}
-    direction: 1
-    kind: 1
-    cooldown: 0.65
-    speed: 5
-    range: 4.8
-    damage: 1
-    radius: 0.42
-    maxActive: 3
-    lobbed: 1
-    pierces: 0
-    blastRadius: 0.3
+    label: 'Vento: tornado com ricochete'
+    fireSound: {fileID: 8300000, guid: 314cfefdadea88649b010e9ca28ed6ba, type: 3}
+    direction: 0
+    kind: 8
+    cooldown: 2
+    speed: 3.4
+    range: 20
+    damage: 2
+    radius: 0.3
+    maxActive: 1
+    lobbed: 0
+    pierces: 1
+    blastRadius: 0
     freezeSeconds: 0
-    duration: 2
-    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    duration: 5
+    color: {r: 0.5, g: 1, b: 0.65, a: 1}
     mode: 0
     arcDegrees: 120
     effectSpriteSheet: {fileID: 0}
-    projectileVisualPrefab: {fileID: 100000, guid: 15ad7a1d486f4cfaa9405654b188be7b, type: 3}
+    projectileVisualPrefab: {fileID: 0}
     projectileFrames: []
-    impactVisualPrefab: {fileID: 100000, guid: 18592ae028ca4c72a55c337fb8a165f2, type: 3}
+    impactVisualPrefab: {fileID: 0}
     impactFrames: []
     impactFramesPerSecond: 45
     effectColumns: 3
@@ -84,11 +85,12 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  normalAttackSound: {fileID: 8300000, guid: 5643289c2507c244f8c8da87c7979fc3, type: 3}
-  specialAttackSound: {fileID: 8300000, guid: 5643289c2507c244f8c8da87c7979fc3, type: 3}
+  normalAttackSound: {fileID: 8300000, guid: 9de397a258bcba1498685e223b9b41c5, type: 3}
+  specialAttackSound: {fileID: 8300000, guid: 314cfefdadea88649b010e9ca28ed6ba, type: 3}
   dashSound: {fileID: 0}
-  hitSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: 6df93af23f0ba7f4398a367b28cd5bce, type: 3}
   switchSound: {fileID: 0}
   rescueSound: {fileID: 0}
   TempodeCooldown: 2

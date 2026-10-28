@@ -12,25 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a5eb2034508c1f4e90fe4962b08330b, type: 3}
   m_Name: Character_18
   m_EditorClassIdentifier: 
-  displayName: Betty
+  displayName: Honey
   sprite: {fileID: 21300000, guid: 3a0d7d7be189ac348ae546da8e9f1af6, type: 3}
   hudPortrait: {fileID: 0}
   directionalSpriteSheet: {fileID: 0}
-  modelPrefab: {fileID: 2614090240380184814, guid: 4d827fc707efaa446983e22f92204d17, type: 3}
+  modelPrefab: {fileID: 5463143875894253604, guid: c53a1c8fc2f7d784ebec8ecbe1eb6460, type: 3}
   speed: 3
   shotInterval: 0.32
   projectileSpeed: 8
   range: 5.5
   damage: 1
-  shotColor: {r: 0.85, g: 0.42, b: 0.85, a: 1}
+  shotColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   specialPassesWalls: 1
   normalWeapon:
     label: Pistola
-    fireSound: {fileID: 8300000, guid: 6cdd576e48767c04e90bda42b6aea15a, type: 3}
+    fireSound: {fileID: 8300000, guid: a8a7eb9208b69ac42ada70de4ce8daeb, type: 3}
     direction: 0
     kind: 0
     cooldown: 0.32
-    speed: 8
+    speed: 10
     range: 5.5
     damage: 1
     radius: 0.12
@@ -44,9 +44,9 @@ MonoBehaviour:
     mode: 0
     arcDegrees: 120
     effectSpriteSheet: {fileID: 0}
-    projectileVisualPrefab: {fileID: 0}
+    projectileVisualPrefab: {fileID: 100000, guid: 6e3a7018fc0446098c4ac69ccc564454, type: 3}
     projectileFrames: []
-    impactVisualPrefab: {fileID: 0}
+    impactVisualPrefab: {fileID: 100000, guid: 18592ae028ca4c72a55c337fb8a165f2, type: 3}
     impactFrames: []
     impactFramesPerSecond: 45
     effectColumns: 3
@@ -54,20 +54,21 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   specialWeapon:
-    label: 'Granada: cima'
-    fireSound: {fileID: 8300000, guid: 296cdbedcedf4944f9282710b55513b5, type: 3}
-    direction: 1
+    label: 'Granada: 8 direcoes'
+    fireSound: {fileID: 8300000, guid: 2267106fef55c5e468e208d596fc0c81, type: 3}
+    direction: 0
     kind: 4
     cooldown: 0.9
     speed: 5
     range: 4.6
     damage: 2
-    radius: 0.12
+    radius: 0.82
     maxActive: 2
     lobbed: 1
     pierces: 0
-    blastRadius: 0.75
+    blastRadius: 0.85
     freezeSeconds: 0
     duration: 2
     color: {r: 0.5, g: 1, b: 0.3, a: 1}
@@ -76,20 +77,32 @@ MonoBehaviour:
     effectSpriteSheet: {fileID: 0}
     projectileVisualPrefab: {fileID: 100000, guid: 0893c533cd23492f9e13afabff45d738, type: 3}
     projectileFrames: []
-    impactVisualPrefab: {fileID: 0}
-    impactFrames: []
+    impactVisualPrefab: {fileID: 100000, guid: c68463aed61f4403912d3d3e0852eb39, type: 3}
+    impactFrames:
+    - {fileID: 21300000, guid: 434d42aac44a4327b4906b7bf2adeb6d, type: 3}
+    - {fileID: 21300000, guid: 9d8d51ec445d462182db01cdbf4351f0, type: 3}
+    - {fileID: 21300000, guid: 4467b510b3814ebe843232d46ae42730, type: 3}
+    - {fileID: 21300000, guid: 18eafe90b9784d9d82e2b1a2b988b972, type: 3}
+    - {fileID: 21300000, guid: 24b3f69bacad44bfa86d1af1a152739b, type: 3}
+    - {fileID: 21300000, guid: 18a6e505b760499bbbc5188ce2f16363, type: 3}
+    - {fileID: 21300000, guid: 16657f07240742f08031a5ce986a2bd7, type: 3}
+    - {fileID: 21300000, guid: d81af66c569040fca6134a590e0db18c, type: 3}
+    - {fileID: 21300000, guid: 3b1bb5fa858242b7a61d13a67c8071bf, type: 3}
+    - {fileID: 21300000, guid: 89e7c8a903c6478ca18003fe2672ba9b, type: 3}
+    - {fileID: 21300000, guid: 29e3bf61a539407c9eec33916a0967bf, type: 3}
+    - {fileID: 21300000, guid: ce1e51c941a5457a9ad636fb31a0356d, type: 3}
     impactFramesPerSecond: 45
     effectColumns: 3
     effectRows: 2
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
-    projectileSpinDegreesPerSecond: 720
+    projectileSpinDegreesPerSecond: 0
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  normalAttackSound: {fileID: 8300000, guid: 6cdd576e48767c04e90bda42b6aea15a, type: 3}
-  specialAttackSound: {fileID: 8300000, guid: 296cdbedcedf4944f9282710b55513b5, type: 3}
+  normalAttackSound: {fileID: 8300000, guid: a8a7eb9208b69ac42ada70de4ce8daeb, type: 3}
+  specialAttackSound: {fileID: 8300000, guid: 2267106fef55c5e468e208d596fc0c81, type: 3}
   dashSound: {fileID: 0}
-  hitSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: 9884a5c04ca89ca479875b2348647341, type: 3}
   switchSound: {fileID: 0}
   rescueSound: {fileID: 0}
   TempodeCooldown: 2

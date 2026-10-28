@@ -26,7 +26,7 @@ MonoBehaviour:
   specialPassesWalls: 0
   normalWeapon:
     label: Metralhadora
-    fireSound: {fileID: 8300000, guid: 6cdd576e48767c04e90bda42b6aea15a, type: 3}
+    fireSound: {fileID: 8300000, guid: ae62f0fce3b4501448271ab4d5be8faa, type: 3}
     direction: 0
     kind: 0
     cooldown: 0.14
@@ -54,9 +54,10 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   specialWeapon:
     label: 'Metralhadora: cima'
-    fireSound: {fileID: 8300000, guid: 6cdd576e48767c04e90bda42b6aea15a, type: 3}
+    fireSound: {fileID: 8300000, guid: a8a7eb9208b69ac42ada70de4ce8daeb, type: 3}
     direction: 1
     kind: 0
     cooldown: 0.16
@@ -84,11 +85,12 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  normalAttackSound: {fileID: 8300000, guid: 6cdd576e48767c04e90bda42b6aea15a, type: 3}
-  specialAttackSound: {fileID: 8300000, guid: 6cdd576e48767c04e90bda42b6aea15a, type: 3}
+  normalAttackSound: {fileID: 8300000, guid: ae62f0fce3b4501448271ab4d5be8faa, type: 3}
+  specialAttackSound: {fileID: 8300000, guid: a8a7eb9208b69ac42ada70de4ce8daeb, type: 3}
   dashSound: {fileID: 0}
-  hitSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: 6df93af23f0ba7f4398a367b28cd5bce, type: 3}
   switchSound: {fileID: 0}
   rescueSound: {fileID: 0}
   TempodeCooldown: 2

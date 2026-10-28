@@ -35,7 +35,7 @@ namespace GainGround.Game
 
         void StepHudSelection(int playerId, int direction)
         {
-            if (state != ScreenState.Playing || paused || playerId >= players.Count) return;
+            if (state != ScreenState.Playing || paused || stageIntroPlaying || playerId >= players.Count) return;
             var player = players[playerId];
             if (!player.awaitingSelection || selectionPortraitsLoading || player.party.Count == 0) return;
             player.selectionIndex = CarouselNeighbor(player, player.selectionIndex, direction);
@@ -43,14 +43,14 @@ namespace GainGround.Game
 
         void ConfirmHudSelection(int playerId)
         {
-            if (playerId >= players.Count) return;
+            if (stageIntroPlaying || playerId >= players.Count) return;
             var player = players[playerId];
             ChooseCharacter(player, player.selectionIndex);
         }
 
         void ToggleHudPause()
         {
-            if (state != ScreenState.Playing) return;
+            if (state != ScreenState.Playing || stageIntroPlaying) return;
             paused = !paused;
             ResetMobileInput();
         }
@@ -78,8 +78,8 @@ namespace GainGround.Game
                 if (id >= players.Count)
                 {
                     hudView.SetPlayer(id, "P" + (id + 1) + "  AGUARDANDO", "",
-                        "ESPECIAL PARA ENTRAR", "DASH", null, null, 0,
-                        false, UsesMobileControls && id == 0, false);
+                        -1, -1, null, null, 0, 0, false,
+                        false, UsesMobileControls && id == 0, false, false);
                     continue;
                 }
                 var player = players[id];
@@ -98,20 +98,26 @@ namespace GainGround.Game
                     if (member.escaped) escaped++;
                     else if (!member.lost) available++;
                 }
-                string name = player.awaitingSelection ? "P" + (id + 1) + "  ESCOLHA" :
-                    hero != null ? "P" + (id + 1) + "  " + hero.displayName :
+                float selectionWait = Mathf.Max(0, player.selectionReadyAt - Time.unscaledTime);
+                string name = player.awaitingSelection && selectionWait > 0 ?
+                    "P" + (id + 1) + "  AGUARDE " + selectionWait.ToString("F1") + "s" :
+                    hero != null ? (player.awaitingSelection ? "P" + (id + 1) : "") :
                     "P" + (id + 1) + "  SEM PERSONAGEM";
-                string roster = "EQUIPE " + available + "  |  SALVOS " + escaped;
                 float cooldown = player.HasActive ? player.party[player.active].dashCooldown : 0;
-                float ready = hero == null ? 0 : hero.TempodeCooldown <= 0 ? 1 :
+                bool canDash = hero != null && hero.Distancia > 0;
+                float ready = !canDash ? 0 : hero.TempodeCooldown <= 0 ? 1 :
                     1 - Mathf.Clamp01(cooldown / hero.TempodeCooldown);
-                string dash = cooldown > 0 ? "DASH  " + cooldown.ToString("F1") + "s" : "DASH PRONTO";
-                hudView.SetPlayer(id, name, hero != null ? hero.displayName : "", roster, dash,
+                float specialDuration = hero != null && hero.specialWeapon != null &&
+                    !string.IsNullOrEmpty(hero.specialWeapon.label) ? hero.specialWeapon.cooldown : 1.2f;
+                float specialReady = !player.HasActive ? 0 : specialDuration <= 0 ? 1 :
+                    1 - Mathf.Clamp01(player.specialCooldown / specialDuration);
+                hudView.SetPlayer(id, name, hero != null ? hero.displayName : "",
+                    available, escaped,
                     hero != null ? hero.hudPortrait : null,
-                    hero != null ? hero.sprite : null, ready,
-                    player.awaitingSelection && state == ScreenState.Playing && !paused,
-                    UsesMobileControls && id == 0 && state == ScreenState.Playing && !paused,
-                    !ClassicMode);
+                    hero != null ? hero.sprite : null, ready, specialReady, canDash,
+                    player.awaitingSelection && state == ScreenState.Playing && !paused && !stageIntroPlaying,
+                    UsesMobileControls && id == 0 && state == ScreenState.Playing && !paused && !stageIntroPlaying,
+                    !ClassicMode, selectionWait <= 0 && !selectionPortraitsLoading);
             }
         }
 

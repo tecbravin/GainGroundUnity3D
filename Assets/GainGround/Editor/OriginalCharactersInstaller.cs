@@ -135,7 +135,7 @@ public static class OriginalCharactersInstaller
         }
         const string scenePath = "Assets/GainGround/Editable/Scenes/GainGround.unity";
         EditorSceneManager.OpenScene(scenePath);
-        var game = UnityEngine.Object.FindObjectOfType<GainGroundGame>();
+        var game = UnityEngine.Object.FindAnyObjectByType<GainGroundGame>();
         game.allCharacters = roster;
         EditorUtility.SetDirty(game);
         EditorSceneManager.SaveScene(game.gameObject.scene);

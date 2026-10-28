@@ -17,26 +17,35 @@ public static class PS2CharacterInstaller
  {
   InstallSource(name, "Analysis/PS2Converted/"+name+".json", null, Folder+"/"+name, true);
  }
- public static void InstallSource(string name,string jsonPath,string texturePath,string folder,bool bindCharacter)
+ public static void InstallSource(string name,string jsonPath,string texturePath,string folder,bool bindCharacter,
+                                  Material sharedMaterial=null,float? sourceScale=null,bool stageObject=false,
+                                  bool saveAssets=true)
  {
   var source=JsonUtility.FromJson<Source>(File.ReadAllText(jsonPath));
   Directory.CreateDirectory(folder);
-  string textureName=source.source=="papi"?"papxi":source.source;
-  File.Copy(texturePath??("Analysis/PS2Characters/"+textureName+".tm2.png"),folder+"/Texture.png",true);AssetDatabase.Refresh();
-  var importer=(TextureImporter)AssetImporter.GetAtPath(folder+"/Texture.png");
-  importer.mipmapEnabled=false;importer.alphaIsTransparency=true;importer.npotScale=TextureImporterNPOTScale.None;
-  importer.textureCompression=TextureImporterCompression.Uncompressed;importer.SaveAndReimport();
-  var material=AssetDatabase.LoadAssetAtPath<Material>(folder+"/Original.mat");
-  if(material==null){material=new Material(Shader.Find("GainGround/PS2Character"));AssetDatabase.CreateAsset(material,folder+"/Original.mat");}
-  material.mainTexture=AssetDatabase.LoadAssetAtPath<Texture2D>(folder+"/Texture.png");EditorUtility.SetDirty(material);
+  if(!AssetDatabase.IsValidFolder(folder))AssetDatabase.Refresh();
+  var material=sharedMaterial;
+  if(material==null)
+  {
+   string textureName=source.source=="papi"?"papxi":source.source;
+   File.Copy(texturePath??("Analysis/PS2Characters/"+textureName+".tm2.png"),folder+"/Texture.png",true);AssetDatabase.Refresh();
+   var importer=(TextureImporter)AssetImporter.GetAtPath(folder+"/Texture.png");
+   importer.mipmapEnabled=false;importer.alphaIsTransparency=true;importer.npotScale=TextureImporterNPOTScale.None;
+   importer.textureCompression=TextureImporterCompression.Uncompressed;importer.SaveAndReimport();
+   material=AssetDatabase.LoadAssetAtPath<Material>(folder+"/Original.mat");
+   if(material==null){material=new Material(Shader.Find("GainGround/PS2Character"));AssetDatabase.CreateAsset(material,folder+"/Original.mat");}
+   material.mainTexture=AssetDatabase.LoadAssetAtPath<Texture2D>(folder+"/Texture.png");EditorUtility.SetDirty(material);
+  }
   var data=AssetDatabase.LoadAssetAtPath<PS2ModelData>(folder+"/Model.asset");
   if(data==null){data=ScriptableObject.CreateInstance<PS2ModelData>();AssetDatabase.CreateAsset(data,folder+"/Model.asset");}
   data.bones=source.bones;data.clips=source.clips;data.material=material;
+  if(sourceScale.HasValue)data.modelScale=sourceScale.Value;
   data.meshes=new Mesh[source.parts.Length];data.partIds=new int[source.parts.Length];
   var root=new GameObject(name);var view=root.AddComponent<PS2CharacterModel>();view.data=data;
   if(name=="Betty")view.viewPitchDegrees=-35;
   view.rig=new GameObject("Original PS2 rig").transform;view.rig.SetParent(root.transform,false);
-  view.rig.localScale=new Vector3(data.modelScale,-data.modelScale,data.modelScale);
+  view.rig.localScale=new Vector3(data.modelScale,stageObject?data.modelScale:-data.modelScale,data.modelScale);
+  if(stageObject)view.rig.localRotation=Quaternion.Euler(60,0,0);
   view.bones=new Transform[data.bones.Length];var renderers=new List<Renderer>();
   for(int i=0;i<view.bones.Length;i++)view.bones[i]=new GameObject("Bone_"+i).transform;
   for(int i=0;i<view.bones.Length;i++)
@@ -69,7 +78,7 @@ public static class PS2CharacterInstaller
   hero.modelPrefab=AssetDatabase.LoadAssetAtPath<GameObject>(folder+"/"+name+".prefab").GetComponent<PS2CharacterModel>();
   hero.characterTint=Color.white;EditorUtility.SetDirty(hero);
   }
-  AssetDatabase.SaveAssets();
+  if(saveAssets)AssetDatabase.SaveAssets();
  }
  public static void Preview(string name)
  {

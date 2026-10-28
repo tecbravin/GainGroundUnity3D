@@ -6,6 +6,8 @@ namespace GainGround.Game
   public Transform rig;
   public PS2CharacterModel[] parts;
   public bool turnWithTarget=true;
+  [Tooltip("Keeps a fixed emplacement centered on its stage spawn instead of lowering it like a standing actor.")]
+  public bool mountedToStage;
   [Tooltip("Optional mesh that keeps its initial rotation and position relative to this enemy while its bones animate.")]
   public Transform fixedRotationPart;
   public int walkClip=1, attackClip=2;
@@ -17,6 +19,10 @@ namespace GainGround.Game
   [Min(1)] public float projectileFramesPerSecond=12;
   public Vector2 projectileSize=new Vector2(.16f,.16f);
   public Color projectileTint=Color.white;
+  [Tooltip("Optional halo drawn behind this enemy's projectile.")]
+  public Sprite projectileGlowSprite;
+  public Vector2 projectileGlowSize;
+  public Color projectileGlowTint=Color.white;
   [Tooltip("Sprite used by the two homing laser spheres fired by the final computer boss.")]
   public Sprite laserSphereSprite;
   public Sprite muzzleFlashSprite;
@@ -51,7 +57,7 @@ namespace GainGround.Game
    var scale=anchor.transform.lossyScale;
    float height=Mathf.Max(.5f,spawn.visualSize.y);
    view.transform.localScale=new Vector3(height/scale.x,height/scale.y,height/scale.z);
-   view.transform.localPosition=new Vector3(0,-height*.4f/scale.y,-.4f/scale.z);
+   view.transform.localPosition=new Vector3(0,view.mountedToStage?0:-height*.4f/scale.y,-.4f/scale.z);
    view.Tick(0,Vector2.down,false);
    view.CaptureFixedRotation();
    return view;

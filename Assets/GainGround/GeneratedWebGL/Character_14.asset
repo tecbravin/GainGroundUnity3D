@@ -12,85 +12,89 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a5eb2034508c1f4e90fe4962b08330b, type: 3}
   m_Name: Character_14
   m_EditorClassIdentifier: 
-  displayName: Wanderer
-  sprite: {fileID: 21300000, guid: a184bdf23b284dfcb021bfe86f99e0da, type: 3}
+  displayName: General
+  sprite: {fileID: 21300000, guid: 3a0d7d7be189ac348ae546da8e9f1af6, type: 3}
   hudPortrait: {fileID: 0}
-  directionalSpriteSheet: {fileID: 2800000, guid: 01fe8ee899f84e1db6051d322642a2f1, type: 3}
-  modelPrefab: {fileID: 0}
-  speed: 3.2
-  shotInterval: 0.42
-  projectileSpeed: 7
-  range: 1.6
-  damage: 5
-  shotColor: {r: 0.9, g: 0.75, b: 0.45, a: 1}
+  directionalSpriteSheet: {fileID: 0}
+  modelPrefab: {fileID: 5127935633444170641, guid: ce6eb2f2e9c1dbe42b34dbd2f63ce368, type: 3}
+  speed: 2
+  shotInterval: 0.32
+  projectileSpeed: 8
+  range: 5.5
+  damage: 1
+  shotColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   specialPassesWalls: 0
   normalWeapon:
-    label: Tajo de espada
-    fireSound: {fileID: 8300000, guid: f816be56df731c741b9ab49b64233e7b, type: 3}
+    label: Pistola
+    fireSound: {fileID: 8300000, guid: ae62f0fce3b4501448271ab4d5be8faa, type: 3}
     direction: 0
     kind: 0
-    cooldown: 0.42
-    speed: 7
-    range: 1.6
-    damage: 5
+    cooldown: 0.32
+    speed: 8
+    range: 5.5
+    damage: 1
     radius: 0.12
-    maxActive: 1
+    maxActive: 3
     lobbed: 0
     pierces: 0
     blastRadius: 0
     freezeSeconds: 0
-    duration: 0.18
-    color: {r: 1, g: 0.78, b: 0.35, a: 1}
-    mode: 1
+    duration: 2
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    mode: 0
     arcDegrees: 120
-    effectSpriteSheet: {fileID: 2800000, guid: f6b1eabfd2b441518f1438fe4bf0c9d5, type: 3}
-    projectileVisualPrefab: {fileID: 0}
+    effectSpriteSheet: {fileID: 0}
+    projectileVisualPrefab: {fileID: 100000, guid: 6e3a7018fc0446098c4ac69ccc564454, type: 3}
     projectileFrames: []
-    impactVisualPrefab: {fileID: 0}
+    impactVisualPrefab: {fileID: 100000, guid: 18592ae028ca4c72a55c337fb8a165f2, type: 3}
     impactFrames: []
     impactFramesPerSecond: 45
     effectColumns: 3
     effectRows: 2
-    effectDuration: 0.24
-    effectScale: 0.7
+    effectDuration: 0
+    effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   specialWeapon:
-    label: Giro refletor
-    fireSound: {fileID: 8300000, guid: f816be56df731c741b9ab49b64233e7b, type: 3}
+    label: Lanca-chamas
+    fireSound: {fileID: 8300000, guid: 7f8cb2ddd4329c149833fa904860575d, type: 3}
     direction: 0
-    kind: 0
-    cooldown: 1.8
-    speed: 7
-    range: 1.45
-    damage: 0
-    radius: 0.12
-    maxActive: 1
+    kind: 6
+    cooldown: 0.15
+    speed: 5
+    range: 2.5
+    damage: 2
+    radius: 0.3
+    maxActive: 4
     lobbed: 0
-    pierces: 0
+    pierces: 1
     blastRadius: 0
     freezeSeconds: 0
-    duration: 0.8
-    color: {r: 0.3, g: 1, b: 0.8, a: 1}
-    mode: 2
-    arcDegrees: 180
-    effectSpriteSheet: {fileID: 2800000, guid: 8121ca6bd3d64f7094a2c6f1d114d391, type: 3}
-    projectileVisualPrefab: {fileID: 0}
-    projectileFrames: []
-    impactVisualPrefab: {fileID: 0}
+    duration: 2
+    color: {r: 1, g: 0.3, b: 0.05, a: 1}
+    mode: 0
+    arcDegrees: 120
+    effectSpriteSheet: {fileID: 0}
+    projectileVisualPrefab: {fileID: 100000, guid: e9726aadd6f447be988bd605cc3a0da6, type: 3}
+    projectileFrames:
+    - {fileID: 21300000, guid: dfdd26b2522a4addba8f08d64c37bfb8, type: 3}
+    - {fileID: 21300000, guid: 4a8b23dfcabe4c56a8fafaabccbe9740, type: 3}
+    impactVisualPrefab: {fileID: 100000, guid: a81bc11dc34d4f869835ead0cda99850, type: 3}
     impactFrames: []
     impactFramesPerSecond: 45
     effectColumns: 3
     effectRows: 2
-    effectDuration: 0.3692308
-    effectScale: 0.7
+    effectDuration: 0
+    effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  normalAttackSound: {fileID: 8300000, guid: f816be56df731c741b9ab49b64233e7b, type: 3}
-  specialAttackSound: {fileID: 8300000, guid: f816be56df731c741b9ab49b64233e7b, type: 3}
+  normalAttackSound: {fileID: 8300000, guid: ae62f0fce3b4501448271ab4d5be8faa, type: 3}
+  specialAttackSound: {fileID: 8300000, guid: 7f8cb2ddd4329c149833fa904860575d, type: 3}
   dashSound: {fileID: 0}
-  hitSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: 1b90bb2b62b02f84899e66960a5b3429, type: 3}
   switchSound: {fileID: 0}
   rescueSound: {fileID: 0}
   TempodeCooldown: 2
-  Distancia: 2.5
+  Distancia: 2
   Invencivel: 1

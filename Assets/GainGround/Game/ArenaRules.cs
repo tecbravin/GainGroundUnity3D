@@ -18,6 +18,25 @@ namespace GainGround.Game
             return false;
         }
 
+        public static bool SegmentIntersects(Rect box, Vector2 from, Vector2 to)
+        {
+            Vector2 delta = to - from;
+            float enter = 0f, leave = 1f;
+            if (!ClipAxis(from.x, delta.x, box.xMin, box.xMax, ref enter, ref leave)) return false;
+            return ClipAxis(from.y, delta.y, box.yMin, box.yMax, ref enter, ref leave);
+        }
+
+        static bool ClipAxis(float origin, float delta, float min, float max, ref float enter, ref float leave)
+        {
+            if (Mathf.Abs(delta) < .00001f) return origin >= min && origin <= max;
+            float near = (min - origin) / delta;
+            float far = (max - origin) / delta;
+            if (near > far) { float swap = near; near = far; far = swap; }
+            enter = Mathf.Max(enter, near);
+            leave = Mathf.Min(leave, far);
+            return enter <= leave;
+        }
+
         public static Vector2 Move(Vector2 from, Vector2 delta, float radius, Vector2 size, Rect[] walls)
         {
             // Small steps prevent tunnelling on slow frames; axes separately allow wall sliding.

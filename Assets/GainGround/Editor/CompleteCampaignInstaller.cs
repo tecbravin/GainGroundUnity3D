@@ -42,7 +42,7 @@ public static class CompleteCampaignInstaller
         if (manifest.stages.Length!=50) throw new InvalidDataException("Expected all 50 original stages.");
         var stages=manifest.stages.Select(InstallMap).ToArray();
         EditorSceneManager.OpenScene("Assets/GainGround/Editable/Scenes/GainGround.unity");
-        var game=UnityEngine.Object.FindObjectOfType<GainGroundGame>();
+        var game=UnityEngine.Object.FindAnyObjectByType<GainGroundGame>();
         game.stages=stages;
         EditorUtility.SetDirty(game);
         EditorSceneManager.SaveScene(game.gameObject.scene);
@@ -55,6 +55,11 @@ public static class CompleteCampaignInstaller
     {
         string path=$"{Root}/Stage_{map.round}_{map.number}.asset";
         var s=AssetDatabase.LoadAssetAtPath<StageDefinition>(path);
+        // 4-9 has its own terrain, actor positions and editable layout decoded from
+        // the PS2 ISO. Reinstalling the Mega Drive campaign must not restore its
+        // incompatible 12x14 maze or replace the PS2 enemy placements.
+        if (map.round==4 && map.number==9 && s!=null &&
+            File.Exists(Root + "/PS2Native/Stage_4_9.json")) return s;
         bool preserve=map.round==1 && map.number<=5 && s!=null;
         if(s==null) { s=ScriptableObject.CreateInstance<StageDefinition>(); AssetDatabase.CreateAsset(s,path); }
         s.background=AssetDatabase.LoadAssetAtPath<Sprite>($"{Content}/Maps/{map.round}-{map.number:00}.png");
@@ -67,6 +72,30 @@ public static class CompleteCampaignInstaller
             s.exit=s.noExit ? new Rect() : map.exits[0].WorldRect;
             s.additionalExits=map.exits.Skip(1).Select(a=>a.WorldRect).ToArray();
             s.enemies=map.enemies.Select(Enemy).ToArray();
+            if (map.round == 2 && map.number == 5) ConfigureStage25(s);
+            if (map.round == 2 && map.number == 4) ConfigureStage24(s);
+            if (map.round == 2 && map.number == 3)
+            {
+                var blade = AssetDatabase.LoadAssetAtPath<Sprite>(
+                    "Assets/GainGround/Editable/Art/Projectiles/SpinningSword.png");
+                if (blade == null) throw new InvalidDataException("Missing 2-3 spinning blade sprite.");
+                foreach (var enemy in s.enemies)
+                    if (enemy.sprite != null && enemy.sprite.name == "axeman" && enemy.position.y > 3f)
+                    {
+                        enemy.melee = false;
+                        enemy.shotInterval = 2.2f;
+                        enemy.projectileSprite = blade;
+                        enemy.projectileSize = new Vector2(.42f, .42f);
+                        enemy.projectileSpinDegreesPerSecond = 900f;
+                    }
+            }
+            if (map.round == 1 && map.number == 9)
+                for (int i = 0; i < s.enemies.Length; i++)
+                    if (map.enemies[i].kind == "archer" && !map.enemies[i].elevated)
+                    {
+                        s.enemies[i].sentry = false;
+                        s.enemies[i].speed = .85f;
+                    }
             if (map.round == 1 && map.number == 10)
                 foreach (var enemy in s.enemies)
                     if (enemy.behavior == EnemyBehavior.Giant && !enemy.boss)
@@ -142,5 +171,75 @@ public static class CompleteCampaignInstaller
         }
         s.freezeImmune=s.boss || s.obstacleSize!=Vector2.zero;
         return s;
+    }
+    static void ConfigureStage24(StageDefinition stage)
+    {
+        if (stage.enemies.Length != 18) throw new InvalidDataException("Unexpected 2-4 enemy count.");
+        var archer = AssetDatabase.LoadAssetAtPath<Sprite>($"{Content}/Sprites/archer.png");
+        var archerModel = AssetDatabase.LoadAssetAtPath<GameObject>(
+            "Assets/GainGround/Editable/Characters/Models3D/EnemyActors/archer.prefab")?.GetComponent<PS2EnemyVisual>();
+        var knight = AssetDatabase.LoadAssetAtPath<Sprite>($"{Content}/Sprites/knight.png");
+        var knightModel = AssetDatabase.LoadAssetAtPath<GameObject>(
+            "Assets/GainGround/Editable/Characters/Models3D/EnemyActors/RunningKnight.prefab")?.GetComponent<PS2EnemyVisual>();
+        if (archer == null || archerModel == null || knight == null || knightModel == null)
+            throw new InvalidDataException("Missing 2-4 archer or knight assets.");
+        for (int i = 0; i < 8; i++)
+        {
+            var enemy = stage.enemies[i];
+            enemy.sprite = archer; enemy.modelPrefab = archerModel;
+            enemy.visualSize = new Vector2(1.5f, 1.5f);
+            enemy.behavior = i == 0 || i == 7 ? EnemyBehavior.BurstArcher : EnemyBehavior.WallArcher;
+            enemy.shotInterval = i == 0 || i == 7 ? 2.8f : 2.4f;
+            enemy.initialShotDelay = 1.2f + i * .12f;
+        }
+        for (int i = 8; i < 10; i++)
+        {
+            var enemy = stage.enemies[i];
+            enemy.sprite = knight; enemy.modelPrefab = knightModel;
+            enemy.visualSize = new Vector2(1.5f, 1.75f);
+            enemy.health = 4; enemy.speed = 3.1f;
+            enemy.behavior = EnemyBehavior.ChargeKnight; enemy.melee = true;
+        }
+        for (int i = 10; i < 18; i++)
+        {
+            var enemy = stage.enemies[i];
+            enemy.position = new Vector2(i % 2 == 0 ? -5.35f : 5.35f,
+                i < 14 ? -5.7f : 5.7f);
+            enemy.speed = 2.25f; enemy.spawnDelay = 2f + (i - 10) * .8f;
+            enemy.behavior = EnemyBehavior.Ambusher;
+        }
+    }
+    static void ConfigureStage25(StageDefinition stage)
+    {
+        var sprite = AssetDatabase.LoadAssetAtPath<Sprite>($"{Content}/Sprites/archer.png");
+        var model = AssetDatabase.LoadAssetAtPath<GameObject>(
+            "Assets/GainGround/Editable/Characters/Models3D/EnemyActors/archer.prefab")?.GetComponent<PS2EnemyVisual>();
+        if (sprite == null || model == null) throw new InvalidDataException("Missing 2-5 archer assets.");
+        var positions = new[] {
+            new Vector2(-4.8f,-4.8f), new Vector2(-2f,-4.8f), new Vector2(2f,-4.8f), new Vector2(4.8f,-4.8f),
+            new Vector2(-5.3f,-2.7f), new Vector2(-1.8f,-2.7f), new Vector2(1.8f,-2.7f), new Vector2(5.3f,-2.7f),
+            new Vector2(-4.9f,-1.45f), new Vector2(4.9f,-1.45f),
+            new Vector2(-5.4f,-5.7f), new Vector2(5.4f,-5.7f),
+            new Vector2(-5.4f,-3.8f), new Vector2(5.4f,-3.8f),
+            new Vector2(-5.4f,-5.7f), new Vector2(5.4f,-5.7f),
+            new Vector2(-5.4f,-3.8f), new Vector2(5.4f,-3.8f) };
+        stage.enemies = new EnemySpawn[positions.Length];
+        for (int i = 0; i < stage.enemies.Length; i++)
+        {
+            var enemy = new EnemySpawn();
+            enemy.sprite = sprite; enemy.modelPrefab = model;
+            enemy.visualSize = new Vector2(1.5f, 1.5f);
+            enemy.position = positions[i]; enemy.sentry = false; enemy.melee = false;
+            enemy.health = 1;
+            enemy.behavior = i < 10 ? EnemyBehavior.Chaser : EnemyBehavior.Ambusher;
+            enemy.speed = i < 10 ? .9f : 1.7f;
+            enemy.shotInterval = i < 10 ? 2.4f : 1.9f;
+            enemy.spawnDelay = i < 10 ? 0f : 3f + (i - 10) * 1.2f;
+            stage.enemies[i] = enemy;
+        }
+        var walls = new System.Collections.Generic.List<Rect>(stage.walls);
+        walls.Add(new Rect(-6f, -1f, 5f, 2.5f));
+        walls.Add(new Rect(1f, -1f, 5f, 2.5f));
+        stage.walls = walls.ToArray();
     }
 }

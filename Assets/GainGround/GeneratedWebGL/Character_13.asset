@@ -12,27 +12,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a5eb2034508c1f4e90fe4962b08330b, type: 3}
   m_Name: Character_13
   m_EditorClassIdentifier: 
-  displayName: Glow Knight
-  sprite: {fileID: 21300000, guid: 85bfa90d8d89fca44bcc1453fc6c3149, type: 3}
+  displayName: Valkyrie
+  sprite: {fileID: 21300000, guid: c54dd0d20abcba94f800ed12050ebe91, type: 3}
   hudPortrait: {fileID: 0}
   directionalSpriteSheet: {fileID: 0}
-  modelPrefab: {fileID: 1813304398822432220, guid: 07360599d0f8ba947b77a3858e4e2da2, type: 3}
+  modelPrefab: {fileID: 9091237171529724857, guid: e35354d0a204c8e42903695970704f32, type: 3}
   speed: 3
-  shotInterval: 0.4
-  projectileSpeed: 7
-  range: 6
-  damage: 2
-  shotColor: {r: 0.38, g: 0.85, b: 0.55, a: 1}
+  shotInterval: 0.32
+  projectileSpeed: 8
+  range: 5.5
+  damage: 1
+  shotColor: {r: 0.95, g: 0.65, b: 0.22, a: 1}
   specialPassesWalls: 0
   normalWeapon:
-    label: Bomba magica
-    fireSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
+    label: Pistola
+    fireSound: {fileID: 8300000, guid: 296cdbedcedf4944f9282710b55513b5, type: 3}
     direction: 0
-    kind: 3
-    cooldown: 0.4
-    speed: 7
-    range: 6
-    damage: 2
+    kind: 1
+    cooldown: 0.32
+    speed: 8
+    range: 7
+    damage: 1
     radius: 0.12
     maxActive: 3
     lobbed: 0
@@ -44,61 +44,55 @@ MonoBehaviour:
     mode: 0
     arcDegrees: 120
     effectSpriteSheet: {fileID: 0}
-    projectileVisualPrefab: {fileID: 100000, guid: 6b7b90502872423e8b6796c8719c0191, type: 3}
+    projectileVisualPrefab: {fileID: 100000, guid: 6e3a7018fc0446098c4ac69ccc564454, type: 3}
     projectileFrames: []
-    impactVisualPrefab: {fileID: 100000, guid: 5ff1e66b6551470d9fb83c388c779e8b, type: 3}
-    impactFrames:
-    - {fileID: 21300000, guid: 6d60f8e2627a466694be039c91ed1961, type: 3}
-    - {fileID: 21300000, guid: b461c268a44b4c1899f2eaaf10c8dcb9, type: 3}
-    - {fileID: 21300000, guid: f9f5dc4a51bb453a933d7751599451c4, type: 3}
-    - {fileID: 21300000, guid: 6e9c111183764b2eb0c9a6299dcceb72, type: 3}
+    impactVisualPrefab: {fileID: 100000, guid: 18592ae028ca4c72a55c337fb8a165f2, type: 3}
+    impactFrames: []
     impactFramesPerSecond: 45
     effectColumns: 3
     effectRows: 2
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   specialWeapon:
-    label: 'Luz: quatro orbes'
+    label: 'Bumerangue: 8 direcoes'
     fireSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
     direction: 0
-    kind: 11
-    cooldown: 3
-    speed: 1
-    range: 0.85
-    damage: 2
+    kind: 1
+    cooldown: 0.45
+    speed: 7
+    range: 8
+    damage: 1
     radius: 0.12
-    maxActive: 4
+    maxActive: 2
     lobbed: 0
     pierces: 1
     blastRadius: 0
     freezeSeconds: 0
-    duration: 2.8
-    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    duration: 2
+    color: {r: 0, g: 1, b: 1, a: 1}
     mode: 0
     arcDegrees: 120
     effectSpriteSheet: {fileID: 0}
-    projectileVisualPrefab: {fileID: 100000, guid: f182f2f2fc574178ab9eb7c695da3a79, type: 3}
+    projectileVisualPrefab: {fileID: 100000, guid: 15ad7a1d486f4cfaa9405654b188be7b, type: 3}
     projectileFrames: []
-    impactVisualPrefab: {fileID: 100000, guid: 5ff1e66b6551470d9fb83c388c779e8b, type: 3}
-    impactFrames:
-    - {fileID: 21300000, guid: 6d60f8e2627a466694be039c91ed1961, type: 3}
-    - {fileID: 21300000, guid: b461c268a44b4c1899f2eaaf10c8dcb9, type: 3}
-    - {fileID: 21300000, guid: f9f5dc4a51bb453a933d7751599451c4, type: 3}
-    - {fileID: 21300000, guid: 6e9c111183764b2eb0c9a6299dcceb72, type: 3}
+    impactVisualPrefab: {fileID: 0}
+    impactFrames: []
     impactFramesPerSecond: 45
     effectColumns: 3
     effectRows: 2
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  normalAttackSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
+  normalAttackSound: {fileID: 8300000, guid: 296cdbedcedf4944f9282710b55513b5, type: 3}
   specialAttackSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
   dashSound: {fileID: 0}
-  hitSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: fa1c5d90efe09ac4f8e2ba313bc000a6, type: 3}
   switchSound: {fileID: 0}
   rescueSound: {fileID: 0}
   TempodeCooldown: 2
-  Distancia: 3.5
+  Distancia: 2.5
   Invencivel: 1

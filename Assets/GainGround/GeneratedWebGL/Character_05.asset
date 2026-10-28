@@ -12,27 +12,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a5eb2034508c1f4e90fe4962b08330b, type: 3}
   m_Name: Character_05
   m_EditorClassIdentifier: 
-  displayName: Zaemon
-  sprite: {fileID: 21300000, guid: 85bfa90d8d89fca44bcc1453fc6c3149, type: 3}
+  displayName: Robbie
+  sprite: {fileID: 21300000, guid: 3a0d7d7be189ac348ae546da8e9f1af6, type: 3}
   hudPortrait: {fileID: 0}
   directionalSpriteSheet: {fileID: 0}
-  modelPrefab: {fileID: 2880083659513738051, guid: fc6ad15415e032d46914b744e1496b61, type: 3}
-  speed: 3
-  shotInterval: 0.4
-  projectileSpeed: 7
-  range: 6
-  damage: 2
+  modelPrefab: {fileID: 7590843818600163813, guid: 071bb7df33d05384da5769fdeb29ef52, type: 3}
+  speed: 1.9
+  shotInterval: 0.32
+  projectileSpeed: 8
+  range: 5.5
+  damage: 1
   shotColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  specialPassesWalls: 0
+  specialPassesWalls: 1
   normalWeapon:
-    label: Bomba magica
-    fireSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
+    label: Pistola
+    fireSound: {fileID: 8300000, guid: f9d4f42b982960e4da52b4b792e87e64, type: 3}
     direction: 0
-    kind: 3
-    cooldown: 0.4
-    speed: 7
-    range: 6
-    damage: 2
+    kind: 7
+    cooldown: 0.52
+    speed: 8
+    range: 5.5
+    damage: 1
     radius: 0.12
     maxActive: 3
     lobbed: 0
@@ -44,53 +44,79 @@ MonoBehaviour:
     mode: 0
     arcDegrees: 120
     effectSpriteSheet: {fileID: 0}
-    projectileVisualPrefab: {fileID: 0}
+    projectileVisualPrefab: {fileID: 100000, guid: aab85a89ca154292a0ac16d2b65fbdf6, type: 3}
     projectileFrames: []
-    impactVisualPrefab: {fileID: 0}
-    impactFrames: []
+    impactVisualPrefab: {fileID: 100000, guid: c68463aed61f4403912d3d3e0852eb39, type: 3}
+    impactFrames:
+    - {fileID: 21300000, guid: 434d42aac44a4327b4906b7bf2adeb6d, type: 3}
+    - {fileID: 21300000, guid: 9d8d51ec445d462182db01cdbf4351f0, type: 3}
+    - {fileID: 21300000, guid: 4467b510b3814ebe843232d46ae42730, type: 3}
+    - {fileID: 21300000, guid: 18eafe90b9784d9d82e2b1a2b988b972, type: 3}
+    - {fileID: 21300000, guid: 24b3f69bacad44bfa86d1af1a152739b, type: 3}
+    - {fileID: 21300000, guid: 18a6e505b760499bbbc5188ce2f16363, type: 3}
+    - {fileID: 21300000, guid: 16657f07240742f08031a5ce986a2bd7, type: 3}
+    - {fileID: 21300000, guid: d81af66c569040fca6134a590e0db18c, type: 3}
+    - {fileID: 21300000, guid: 3b1bb5fa858242b7a61d13a67c8071bf, type: 3}
+    - {fileID: 21300000, guid: 89e7c8a903c6478ca18003fe2672ba9b, type: 3}
+    - {fileID: 21300000, guid: 29e3bf61a539407c9eec33916a0967bf, type: 3}
+    - {fileID: 21300000, guid: ce1e51c941a5457a9ad636fb31a0356d, type: 3}
     impactFramesPerSecond: 45
     effectColumns: 3
     effectRows: 2
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   specialWeapon:
-    label: 'Vento: tornado com ricochete'
-    fireSound: {fileID: 8300000, guid: 314cfefdadea88649b010e9ca28ed6ba, type: 3}
+    label: Foguete em arco
+    fireSound: {fileID: 8300000, guid: 7f8cb2ddd4329c149833fa904860575d, type: 3}
     direction: 0
-    kind: 8
-    cooldown: 2
-    speed: 3.4
-    range: 20
+    kind: 7
+    cooldown: 0.9
+    speed: 6
+    range: 10
     damage: 2
-    radius: 0.3
-    maxActive: 1
-    lobbed: 0
-    pierces: 1
-    blastRadius: 0
+    radius: 0.12
+    maxActive: 2
+    lobbed: 1
+    pierces: 0
+    blastRadius: 0.6
     freezeSeconds: 0
-    duration: 5
-    color: {r: 0.5, g: 1, b: 0.65, a: 1}
+    duration: 2
+    color: {r: 0.7, g: 0.8, b: 1, a: 1}
     mode: 0
     arcDegrees: 120
     effectSpriteSheet: {fileID: 0}
-    projectileVisualPrefab: {fileID: 0}
+    projectileVisualPrefab: {fileID: 100000, guid: aab85a89ca154292a0ac16d2b65fbdf6, type: 3}
     projectileFrames: []
-    impactVisualPrefab: {fileID: 0}
-    impactFrames: []
+    impactVisualPrefab: {fileID: 100000, guid: c68463aed61f4403912d3d3e0852eb39, type: 3}
+    impactFrames:
+    - {fileID: 21300000, guid: 434d42aac44a4327b4906b7bf2adeb6d, type: 3}
+    - {fileID: 21300000, guid: 9d8d51ec445d462182db01cdbf4351f0, type: 3}
+    - {fileID: 21300000, guid: 4467b510b3814ebe843232d46ae42730, type: 3}
+    - {fileID: 21300000, guid: 18eafe90b9784d9d82e2b1a2b988b972, type: 3}
+    - {fileID: 21300000, guid: 24b3f69bacad44bfa86d1af1a152739b, type: 3}
+    - {fileID: 21300000, guid: 18a6e505b760499bbbc5188ce2f16363, type: 3}
+    - {fileID: 21300000, guid: 16657f07240742f08031a5ce986a2bd7, type: 3}
+    - {fileID: 21300000, guid: d81af66c569040fca6134a590e0db18c, type: 3}
+    - {fileID: 21300000, guid: 3b1bb5fa858242b7a61d13a67c8071bf, type: 3}
+    - {fileID: 21300000, guid: 89e7c8a903c6478ca18003fe2672ba9b, type: 3}
+    - {fileID: 21300000, guid: 29e3bf61a539407c9eec33916a0967bf, type: 3}
+    - {fileID: 21300000, guid: ce1e51c941a5457a9ad636fb31a0356d, type: 3}
     impactFramesPerSecond: 45
     effectColumns: 3
     effectRows: 2
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  normalAttackSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
-  specialAttackSound: {fileID: 8300000, guid: 314cfefdadea88649b010e9ca28ed6ba, type: 3}
+  normalAttackSound: {fileID: 8300000, guid: f9d4f42b982960e4da52b4b792e87e64, type: 3}
+  specialAttackSound: {fileID: 8300000, guid: 7f8cb2ddd4329c149833fa904860575d, type: 3}
   dashSound: {fileID: 0}
-  hitSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: b1852e19f2bd363478a999c461613359, type: 3}
   switchSound: {fileID: 0}
   rescueSound: {fileID: 0}
   TempodeCooldown: 2
-  Distancia: 2.5
-  Invencivel: 1
+  Distancia: 0
+  Invencivel: 0

@@ -190,9 +190,9 @@ MonoBehaviour:
     triggerDistance: 0
   - position: {x: -0.75, y: 3.875}
     health: 1
-    speed: 0
+    speed: 0.85
     shotInterval: 2.8
-    sentry: 1
+    sentry: 0
     elevated: 0
     melee: 0
     spawnDelay: 0
@@ -207,9 +207,9 @@ MonoBehaviour:
     triggerDistance: 0
   - position: {x: 0.75, y: 3.875}
     health: 1
-    speed: 0
+    speed: 0.85
     shotInterval: 2.8
-    sentry: 1
+    sentry: 0
     elevated: 0
     melee: 0
     spawnDelay: 0
@@ -224,9 +224,9 @@ MonoBehaviour:
     triggerDistance: 0
   - position: {x: -4.25, y: 1.375}
     health: 1
-    speed: 0
+    speed: 0.85
     shotInterval: 2.8
-    sentry: 1
+    sentry: 0
     elevated: 0
     melee: 0
     spawnDelay: 0
@@ -241,9 +241,9 @@ MonoBehaviour:
     triggerDistance: 0
   - position: {x: 4.25, y: 1.375}
     health: 1
-    speed: 0
+    speed: 0.85
     shotInterval: 2.8
-    sentry: 1
+    sentry: 0
     elevated: 0
     melee: 0
     spawnDelay: 0
@@ -365,4 +365,53 @@ MonoBehaviour:
   noExit: 0
   additionalExits: []
   additionalCaptives: []
+  objects:
+  - id: PS2:Native:Stage19Platform0
+    prefab: {fileID: 8972084351390942486, guid: 1905b467821e3da409e7c7f6ec6773f3, type: 3}
+    area:
+      serializedVersion: 2
+      x: -6
+      y: 2.63
+      width: 4
+      height: 2.5
+    rotationDegrees: 0
+    modelScale: {x: 1.1428572, y: 1, z: 1}
+    teleportGroup: 0
+    health: 0
+  - id: PS2:Native:Stage19Platform1
+    prefab: {fileID: 1421850073563175274, guid: d1391b18a899edd4a924212ad680ee94, type: 3}
+    area:
+      serializedVersion: 2
+      x: 2
+      y: 2.63
+      width: 4
+      height: 2.5
+    rotationDegrees: 0
+    modelScale: {x: 1.1428572, y: 1, z: 1}
+    teleportGroup: 0
+    health: 0
+  - id: PS2:Native:Stage19Platform2
+    prefab: {fileID: 8972084351390942486, guid: 1905b467821e3da409e7c7f6ec6773f3, type: 3}
+    area:
+      serializedVersion: 2
+      x: -6
+      y: -3.37
+      width: 3
+      height: 2.5
+    rotationDegrees: 0
+    modelScale: {x: 0.85714287, y: 1, z: 1}
+    teleportGroup: 0
+    health: 0
+  - id: PS2:Native:Stage19Platform3
+    prefab: {fileID: 1421850073563175274, guid: d1391b18a899edd4a924212ad680ee94, type: 3}
+    area:
+      serializedVersion: 2
+      x: 3
+      y: -3.37
+      width: 3
+      height: 2.5
+    rotationDegrees: 0
+    modelScale: {x: 0.85714287, y: 1, z: 1}
+    teleportGroup: 0
+    health: 0
   hazards: []

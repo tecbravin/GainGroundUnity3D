@@ -12,27 +12,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a5eb2034508c1f4e90fe4962b08330b, type: 3}
   m_Name: Character_11
   m_EditorClassIdentifier: 
-  displayName: Athra
-  sprite: {fileID: 21300000, guid: c54dd0d20abcba94f800ed12050ebe91, type: 3}
+  displayName: Water Knight
+  sprite: {fileID: 21300000, guid: 85bfa90d8d89fca44bcc1453fc6c3149, type: 3}
   hudPortrait: {fileID: 0}
   directionalSpriteSheet: {fileID: 0}
-  modelPrefab: {fileID: 4266932886503673140, guid: 664c13a307604cb46ae21d79e6c87a05, type: 3}
-  speed: 3.8
+  modelPrefab: {fileID: 3836949723856864748, guid: ba1dc1324092cb348a4ae513bb5d1fff, type: 3}
+  speed: 3
   shotInterval: 0.4
   projectileSpeed: 7
-  range: 3.4
-  damage: 1
-  shotColor: {r: 0.95, g: 0.65, b: 0.22, a: 1}
-  specialPassesWalls: 1
+  range: 6
+  damage: 2
+  shotColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  specialPassesWalls: 0
   normalWeapon:
-    label: Lanca
-    fireSound: {fileID: 8300000, guid: 5643289c2507c244f8c8da87c7979fc3, type: 3}
+    label: Bomba magica
+    fireSound: {fileID: 8300000, guid: 9de397a258bcba1498685e223b9b41c5, type: 3}
     direction: 0
-    kind: 1
+    kind: 3
     cooldown: 0.4
     speed: 7
-    range: 3.4
-    damage: 1
+    range: 6
+    damage: 2
     radius: 0.12
     maxActive: 3
     lobbed: 0
@@ -44,39 +44,44 @@ MonoBehaviour:
     mode: 0
     arcDegrees: 120
     effectSpriteSheet: {fileID: 0}
-    projectileVisualPrefab: {fileID: 100000, guid: 15ad7a1d486f4cfaa9405654b188be7b, type: 3}
+    projectileVisualPrefab: {fileID: 100000, guid: 6b7b90502872423e8b6796c8719c0191, type: 3}
     projectileFrames: []
-    impactVisualPrefab: {fileID: 100000, guid: 18592ae028ca4c72a55c337fb8a165f2, type: 3}
-    impactFrames: []
+    impactVisualPrefab: {fileID: 100000, guid: 5ff1e66b6551470d9fb83c388c779e8b, type: 3}
+    impactFrames:
+    - {fileID: 21300000, guid: 6d60f8e2627a466694be039c91ed1961, type: 3}
+    - {fileID: 21300000, guid: b461c268a44b4c1899f2eaaf10c8dcb9, type: 3}
+    - {fileID: 21300000, guid: f9f5dc4a51bb453a933d7751599451c4, type: 3}
+    - {fileID: 21300000, guid: 6e9c111183764b2eb0c9a6299dcceb72, type: 3}
     impactFramesPerSecond: 45
     effectColumns: 3
     effectRows: 2
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   specialWeapon:
-    label: Lanca em arco
-    fireSound: {fileID: 8300000, guid: 5643289c2507c244f8c8da87c7979fc3, type: 3}
+    label: 'Agua: imobiliza'
+    fireSound: {fileID: 8300000, guid: 27df425d2b984dc419c92b6f5dfc8008, type: 3}
     direction: 0
-    kind: 1
-    cooldown: 0.65
-    speed: 5
-    range: 4
-    damage: 1
-    radius: 0.12
-    maxActive: 3
-    lobbed: 1
+    kind: 10
+    cooldown: 1.2
+    speed: 1
+    range: 0.9
+    damage: 0
+    radius: 0.6
+    maxActive: 2
+    lobbed: 0
     pierces: 0
     blastRadius: 0
-    freezeSeconds: 0
-    duration: 2
-    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    freezeSeconds: 3
+    duration: 2.5
+    color: {r: 0, g: 1, b: 1, a: 1}
     mode: 0
     arcDegrees: 120
     effectSpriteSheet: {fileID: 0}
-    projectileVisualPrefab: {fileID: 100000, guid: 15ad7a1d486f4cfaa9405654b188be7b, type: 3}
+    projectileVisualPrefab: {fileID: 0}
     projectileFrames: []
-    impactVisualPrefab: {fileID: 100000, guid: 18592ae028ca4c72a55c337fb8a165f2, type: 3}
+    impactVisualPrefab: {fileID: 0}
     impactFrames: []
     impactFramesPerSecond: 45
     effectColumns: 3
@@ -84,13 +89,14 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  normalAttackSound: {fileID: 8300000, guid: 5643289c2507c244f8c8da87c7979fc3, type: 3}
-  specialAttackSound: {fileID: 8300000, guid: 5643289c2507c244f8c8da87c7979fc3, type: 3}
+  normalAttackSound: {fileID: 8300000, guid: 9de397a258bcba1498685e223b9b41c5, type: 3}
+  specialAttackSound: {fileID: 8300000, guid: 27df425d2b984dc419c92b6f5dfc8008, type: 3}
   dashSound: {fileID: 0}
-  hitSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: 1e858cdcc53f9214387aa3385ff52aa6, type: 3}
   switchSound: {fileID: 0}
   rescueSound: {fileID: 0}
-  TempodeCooldown: 2
-  Distancia: 0
-  Invencivel: 0
+  TempodeCooldown: 1.5
+  Distancia: 2.5
+  Invencivel: 1

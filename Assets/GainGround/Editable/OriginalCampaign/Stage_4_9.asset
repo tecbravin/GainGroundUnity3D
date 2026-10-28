@@ -17,14 +17,14 @@ MonoBehaviour:
   victoryMusic: {fileID: 8300000, guid: b788388c35b3f3144a0b0e0050ea904b, type: 3}
   musicVolume: 0.65
   timeLimit: 180
-  size: {x: 12, y: 14}
-  start: {x: 0, y: -6}
+  size: {x: 13, y: 10}
+  start: {x: 0, y: -4.5}
   exit:
     serializedVersion: 2
-    x: -6
-    y: 6
-    width: 3
-    height: 1
+    x: -0.5
+    y: -0.5
+    width: 1
+    height: 0.5
   floorColor: {r: 0.14, g: 0.23, b: 0.22, a: 1}
   terrainAtlas: {fileID: 0}
   atlasOrigin: {x: 0, y: 0}
@@ -32,83 +32,79 @@ MonoBehaviour:
   patchSources: []
   walls:
   - serializedVersion: 2
-    x: -6
-    y: 3.75
-    width: 5
-    height: 1.75
+    x: -6.5
+    y: 2.8
+    width: 1.2
+    height: 1.4
   - serializedVersion: 2
-    x: 1
-    y: 3.75
-    width: 5
-    height: 1.75
+    x: -6.5
+    y: 0.3
+    width: 1.2
+    height: 1.4
   - serializedVersion: 2
-    x: -1.5
-    y: 2
-    width: 0.5
-    height: 1.75
+    x: -6.5
+    y: -2.2
+    width: 1.2
+    height: 1.4
   - serializedVersion: 2
-    x: 1
-    y: 2
-    width: 0.5
-    height: 1.75
+    x: -6.5
+    y: -4.7
+    width: 1.2
+    height: 1.4
   - serializedVersion: 2
-    x: -4
-    y: 0.5
-    width: 0.5
+    x: 5.3
+    y: 2.8
+    width: 1.2
+    height: 1.4
+  - serializedVersion: 2
+    x: 5.3
+    y: 0.3
+    width: 1.2
+    height: 1.4
+  - serializedVersion: 2
+    x: 5.3
+    y: -2.2
+    width: 1.2
+    height: 1.4
+  - serializedVersion: 2
+    x: 5.3
+    y: -4.7
+    width: 1.2
+    height: 1.4
+  - serializedVersion: 2
+    x: -1.33
+    y: -1.27
+    width: 0.22
     height: 2.5
   - serializedVersion: 2
-    x: 3.5
-    y: 0.5
-    width: 0.5
+    x: -0.84000003
+    y: -2.27
+    width: 0.22
+    height: 1.26
+  - serializedVersion: 2
+    x: 1.11
+    y: -1.27
+    width: 0.22
     height: 2.5
   - serializedVersion: 2
-    x: -4
-    y: -0.75
-    width: 3.5
-    height: 1.75
-  - serializedVersion: 2
-    x: 0.5
-    y: -0.75
-    width: 3.5
-    height: 1.75
-  - serializedVersion: 2
-    x: -0.5
-    y: -4
-    width: 1
-    height: 5
-  - serializedVersion: 2
-    x: -6
-    y: -5
-    width: 3.5
-    height: 1.5
-  - serializedVersion: 2
-    x: 2.5
-    y: -5
-    width: 3.5
-    height: 1.5
-  - serializedVersion: 2
-    x: -3
-    y: -3.5
-    width: 0.5
-    height: 1.5
-  - serializedVersion: 2
-    x: 2.5
-    y: -3.5
-    width: 0.5
-    height: 1.5
+    x: 0.62
+    y: -2.27
+    width: 0.22
+    height: 1.26
   enemies:
-  - position: {x: -2.25, y: 6.5}
-    health: 1
+  - position: {x: -4.75, y: -4.25}
+    health: 2
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
     spawnDelay: 0
-    behavior: 0
-    sprite: {fileID: 21300000, guid: 99d5697f9d7c85f41b712b216572c145, type: 3}
-    modelPrefab: {fileID: 50608964581185104, guid: a068dfceacea74643b956644704b8c9b, type: 3}
-    visualSize: {x: 1.5, y: 1.5}
+    behavior: 6
+    sprite: {fileID: 21300000, guid: dce881a75a6182e41b4b9dab57cfcf10, type: 3}
+    modelPrefab: {fileID: 1947390483238534478, guid: 2e07fa4384478044f867d68bb5e2a938, type: 3}
+    visualSize: {x: 0.55, y: 0.82500005}
     hitRadius: 0.23
     obstacleSize: {x: 0, y: 0}
     boss: 0
@@ -117,18 +113,19 @@ MonoBehaviour:
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
-  - position: {x: -0.75, y: 6.5}
-    health: 1
+  - position: {x: -4.5, y: -2.75}
+    health: 2
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
     spawnDelay: 0
-    behavior: 0
-    sprite: {fileID: 21300000, guid: 99d5697f9d7c85f41b712b216572c145, type: 3}
-    modelPrefab: {fileID: 50608964581185104, guid: a068dfceacea74643b956644704b8c9b, type: 3}
-    visualSize: {x: 1.5, y: 1.5}
+    behavior: 6
+    sprite: {fileID: 21300000, guid: dce881a75a6182e41b4b9dab57cfcf10, type: 3}
+    modelPrefab: {fileID: 1947390483238534478, guid: 2e07fa4384478044f867d68bb5e2a938, type: 3}
+    visualSize: {x: 0.55, y: 0.82500005}
     hitRadius: 0.23
     obstacleSize: {x: 0, y: 0}
     boss: 0
@@ -137,18 +134,19 @@ MonoBehaviour:
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
-  - position: {x: 0.75, y: 6.5}
-    health: 1
+  - position: {x: -5, y: -4.5}
+    health: 2
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
     spawnDelay: 0
-    behavior: 0
-    sprite: {fileID: 21300000, guid: 99d5697f9d7c85f41b712b216572c145, type: 3}
-    modelPrefab: {fileID: 50608964581185104, guid: a068dfceacea74643b956644704b8c9b, type: 3}
-    visualSize: {x: 1.5, y: 1.5}
+    behavior: 6
+    sprite: {fileID: 21300000, guid: dce881a75a6182e41b4b9dab57cfcf10, type: 3}
+    modelPrefab: {fileID: 1947390483238534478, guid: 2e07fa4384478044f867d68bb5e2a938, type: 3}
+    visualSize: {x: 0.55, y: 0.82500005}
     hitRadius: 0.23
     obstacleSize: {x: 0, y: 0}
     boss: 0
@@ -157,18 +155,19 @@ MonoBehaviour:
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
-  - position: {x: 2.25, y: 6.5}
-    health: 1
+  - position: {x: -1.5, y: -4.5}
+    health: 2
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
     spawnDelay: 0
-    behavior: 0
-    sprite: {fileID: 21300000, guid: 99d5697f9d7c85f41b712b216572c145, type: 3}
-    modelPrefab: {fileID: 50608964581185104, guid: a068dfceacea74643b956644704b8c9b, type: 3}
-    visualSize: {x: 1.5, y: 1.5}
+    behavior: 6
+    sprite: {fileID: 21300000, guid: dce881a75a6182e41b4b9dab57cfcf10, type: 3}
+    modelPrefab: {fileID: 1947390483238534478, guid: 2e07fa4384478044f867d68bb5e2a938, type: 3}
+    visualSize: {x: 0.55, y: 0.82500005}
     hitRadius: 0.23
     obstacleSize: {x: 0, y: 0}
     boss: 0
@@ -177,18 +176,19 @@ MonoBehaviour:
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
-  - position: {x: -2.25, y: 3.25}
-    health: 1
+  - position: {x: 1.5, y: -4.5}
+    health: 2
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
     spawnDelay: 0
-    behavior: 0
-    sprite: {fileID: 21300000, guid: 99d5697f9d7c85f41b712b216572c145, type: 3}
-    modelPrefab: {fileID: 50608964581185104, guid: a068dfceacea74643b956644704b8c9b, type: 3}
-    visualSize: {x: 1.5, y: 1.5}
+    behavior: 6
+    sprite: {fileID: 21300000, guid: dce881a75a6182e41b4b9dab57cfcf10, type: 3}
+    modelPrefab: {fileID: 1947390483238534478, guid: 2e07fa4384478044f867d68bb5e2a938, type: 3}
+    visualSize: {x: 0.55, y: 0.82500005}
     hitRadius: 0.23
     obstacleSize: {x: 0, y: 0}
     boss: 0
@@ -197,18 +197,19 @@ MonoBehaviour:
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
-  - position: {x: 0.25, y: 3.75}
-    health: 1
+  - position: {x: 5, y: -4.5}
+    health: 2
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
     spawnDelay: 0
-    behavior: 0
-    sprite: {fileID: 21300000, guid: 99d5697f9d7c85f41b712b216572c145, type: 3}
-    modelPrefab: {fileID: 50608964581185104, guid: a068dfceacea74643b956644704b8c9b, type: 3}
-    visualSize: {x: 1.5, y: 1.5}
+    behavior: 6
+    sprite: {fileID: 21300000, guid: dce881a75a6182e41b4b9dab57cfcf10, type: 3}
+    modelPrefab: {fileID: 1947390483238534478, guid: 2e07fa4384478044f867d68bb5e2a938, type: 3}
+    visualSize: {x: 0.55, y: 0.82500005}
     hitRadius: 0.23
     obstacleSize: {x: 0, y: 0}
     boss: 0
@@ -217,18 +218,19 @@ MonoBehaviour:
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
-  - position: {x: 0.25, y: 2.25}
-    health: 1
+  - position: {x: -4.75, y: -1.75}
+    health: 2
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
     spawnDelay: 0
-    behavior: 0
-    sprite: {fileID: 21300000, guid: 99d5697f9d7c85f41b712b216572c145, type: 3}
-    modelPrefab: {fileID: 50608964581185104, guid: a068dfceacea74643b956644704b8c9b, type: 3}
-    visualSize: {x: 1.5, y: 1.5}
+    behavior: 6
+    sprite: {fileID: 21300000, guid: dce881a75a6182e41b4b9dab57cfcf10, type: 3}
+    modelPrefab: {fileID: 1947390483238534478, guid: 2e07fa4384478044f867d68bb5e2a938, type: 3}
+    visualSize: {x: 0.55, y: 0.82500005}
     hitRadius: 0.23
     obstacleSize: {x: 0, y: 0}
     boss: 0
@@ -237,18 +239,124 @@ MonoBehaviour:
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
-  - position: {x: 2.25, y: 3.25}
-    health: 1
+  - position: {x: -4.75, y: -0.75}
+    health: 2
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
     spawnDelay: 0
-    behavior: 0
-    sprite: {fileID: 21300000, guid: 99d5697f9d7c85f41b712b216572c145, type: 3}
-    modelPrefab: {fileID: 50608964581185104, guid: a068dfceacea74643b956644704b8c9b, type: 3}
-    visualSize: {x: 1.5, y: 1.5}
+    behavior: 6
+    sprite: {fileID: 21300000, guid: dce881a75a6182e41b4b9dab57cfcf10, type: 3}
+    modelPrefab: {fileID: 1947390483238534478, guid: 2e07fa4384478044f867d68bb5e2a938, type: 3}
+    visualSize: {x: 0.55, y: 0.82500005}
+    hitRadius: 0.23
+    obstacleSize: {x: 0, y: 0}
+    boss: 0
+    freezeImmune: 0
+    triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
+  - position: {x: -4.75, y: 2.75}
+    health: 2
+    speed: 0
+    shotInterval: 2.8
+    initialShotDelay: 0
+    sentry: 1
+    elevated: 0
+    melee: 0
+    spawnDelay: 0
+    behavior: 6
+    sprite: {fileID: 21300000, guid: dce881a75a6182e41b4b9dab57cfcf10, type: 3}
+    modelPrefab: {fileID: 1947390483238534478, guid: 2e07fa4384478044f867d68bb5e2a938, type: 3}
+    visualSize: {x: 0.55, y: 0.82500005}
+    hitRadius: 0.23
+    obstacleSize: {x: 0, y: 0}
+    boss: 0
+    freezeImmune: 0
+    triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
+  - position: {x: -3.25, y: -4}
+    health: 2
+    speed: 0
+    shotInterval: 2.8
+    initialShotDelay: 0
+    sentry: 1
+    elevated: 0
+    melee: 0
+    spawnDelay: 0
+    behavior: 6
+    sprite: {fileID: 21300000, guid: dce881a75a6182e41b4b9dab57cfcf10, type: 3}
+    modelPrefab: {fileID: 1947390483238534478, guid: 2e07fa4384478044f867d68bb5e2a938, type: 3}
+    visualSize: {x: 0.55, y: 0.82500005}
+    hitRadius: 0.23
+    obstacleSize: {x: 0, y: 0}
+    boss: 0
+    freezeImmune: 0
+    triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
+  - position: {x: 3.25, y: -4}
+    health: 2
+    speed: 0
+    shotInterval: 2.8
+    initialShotDelay: 0
+    sentry: 1
+    elevated: 0
+    melee: 0
+    spawnDelay: 0
+    behavior: 6
+    sprite: {fileID: 21300000, guid: dce881a75a6182e41b4b9dab57cfcf10, type: 3}
+    modelPrefab: {fileID: 1947390483238534478, guid: 2e07fa4384478044f867d68bb5e2a938, type: 3}
+    visualSize: {x: 0.55, y: 0.82500005}
+    hitRadius: 0.23
+    obstacleSize: {x: 0, y: 0}
+    boss: 0
+    freezeImmune: 0
+    triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
+  - position: {x: -4.5, y: 0.75}
+    health: 2
+    speed: 0
+    shotInterval: 2.8
+    initialShotDelay: 0
+    sentry: 1
+    elevated: 0
+    melee: 0
+    spawnDelay: 0
+    behavior: 6
+    sprite: {fileID: 21300000, guid: dce881a75a6182e41b4b9dab57cfcf10, type: 3}
+    modelPrefab: {fileID: 1947390483238534478, guid: 2e07fa4384478044f867d68bb5e2a938, type: 3}
+    visualSize: {x: 0.55, y: 0.82500005}
+    hitRadius: 0.23
+    obstacleSize: {x: 0, y: 0}
+    boss: 0
+    freezeImmune: 0
+    triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
+  - position: {x: -4.5, y: 4.25}
+    health: 2
+    speed: 0
+    shotInterval: 2.8
+    initialShotDelay: 0
+    sentry: 1
+    elevated: 0
+    melee: 0
+    spawnDelay: 0
+    behavior: 6
+    sprite: {fileID: 21300000, guid: dce881a75a6182e41b4b9dab57cfcf10, type: 3}
+    modelPrefab: {fileID: 1947390483238534478, guid: 2e07fa4384478044f867d68bb5e2a938, type: 3}
+    visualSize: {x: 0.55, y: 0.82500005}
     hitRadius: 0.23
     obstacleSize: {x: 0, y: 0}
     boss: 0
@@ -258,17 +366,18 @@ MonoBehaviour:
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
   - position: {x: -4.75, y: 1.75}
-    health: 1
+    health: 2
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
     spawnDelay: 0
-    behavior: 0
-    sprite: {fileID: 21300000, guid: 99d5697f9d7c85f41b712b216572c145, type: 3}
-    modelPrefab: {fileID: 50608964581185104, guid: a068dfceacea74643b956644704b8c9b, type: 3}
-    visualSize: {x: 1.5, y: 1.5}
+    behavior: 6
+    sprite: {fileID: 21300000, guid: dce881a75a6182e41b4b9dab57cfcf10, type: 3}
+    modelPrefab: {fileID: 1947390483238534478, guid: 2e07fa4384478044f867d68bb5e2a938, type: 3}
+    visualSize: {x: 0.55, y: 0.82500005}
     hitRadius: 0.23
     obstacleSize: {x: 0, y: 0}
     boss: 0
@@ -277,18 +386,19 @@ MonoBehaviour:
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
-  - position: {x: 5.25, y: 1.75}
-    health: 1
+  - position: {x: 4.75, y: 1.75}
+    health: 2
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
     spawnDelay: 0
-    behavior: 0
-    sprite: {fileID: 21300000, guid: 99d5697f9d7c85f41b712b216572c145, type: 3}
-    modelPrefab: {fileID: 50608964581185104, guid: a068dfceacea74643b956644704b8c9b, type: 3}
-    visualSize: {x: 1.5, y: 1.5}
+    behavior: 6
+    sprite: {fileID: 21300000, guid: dce881a75a6182e41b4b9dab57cfcf10, type: 3}
+    modelPrefab: {fileID: 1947390483238534478, guid: 2e07fa4384478044f867d68bb5e2a938, type: 3}
+    visualSize: {x: 0.55, y: 0.82500005}
     hitRadius: 0.23
     obstacleSize: {x: 0, y: 0}
     boss: 0
@@ -297,18 +407,19 @@ MonoBehaviour:
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
-  - position: {x: -4.75, y: 0.25}
-    health: 1
+  - position: {x: 4.75, y: -1.75}
+    health: 2
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
     spawnDelay: 0
-    behavior: 0
-    sprite: {fileID: 21300000, guid: 99d5697f9d7c85f41b712b216572c145, type: 3}
-    modelPrefab: {fileID: 50608964581185104, guid: a068dfceacea74643b956644704b8c9b, type: 3}
-    visualSize: {x: 1.5, y: 1.5}
+    behavior: 6
+    sprite: {fileID: 21300000, guid: dce881a75a6182e41b4b9dab57cfcf10, type: 3}
+    modelPrefab: {fileID: 1947390483238534478, guid: 2e07fa4384478044f867d68bb5e2a938, type: 3}
+    visualSize: {x: 0.55, y: 0.82500005}
     hitRadius: 0.23
     obstacleSize: {x: 0, y: 0}
     boss: 0
@@ -317,118 +428,19 @@ MonoBehaviour:
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
-  - position: {x: 5.25, y: 0.25}
-    health: 1
-    speed: 0
-    shotInterval: 2.8
-    sentry: 1
-    elevated: 0
-    melee: 0
-    spawnDelay: 0
-    behavior: 0
-    sprite: {fileID: 21300000, guid: 99d5697f9d7c85f41b712b216572c145, type: 3}
-    modelPrefab: {fileID: 50608964581185104, guid: a068dfceacea74643b956644704b8c9b, type: 3}
-    visualSize: {x: 1.5, y: 1.5}
-    hitRadius: 0.23
-    obstacleSize: {x: 0, y: 0}
-    boss: 0
-    freezeImmune: 0
-    triggerDistance: 0
-    attackSound: {fileID: 0}
-    hitSound: {fileID: 0}
-    deathSound: {fileID: 0}
-  - position: {x: -1.25, y: -1.75}
-    health: 1
-    speed: 0
-    shotInterval: 2.8
-    sentry: 1
-    elevated: 0
-    melee: 0
-    spawnDelay: 0
-    behavior: 0
-    sprite: {fileID: 21300000, guid: 99d5697f9d7c85f41b712b216572c145, type: 3}
-    modelPrefab: {fileID: 50608964581185104, guid: a068dfceacea74643b956644704b8c9b, type: 3}
-    visualSize: {x: 1.5, y: 1.5}
-    hitRadius: 0.23
-    obstacleSize: {x: 0, y: 0}
-    boss: 0
-    freezeImmune: 0
-    triggerDistance: 0
-    attackSound: {fileID: 0}
-    hitSound: {fileID: 0}
-    deathSound: {fileID: 0}
-  - position: {x: 1.25, y: -1.75}
-    health: 1
-    speed: 0
-    shotInterval: 2.8
-    sentry: 1
-    elevated: 0
-    melee: 0
-    spawnDelay: 0
-    behavior: 0
-    sprite: {fileID: 21300000, guid: 99d5697f9d7c85f41b712b216572c145, type: 3}
-    modelPrefab: {fileID: 50608964581185104, guid: a068dfceacea74643b956644704b8c9b, type: 3}
-    visualSize: {x: 1.5, y: 1.5}
-    hitRadius: 0.23
-    obstacleSize: {x: 0, y: 0}
-    boss: 0
-    freezeImmune: 0
-    triggerDistance: 0
-    attackSound: {fileID: 0}
-    hitSound: {fileID: 0}
-    deathSound: {fileID: 0}
-  - position: {x: -1.25, y: -3.25}
-    health: 1
-    speed: 0
-    shotInterval: 2.8
-    sentry: 1
-    elevated: 0
-    melee: 0
-    spawnDelay: 0
-    behavior: 0
-    sprite: {fileID: 21300000, guid: 99d5697f9d7c85f41b712b216572c145, type: 3}
-    modelPrefab: {fileID: 50608964581185104, guid: a068dfceacea74643b956644704b8c9b, type: 3}
-    visualSize: {x: 1.5, y: 1.5}
-    hitRadius: 0.23
-    obstacleSize: {x: 0, y: 0}
-    boss: 0
-    freezeImmune: 0
-    triggerDistance: 0
-    attackSound: {fileID: 0}
-    hitSound: {fileID: 0}
-    deathSound: {fileID: 0}
-  - position: {x: 1.25, y: -3.25}
-    health: 1
-    speed: 0
-    shotInterval: 2.8
-    sentry: 1
-    elevated: 0
-    melee: 0
-    spawnDelay: 0
-    behavior: 0
-    sprite: {fileID: 21300000, guid: 99d5697f9d7c85f41b712b216572c145, type: 3}
-    modelPrefab: {fileID: 50608964581185104, guid: a068dfceacea74643b956644704b8c9b, type: 3}
-    visualSize: {x: 1.5, y: 1.5}
-    hitRadius: 0.23
-    obstacleSize: {x: 0, y: 0}
-    boss: 0
-    freezeImmune: 0
-    triggerDistance: 0
-    attackSound: {fileID: 0}
-    hitSound: {fileID: 0}
-    deathSound: {fileID: 0}
-  - position: {x: -4.75, y: 3.25}
-    health: 1
+  - position: {x: 4.5, y: 0.75}
+    health: 2
     speed: 0
     shotInterval: 2.6
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
     spawnDelay: 0
-    behavior: 2
-    sprite: {fileID: 21300000, guid: 562b2d2245bc5c74cb7d556e9203c0d1, type: 3}
-    modelPrefab: {fileID: 6011527456182994679, guid: 8db7aea53b01596489ec8213c53b9098, type: 3}
-    visualSize: {x: 1.5, y: 1.5}
+    behavior: 6
+    sprite: {fileID: 21300000, guid: dce881a75a6182e41b4b9dab57cfcf10, type: 3}
+    modelPrefab: {fileID: 1947390483238534478, guid: 2e07fa4384478044f867d68bb5e2a938, type: 3}
+    visualSize: {x: 0.55, y: 0.82500005}
     hitRadius: 0.23
     obstacleSize: {x: 0, y: 0}
     boss: 0
@@ -437,18 +449,19 @@ MonoBehaviour:
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
-  - position: {x: 5.25, y: 3.25}
-    health: 1
+  - position: {x: 4.5, y: 4.25}
+    health: 2
     speed: 0
     shotInterval: 2.6
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
     spawnDelay: 0
-    behavior: 2
-    sprite: {fileID: 21300000, guid: 562b2d2245bc5c74cb7d556e9203c0d1, type: 3}
-    modelPrefab: {fileID: 6011527456182994679, guid: 8db7aea53b01596489ec8213c53b9098, type: 3}
-    visualSize: {x: 1.5, y: 1.5}
+    behavior: 6
+    sprite: {fileID: 21300000, guid: dce881a75a6182e41b4b9dab57cfcf10, type: 3}
+    modelPrefab: {fileID: 1947390483238534478, guid: 2e07fa4384478044f867d68bb5e2a938, type: 3}
+    visualSize: {x: 0.55, y: 0.82500005}
     hitRadius: 0.23
     obstacleSize: {x: 0, y: 0}
     boss: 0
@@ -457,18 +470,19 @@ MonoBehaviour:
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
-  - position: {x: -2.25, y: 1.75}
-    health: 1
+  - position: {x: 4.5, y: -2.75}
+    health: 2
     speed: 0
     shotInterval: 2.6
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
     spawnDelay: 0
-    behavior: 2
-    sprite: {fileID: 21300000, guid: 562b2d2245bc5c74cb7d556e9203c0d1, type: 3}
-    modelPrefab: {fileID: 6011527456182994679, guid: 8db7aea53b01596489ec8213c53b9098, type: 3}
-    visualSize: {x: 1.5, y: 1.5}
+    behavior: 6
+    sprite: {fileID: 21300000, guid: dce881a75a6182e41b4b9dab57cfcf10, type: 3}
+    modelPrefab: {fileID: 1947390483238534478, guid: 2e07fa4384478044f867d68bb5e2a938, type: 3}
+    visualSize: {x: 0.55, y: 0.82500005}
     hitRadius: 0.23
     obstacleSize: {x: 0, y: 0}
     boss: 0
@@ -477,18 +491,19 @@ MonoBehaviour:
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
-  - position: {x: 2.25, y: 1.75}
-    health: 1
+  - position: {x: 4.75, y: -4.25}
+    health: 2
     speed: 0
     shotInterval: 2.6
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
     spawnDelay: 0
-    behavior: 2
-    sprite: {fileID: 21300000, guid: 562b2d2245bc5c74cb7d556e9203c0d1, type: 3}
-    modelPrefab: {fileID: 6011527456182994679, guid: 8db7aea53b01596489ec8213c53b9098, type: 3}
-    visualSize: {x: 1.5, y: 1.5}
+    behavior: 6
+    sprite: {fileID: 21300000, guid: dce881a75a6182e41b4b9dab57cfcf10, type: 3}
+    modelPrefab: {fileID: 1947390483238534478, guid: 2e07fa4384478044f867d68bb5e2a938, type: 3}
+    visualSize: {x: 0.55, y: 0.82500005}
     hitRadius: 0.23
     obstacleSize: {x: 0, y: 0}
     boss: 0
@@ -497,17 +512,55 @@ MonoBehaviour:
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
+  - position: {x: 4.75, y: -0.75}
+    health: 2
+    speed: 0
+    shotInterval: 2.8
+    initialShotDelay: 0
+    sentry: 1
+    elevated: 0
+    melee: 0
+    spawnDelay: 0
+    behavior: 6
+    sprite: {fileID: 21300000, guid: dce881a75a6182e41b4b9dab57cfcf10, type: 3}
+    modelPrefab: {fileID: 1947390483238534478, guid: 2e07fa4384478044f867d68bb5e2a938, type: 3}
+    visualSize: {x: 0.55, y: 0.82500005}
+    hitRadius: 0.23
+    obstacleSize: {x: 0, y: 0}
+    boss: 0
+    freezeImmune: 0
+    triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
+  - position: {x: 4.75, y: 2.75}
+    health: 2
+    speed: 0
+    shotInterval: 2.8
+    initialShotDelay: 0
+    sentry: 1
+    elevated: 0
+    melee: 0
+    spawnDelay: 0
+    behavior: 6
+    sprite: {fileID: 21300000, guid: dce881a75a6182e41b4b9dab57cfcf10, type: 3}
+    modelPrefab: {fileID: 1947390483238534478, guid: 2e07fa4384478044f867d68bb5e2a938, type: 3}
+    visualSize: {x: 0.55, y: 0.82500005}
+    hitRadius: 0.23
+    obstacleSize: {x: 0, y: 0}
+    boss: 0
+    freezeImmune: 0
+    triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
+  introCameraTargets: []
   rescue: {fileID: 11400000, guid: 4c5e8b2c0fe2cf5499c67cdfe3d519f8, type: 2}
   rescuePosition: {x: -4.5, y: -3}
-  background: {fileID: 21300000, guid: d89cd05251707124897d12b0a330b592, type: 3}
+  background: {fileID: 21300000, guid: 4a60598a3ff1bea4d96383ce7c04b869, type: 3}
   paintedLayout: {fileID: 3743319099441945372, guid: 796bdd903b70f5b45b494801307ee157, type: 3}
   noExit: 0
-  additionalExits:
-  - serializedVersion: 2
-    x: 3
-    y: 6
-    width: 3
-    height: 1
+  additionalExits: []
   additionalCaptives:
   - character: {fileID: 11400000, guid: dc22f70526decd0438e57daedfd2830f, type: 2}
     position: {x: 4.5, y: -3}

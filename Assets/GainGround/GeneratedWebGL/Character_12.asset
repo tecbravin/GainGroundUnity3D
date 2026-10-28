@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a5eb2034508c1f4e90fe4962b08330b, type: 3}
   m_Name: Character_12
   m_EditorClassIdentifier: 
-  displayName: General
+  displayName: Mamu
   sprite: {fileID: 21300000, guid: 3a0d7d7be189ac348ae546da8e9f1af6, type: 3}
   hudPortrait: {fileID: 0}
   directionalSpriteSheet: {fileID: 0}
-  modelPrefab: {fileID: 5127935633444170641, guid: ce6eb2f2e9c1dbe42b34dbd2f63ce368, type: 3}
-  speed: 2
+  modelPrefab: {fileID: 1933619587251180154, guid: 00ca9e55f5823d7449c47eb530a7304c, type: 3}
+  speed: 3
   shotInterval: 0.32
   projectileSpeed: 8
   range: 5.5
@@ -26,7 +26,7 @@ MonoBehaviour:
   specialPassesWalls: 0
   normalWeapon:
     label: Pistola
-    fireSound: {fileID: 8300000, guid: 6cdd576e48767c04e90bda42b6aea15a, type: 3}
+    fireSound: {fileID: 8300000, guid: ae62f0fce3b4501448271ab4d5be8faa, type: 3}
     direction: 0
     kind: 0
     cooldown: 0.32
@@ -54,31 +54,30 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   specialWeapon:
-    label: Lanca-chamas
-    fireSound: {fileID: 8300000, guid: 8f382feb7624c6b439d0ef3ec5817a01, type: 3}
-    direction: 0
-    kind: 6
-    cooldown: 0.15
-    speed: 5
-    range: 2.5
-    damage: 2
-    radius: 0.3
-    maxActive: 4
+    label: 'Bumerangue: cima'
+    fireSound: {fileID: 8300000, guid: 50faef9d7c3480c40a6e359d4a52a279, type: 3}
+    direction: 1
+    kind: 5
+    cooldown: 0.45
+    speed: 7
+    range: 6
+    damage: 1
+    radius: 0.12
+    maxActive: 2
     lobbed: 0
     pierces: 1
     blastRadius: 0
     freezeSeconds: 0
     duration: 2
-    color: {r: 1, g: 0.3, b: 0.05, a: 1}
+    color: {r: 0, g: 1, b: 1, a: 1}
     mode: 0
     arcDegrees: 120
     effectSpriteSheet: {fileID: 0}
-    projectileVisualPrefab: {fileID: 100000, guid: e9726aadd6f447be988bd605cc3a0da6, type: 3}
-    projectileFrames:
-    - {fileID: 21300000, guid: dfdd26b2522a4addba8f08d64c37bfb8, type: 3}
-    - {fileID: 21300000, guid: 4a8b23dfcabe4c56a8fafaabccbe9740, type: 3}
-    impactVisualPrefab: {fileID: 100000, guid: a81bc11dc34d4f869835ead0cda99850, type: 3}
+    projectileVisualPrefab: {fileID: 100000, guid: 3f0ea09c40294daab8c441b791849cdd, type: 3}
+    projectileFrames: []
+    impactVisualPrefab: {fileID: 0}
     impactFrames: []
     impactFramesPerSecond: 45
     effectColumns: 3
@@ -86,13 +85,14 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  normalAttackSound: {fileID: 8300000, guid: 6cdd576e48767c04e90bda42b6aea15a, type: 3}
-  specialAttackSound: {fileID: 8300000, guid: 8f382feb7624c6b439d0ef3ec5817a01, type: 3}
+  normalAttackSound: {fileID: 8300000, guid: ae62f0fce3b4501448271ab4d5be8faa, type: 3}
+  specialAttackSound: {fileID: 8300000, guid: 50faef9d7c3480c40a6e359d4a52a279, type: 3}
   dashSound: {fileID: 0}
-  hitSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: fa1c5d90efe09ac4f8e2ba313bc000a6, type: 3}
   switchSound: {fileID: 0}
   rescueSound: {fileID: 0}
   TempodeCooldown: 2
-  Distancia: 2
+  Distancia: 3
   Invencivel: 1

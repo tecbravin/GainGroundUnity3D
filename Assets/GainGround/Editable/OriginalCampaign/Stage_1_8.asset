@@ -30,12 +30,33 @@ MonoBehaviour:
   atlasOrigin: {x: 0, y: 0}
   terrainPatches: []
   patchSources: []
-  walls: []
+  walls:
+  - serializedVersion: 2
+    x: -6
+    y: -7
+    width: 2.7
+    height: 4.5
+  - serializedVersion: 2
+    x: -6
+    y: -0.5
+    width: 2.7
+    height: 7.5
+  - serializedVersion: 2
+    x: 3.3
+    y: -7
+    width: 2.7
+    height: 4.5
+  - serializedVersion: 2
+    x: 3.3
+    y: -0.5
+    width: 2.7
+    height: 7.5
   enemies:
   - position: {x: -2.75, y: 4.875}
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -49,10 +70,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: 2.75, y: 4.875}
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -66,10 +91,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: -2.75, y: 1.875}
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -83,10 +112,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: 2.75, y: 1.875}
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -100,10 +133,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: 0, y: 0.5}
     health: 12
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -117,10 +154,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: -5.5, y: -1.5}
     health: 1
     speed: 1.1
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 0
     elevated: 0
     melee: 1
@@ -134,10 +175,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: 5.5, y: -1.5}
     health: 1
     speed: 1.1
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 0
     elevated: 0
     melee: 1
@@ -151,10 +196,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: -5.5, y: -1.5}
     health: 1
     speed: 1.1
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 0
     elevated: 0
     melee: 1
@@ -168,10 +217,14 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
   - position: {x: 5.5, y: -1.5}
     health: 1
     speed: 1.1
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 0
     elevated: 0
     melee: 1
@@ -185,6 +238,10 @@ MonoBehaviour:
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    attackSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    deathSound: {fileID: 0}
+  introCameraTargets: []
   rescue: {fileID: 11400000, guid: dd9e9ba321ced964aa90fc2e16cb8f1f, type: 2}
   rescuePosition: {x: -4.5, y: 5.5}
   background: {fileID: 21300000, guid: 29661d95b02be294b9c562998619664f, type: 3}
@@ -192,4 +249,29 @@ MonoBehaviour:
   noExit: 0
   additionalExits: []
   additionalCaptives: []
+  objects:
+  - id: PS2:Native:Stage18BorderLeft
+    prefab: {fileID: 7108271682618347482, guid: fa0535d0fc682ad418a8fa708d6d7389, type: 3}
+    area:
+      serializedVersion: 2
+      x: -6
+      y: -6.6
+      width: 2.76
+      height: 14
+    rotationDegrees: 0
+    modelScale: {x: 0.9230769, y: 1.45, z: 1}
+    teleportGroup: 0
+    health: 0
+  - id: PS2:Native:Stage18BorderRight
+    prefab: {fileID: 1842059512258232193, guid: af0c314faa4f4bb4bb72a93668c9ae60, type: 3}
+    area:
+      serializedVersion: 2
+      x: 3.2399998
+      y: -6.6
+      width: 2.76
+      height: 14
+    rotationDegrees: 0
+    modelScale: {x: 0.9230769, y: 1.45, z: 1}
+    teleportGroup: 0
+    health: 0
   hazards: []

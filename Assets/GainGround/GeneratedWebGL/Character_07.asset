@@ -12,26 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a5eb2034508c1f4e90fe4962b08330b, type: 3}
   m_Name: Character_07
   m_EditorClassIdentifier: 
-  displayName: Mad Poppy
-  sprite: {fileID: 21300000, guid: 3a0d7d7be189ac348ae546da8e9f1af6, type: 3}
+  displayName: Gaston
+  sprite: {fileID: 21300000, guid: c54dd0d20abcba94f800ed12050ebe91, type: 3}
   hudPortrait: {fileID: 0}
   directionalSpriteSheet: {fileID: 0}
-  modelPrefab: {fileID: 8444923898862078502, guid: 7de1f32229659684591ba26f9c0461ce, type: 3}
-  speed: 2
-  shotInterval: 0.32
-  projectileSpeed: 8
-  range: 5.5
+  modelPrefab: {fileID: 4622336896041716183, guid: df39a520890967d4e910c1da818a13b7, type: 3}
+  speed: 3.8
+  shotInterval: 0.4
+  projectileSpeed: 7
+  range: 3.4
   damage: 1
   shotColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  specialPassesWalls: 0
+  specialPassesWalls: 1
   normalWeapon:
-    label: Pistola
-    fireSound: {fileID: 8300000, guid: 6cdd576e48767c04e90bda42b6aea15a, type: 3}
+    label: Lanca
+    fireSound: {fileID: 8300000, guid: 50faef9d7c3480c40a6e359d4a52a279, type: 3}
     direction: 0
-    kind: 0
-    cooldown: 0.32
-    speed: 8
-    range: 5.5
+    kind: 1
+    cooldown: 0.4
+    speed: 7
+    range: 3.4
     damage: 1
     radius: 0.12
     maxActive: 3
@@ -44,9 +44,9 @@ MonoBehaviour:
     mode: 0
     arcDegrees: 120
     effectSpriteSheet: {fileID: 0}
-    projectileVisualPrefab: {fileID: 100000, guid: 6e3a7018fc0446098c4ac69ccc564454, type: 3}
+    projectileVisualPrefab: {fileID: 100000, guid: 15ad7a1d486f4cfaa9405654b188be7b, type: 3}
     projectileFrames: []
-    impactVisualPrefab: {fileID: 100000, guid: 18592ae028ca4c72a55c337fb8a165f2, type: 3}
+    impactVisualPrefab: {fileID: 0}
     impactFrames: []
     impactFramesPerSecond: 45
     effectColumns: 3
@@ -54,55 +54,45 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   specialWeapon:
-    label: 'Bazuca: cima'
-    fireSound: {fileID: 8300000, guid: cf77f42a2793da64da8610d73bb4a340, type: 3}
+    label: Lanca em arco
+    fireSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
     direction: 1
-    kind: 7
-    cooldown: 0.9
-    speed: 9
-    range: 20
-    damage: 3
-    radius: 0.4
-    maxActive: 2
-    lobbed: 0
+    kind: 1
+    cooldown: 0.65
+    speed: 5
+    range: 4.8
+    damage: 1
+    radius: 0.42
+    maxActive: 3
+    lobbed: 1
     pierces: 0
-    blastRadius: 0.55
+    blastRadius: 0
     freezeSeconds: 0
     duration: 2
-    color: {r: 1, g: 0.6, b: 0.15, a: 1}
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
     mode: 0
     arcDegrees: 120
     effectSpriteSheet: {fileID: 0}
-    projectileVisualPrefab: {fileID: 100000, guid: aab85a89ca154292a0ac16d2b65fbdf6, type: 3}
+    projectileVisualPrefab: {fileID: 100000, guid: 15ad7a1d486f4cfaa9405654b188be7b, type: 3}
     projectileFrames: []
-    impactVisualPrefab: {fileID: 100000, guid: c68463aed61f4403912d3d3e0852eb39, type: 3}
-    impactFrames:
-    - {fileID: 21300000, guid: 434d42aac44a4327b4906b7bf2adeb6d, type: 3}
-    - {fileID: 21300000, guid: 9d8d51ec445d462182db01cdbf4351f0, type: 3}
-    - {fileID: 21300000, guid: 4467b510b3814ebe843232d46ae42730, type: 3}
-    - {fileID: 21300000, guid: 18eafe90b9784d9d82e2b1a2b988b972, type: 3}
-    - {fileID: 21300000, guid: 24b3f69bacad44bfa86d1af1a152739b, type: 3}
-    - {fileID: 21300000, guid: 18a6e505b760499bbbc5188ce2f16363, type: 3}
-    - {fileID: 21300000, guid: 16657f07240742f08031a5ce986a2bd7, type: 3}
-    - {fileID: 21300000, guid: d81af66c569040fca6134a590e0db18c, type: 3}
-    - {fileID: 21300000, guid: 3b1bb5fa858242b7a61d13a67c8071bf, type: 3}
-    - {fileID: 21300000, guid: 89e7c8a903c6478ca18003fe2672ba9b, type: 3}
-    - {fileID: 21300000, guid: 29e3bf61a539407c9eec33916a0967bf, type: 3}
-    - {fileID: 21300000, guid: ce1e51c941a5457a9ad636fb31a0356d, type: 3}
+    impactVisualPrefab: {fileID: 0}
+    impactFrames: []
     impactFramesPerSecond: 45
     effectColumns: 3
     effectRows: 2
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  normalAttackSound: {fileID: 8300000, guid: 6cdd576e48767c04e90bda42b6aea15a, type: 3}
-  specialAttackSound: {fileID: 8300000, guid: cf77f42a2793da64da8610d73bb4a340, type: 3}
+  normalAttackSound: {fileID: 8300000, guid: 50faef9d7c3480c40a6e359d4a52a279, type: 3}
+  specialAttackSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
   dashSound: {fileID: 0}
-  hitSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: 6df93af23f0ba7f4398a367b28cd5bce, type: 3}
   switchSound: {fileID: 0}
   rescueSound: {fileID: 0}
   TempodeCooldown: 2
-  Distancia: 1
+  Distancia: 2.5
   Invencivel: 1

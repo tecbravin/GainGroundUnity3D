@@ -28,7 +28,7 @@ public static class PS2SFXInstaller
             EditorUtility.SetDirty(hero);
         }
         EditorSceneManager.OpenScene("Assets/GainGround/Editable/Scenes/GainGround.unity");
-        var game=Object.FindObjectOfType<GainGroundGame>();
+        var game=Object.FindAnyObjectByType<GainGroundGame>();
         game.shotSound=Clip("SE_01");game.hitSound=Clip("SE_20");game.rescueSound=Clip("SE_64");
         game.dashSound=Clip("SYU");game.impactSound=Clip("SE_02");game.explosionSound=Clip("SE_29");
         game.switchSound=Clip("SE_67");

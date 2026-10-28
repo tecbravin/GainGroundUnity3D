@@ -299,5 +299,38 @@ MonoBehaviour:
   noExit: 0
   additionalExits: []
   additionalCaptives: []
-  objects: []
+  objects:
+  - id: PS2:Native:LeftElevation
+    prefab: {fileID: 9061564136886122778, guid: c0bc89558726cd849b74c55e9f56cb52, type: 3}
+    area:
+      serializedVersion: 2
+      x: -6
+      y: -4.5
+      width: 4.5
+      height: 4
+    modelScale: {x: 1.4, y: 1.25, z: 1}
+    teleportGroup: 0
+    health: 0
+  - id: PS2:Native:RightElevation
+    prefab: {fileID: 7755938242866243222, guid: 408a45e47d9cbcb46a2b60313875ad45, type: 3}
+    area:
+      serializedVersion: 2
+      x: 1.5
+      y: -4.5
+      width: 4.5
+      height: 4
+    modelScale: {x: 1.4, y: 0.9, z: 1}
+    teleportGroup: 0
+    health: 0
+  - id: PS2:Native:UpperBridge
+    prefab: {fileID: 1444927909508942711, guid: baef54ece2eabfe4ba99db23e66b063c, type: 3}
+    area:
+      serializedVersion: 2
+      x: -2
+      y: 4
+      width: 4
+      height: 1
+    modelScale: {x: 0.56, y: 0.35, z: 1}
+    teleportGroup: 0
+    health: 0
   hazards: []

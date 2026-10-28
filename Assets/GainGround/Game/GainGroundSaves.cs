@@ -79,6 +79,7 @@ namespace GainGround.Game
    }
    bool complete=save.lastCompletedStage==stages.Length-1;
    if(!alive&&!complete)throw new InvalidDataException("O save nao tem herois disponiveis.");
+   recordToBeat=HighScore;
    players.Clear();players.AddRange(restored);playerCount=save.playerCount;campaignDifficulty=save.difficulty;campaignClassicMode=save.classicMode;
    score=0;foreach(var p in players)score+=p.score;
    UpdateHighScore();
@@ -101,6 +102,7 @@ namespace GainGround.Game
     else
     {
      var save=saveStore.Read(slot);
+     stageIntroRequested=true;
      RestoreCampaign(save);
      saveBrowserOpen=false;saveError="";RefreshSaves();
     }
@@ -134,6 +136,7 @@ namespace GainGround.Game
    GUILayout.BeginArea(new Rect(left,20,width,size.y-40));
    MobileSafeSaveHeading(saveBrowserWriting?"Salvar e voltar para o menu":"Continuar — escolha um save",SelectionHeading);
    saveScroll=GUILayout.BeginScrollView(saveScroll);
+   ScrollActiveViewWithMouseWheel(ref saveScroll);
    for(int i=0;i<3;i++)
    {
     bool enabled=GUI.enabled;GUI.enabled=saveBrowserWriting||saveSlots[i]!=null;

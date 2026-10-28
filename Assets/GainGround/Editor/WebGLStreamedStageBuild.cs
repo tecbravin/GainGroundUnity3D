@@ -390,3 +390,23 @@ public static class WebGLStreamedStageBuild
         return result;
     }
 }
+
+// Installed PWA builds can honor this before Unity initializes; browser tabs
+// still use the runtime Screen Orientation API when the browser supports it.
+public sealed class GainGroundWebGLLandscapeManifest : UnityEditor.Build.IPostprocessBuildWithReport
+{
+    public int callbackOrder => 0;
+
+    public void OnPostprocessBuild(BuildReport report)
+    {
+        if (report.summary.platform != BuildTarget.WebGL) return;
+        string path = Path.Combine(report.summary.outputPath, "manifest.webmanifest");
+        if (!File.Exists(path)) return;
+        string manifest = File.ReadAllText(path);
+        if (manifest.Contains("\"orientation\"")) return;
+        int openingBrace = manifest.IndexOf('{');
+        if (openingBrace < 0) throw new InvalidDataException("Manifesto PWA inválido: " + path);
+        manifest = manifest.Insert(openingBrace + 1, "\n  \"orientation\": \"landscape\",");
+        File.WriteAllText(path, manifest);
+    }
+}

@@ -359,5 +359,38 @@ MonoBehaviour:
   noExit: 0
   additionalExits: []
   additionalCaptives: []
-  objects: []
+  objects:
+  - id: PS2:Native:LeftCliff
+    prefab: {fileID: 1852911831026596493, guid: cf96074ffbe320d4283380e4b83f7c07, type: 3}
+    area:
+      serializedVersion: 2
+      x: -6
+      y: -3
+      width: 2.25
+      height: 10
+    modelScale: {x: 0.7, y: 1, z: 1}
+    teleportGroup: 0
+    health: 0
+  - id: PS2:Native:MiddleCliff
+    prefab: {fileID: 4642343163775885230, guid: 5654ef2c96e5f424fb37f9c0282fe842, type: 3}
+    area:
+      serializedVersion: 2
+      x: -0.5
+      y: -3
+      width: 1
+      height: 8
+    modelScale: {x: 0.31, y: 0.8, z: 1}
+    teleportGroup: 0
+    health: 0
+  - id: PS2:Native:RightCliff
+    prefab: {fileID: 1852911831026596493, guid: cf96074ffbe320d4283380e4b83f7c07, type: 3}
+    area:
+      serializedVersion: 2
+      x: 3.5
+      y: -3
+      width: 1
+      height: 8
+    modelScale: {x: 0.31, y: 0.8, z: 1}
+    teleportGroup: 0
+    health: 0
   hazards: []

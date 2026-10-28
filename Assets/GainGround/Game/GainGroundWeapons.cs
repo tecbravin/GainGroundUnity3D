@@ -15,8 +15,9 @@ namespace GainGround.Game
             p.currentFacingSprite = -1;
             p.player.sprite = character.sprite;
             if (character.sprite != null)
-                p.player.transform.localScale = new Vector3(.6f / character.sprite.bounds.size.x,
-                    .8f / character.sprite.bounds.size.y, 1);
+                p.player.transform.localScale = new Vector3(
+                    .6f * PS2VisualBinding.InGameCharacterScale / character.sprite.bounds.size.x,
+                    .8f * PS2VisualBinding.InGameCharacterScale / character.sprite.bounds.size.y, 1);
             UpdatePlayerFacingSprite(p, character);
         }
 
@@ -33,8 +34,9 @@ namespace GainGround.Game
             }
             if (index >= sprites.Length || sprites[index] == null) return;
             p.player.sprite = sprites[index];
-            p.player.transform.localScale = new Vector3(.6f / sprites[index].bounds.size.x,
-                .8f / sprites[index].bounds.size.y, 1);
+            p.player.transform.localScale = new Vector3(
+                .6f * PS2VisualBinding.InGameCharacterScale / sprites[index].bounds.size.x,
+                .8f * PS2VisualBinding.InGameCharacterScale / sprites[index].bounds.size.y, 1);
             p.currentFacingSprite = index;
         }
 
@@ -211,6 +213,9 @@ namespace GainGround.Game
                 shot.remaining = Mathf.Max(.35f, Vector2.Distance(shot.position, shot.origin) + .15f);
                 shot.travel = 0;
                 shot.visual.color = new Color(.3f, 1, .8f, 1);
+                var glow = shot.visual.transform.Find("Projectile glow");
+                if (glow != null)
+                    glow.GetComponent<SpriteRenderer>().color = new Color(.12f, 1, .8f, .7f);
                 return true;
             }
             return false;
@@ -390,9 +395,55 @@ namespace GainGround.Game
             enemy.health -= damage;
             if (enemy.health <= 0)
             {
+                SpawnSplitEnemies(enemy);
                 Destroy(enemy.visual.gameObject); enemies.Remove(enemy);
                 AwardPoints(enemy.lastHitPlayer,DifficultyRules.ScorePoints(campaignDifficulty,enemy.data.boss ? 2000 : 200));
                 if (enemy.data.obstacleSize.sqrMagnitude > 0) RebuildMovementWalls();
+            }
+        }
+
+        void SpawnSplitEnemies(Enemy parent)
+        {
+            var defaults = parent.prefabDefaults;
+            if (defaults == null || defaults.splitOnDeathPrefab == null) return;
+            var childPrefab = defaults.splitOnDeathPrefab;
+            var childDefaults = childPrefab.GetComponent<EnemyPrefabDefaults>();
+            if (childDefaults == null)
+            {
+                Debug.LogError("Split enemy prefab needs EnemyPrefabDefaults: " + childPrefab.name);
+                return;
+            }
+            float offset = defaults.splitOffset > 0 ? defaults.splitOffset : .5f;
+            for (int side = -1; side <= 1; side += 2)
+            {
+                Vector2 position = ArenaRules.Move(parent.position, Vector2.right * (side * offset),
+                    .12f, stage.size, movementWalls);
+                var source = parent.data;
+                var spawn = new EnemySpawn
+                {
+                    position = position,
+                    health = Mathf.Max(1, childDefaults.health),
+                    speed = childDefaults.speed > 0 ? childDefaults.speed : parent.moveSpeed * 1.5f,
+                    shotInterval = source.shotInterval,
+                    melee = true,
+                    behavior = EnemyBehavior.Slime,
+                    walkingPattern = EnemyWalkingPattern.TowardPlayers,
+                    sprite = source.sprite,
+                    modelPrefab = childPrefab,
+                    visualSize = source.visualSize * .5f,
+                    hitRadius = Mathf.Max(.05f, source.hitRadius * .7f)
+                };
+                var child = new Enemy
+                {
+                    position = position, data = spawn, prefabDefaults = childDefaults,
+                    health = DifficultyRules.EnemyHealth(campaignDifficulty, spawn.health, false),
+                    moveSpeed = spawn.speed, walkingPattern = EnemyWalkingPattern.TowardPlayers,
+                    spawnIndex = -1, cooldown = 1f
+                };
+                child.visual = Visual("MiniSlime", spawn.sprite != null ? spawn.sprite : enemySprite,
+                    position, spawn.visualSize, Color.white, 2);
+                child.model = PS2EnemyVisual.Bind(child.visual, spawn);
+                enemies.Add(child);
             }
         }
 

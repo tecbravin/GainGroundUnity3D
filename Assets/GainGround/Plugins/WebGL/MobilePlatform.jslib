@@ -1,32 +1,48 @@
 mergeInto(LibraryManager.library, {
   GainGroundIsMobile: function () {
     return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) ||
-      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ? 1 : 0;
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ||
+      (navigator.maxTouchPoints > 0 && window.matchMedia &&
+        window.matchMedia('(pointer: coarse)').matches) ? 1 : 0;
   },
   GainGroundLockLandscape: function () {
     if (window.gainGroundTryLandscape) {
       window.gainGroundTryLandscape(false);
       return;
     }
+    var fullscreenAttempted = false;
+    var lockPending = false;
     var lock = function (fromGesture) {
-      if (!screen.orientation || !screen.orientation.lock) return;
+      if (!screen.orientation || !screen.orientation.lock || lockPending) return;
       var canvas = Module.canvas;
       var fullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+      var portrait = window.innerHeight > window.innerWidth;
+      if (portrait && !fullscreen && !fromGesture) return;
+      if (portrait && !fullscreen && fullscreenAttempted) return;
       var request = canvas && (canvas.requestFullscreen || canvas.webkitRequestFullscreen);
-      var enterFullscreen = fromGesture && !fullscreen && request;
+      var enterFullscreen = portrait && fromGesture && !fullscreen && request;
+      if (portrait && fromGesture) {
+        fullscreenAttempted = true;
+        document.removeEventListener('pointerdown', window.gainGroundLandscapeHandler, false);
+      }
+      lockPending = true;
       try {
         var entered = enterFullscreen ? request.call(canvas) : null;
         Promise.resolve(entered).then(function () {
           return screen.orientation.lock('landscape');
         }).catch(function () {
           // Some mobile browsers do not support orientation locking.
+        }).then(function () {
+          lockPending = false;
         });
       } catch (error) {
-        // Keep the listener so a later user gesture can retry.
+        lockPending = false;
       }
     };
     window.gainGroundTryLandscape = lock;
-    window.gainGroundLandscapeHandler = function () { lock(true); };
+    window.gainGroundLandscapeHandler = function () {
+      if (window.innerHeight > window.innerWidth) lock(true);
+    };
     document.addEventListener('pointerdown', window.gainGroundLandscapeHandler, false);
     lock(false);
   },

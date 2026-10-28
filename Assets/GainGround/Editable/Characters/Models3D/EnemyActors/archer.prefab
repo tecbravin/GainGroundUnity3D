@@ -2007,6 +2007,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
+  - component: {fileID: 8200000000000000000}
   - component: {fileID: 2956377553475609789}
   - component: {fileID: 475903555348049507}
   m_Layer: 0
@@ -2055,8 +2056,11 @@ MonoBehaviour:
   projectileVisualPrefab: {fileID: 100000, guid: f217119c4ff14c28a67e3467695ac7b6, type: 3}
   projectileFrames: []
   projectileFramesPerSecond: 12
-  projectileSize: {x: 0.25, y: 0.48}
-  projectileTint: {r: 1, g: 1, b: 1, a: 1}
+  projectileSize: {x: 0.35, y: 0.58}
+  projectileTint: {r: 1, g: 0.35, b: 0.35, a: 1}
+  projectileGlowSprite: {fileID: 21300000, guid: 8d9e6d17a8904af097ff999b269386c3, type: 3}
+  projectileGlowSize: {x: 0.58, y: 0.82}
+  projectileGlowTint: {r: 1, g: 0.04, b: 0.03, a: 0.7}
   laserSphereSprite: {fileID: 0}
   muzzleFlashSprite: {fileID: 0}
   impactSprite: {fileID: 0}
@@ -2267,3 +2271,19 @@ Transform:
   - {fileID: 8040596829853646090}
   m_Father: {fileID: 4853753854088184426}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8200000000000000000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8658953709831035816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e3b7c126e0c4b8a91f5ae2e50120804, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  health: 0
+  speed: 0
+  walkingPattern: 0
+  walkingDistance: 0

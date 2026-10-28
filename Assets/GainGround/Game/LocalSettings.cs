@@ -14,6 +14,7 @@ namespace GainGround.Game
         public int BGM = 100;
         public int SFX = 100;
         public bool ClassicMode = true;
+        public bool AutoFire;
         public GameDifficulty Difficulty = GameDifficulty.Normal;
         public int BindingDefaultsVersion;
         const string BrowserSettingsKey = "GainGround.LocalSettings";
@@ -29,7 +30,7 @@ namespace GainGround.Game
 #endif
             }
         }
-        public LocalSettings Copy() => new LocalSettings { BGM = BGM, SFX = SFX, ClassicMode = ClassicMode, Difficulty = Difficulty, BindingDefaultsVersion = BindingDefaultsVersion, Player1 = Player1.Copy(), Player2 = Player2.Copy() };
+        public LocalSettings Copy() => new LocalSettings { BGM = BGM, SFX = SFX, ClassicMode = ClassicMode, AutoFire = AutoFire, Difficulty = Difficulty, BindingDefaultsVersion = BindingDefaultsVersion, Player1 = Player1.Copy(), Player2 = Player2.Copy() };
         public void Clamp() { Player1 = Player1 ?? PlayerBindings.Defaults(0); Player2 = Player2 ?? PlayerBindings.Defaults(1); Player1.Validate(0); Player2.Validate(1); BGM = Mathf.Clamp(BGM, 0, 100); SFX = Mathf.Clamp(SFX, 0, 100); if (!Enum.IsDefined(typeof(GameDifficulty), Difficulty)) Difficulty = GameDifficulty.Normal; }
 
         void UpgradeBindingDefaults()

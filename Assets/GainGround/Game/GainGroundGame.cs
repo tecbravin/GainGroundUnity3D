@@ -18,6 +18,10 @@ namespace GainGround.Game
         public CharacterDefinition[] secondStartingParty;
         [Tooltip("All available characters, referenced from Editable/Characters.")]
         public CharacterDefinition[] allCharacters;
+        [Header("Movement")]
+        [Min(.1f)] [SerializeField] float keyboardAccelerationSeconds = .3f;
+        [Header("Character selection")]
+        [Min(0f)] [SerializeField] float hitSelectionDelaySeconds = 1.6f;
         public bool useFullRoster;
         public bool hasFinished;
         public Sprite floorSprite, wallSprite, enemySprite, projectileSprite, exitSprite;
@@ -34,9 +38,15 @@ namespace GainGround.Game
             public int boomerangLaunches, score;
             public int id, active = -1, fallenMember = -1, selectionIndex;
             public bool awaitingSelection;
+            public float selectionReadyAt;
             public Vector2 selectionScroll;
             public readonly List<Member> party = new List<Member>();
             public Vector2 position, facing = Vector2.up, dashDirection;
+            public Vector2 lastMovementDirection;
+            public float keyboardMovementRamp;
+            public Vector2 dashTapDirection, previousDashTapDirection;
+            public float dashTapStartedAt, previousDashTapReleasedAt;
+            public bool dashTapHeld;
             public SpriteRenderer player, fallenAlly;
             public PS2VisualBinding modelBinding;
             public PlayerState carriedAlly, fallenCarrier;
@@ -58,6 +68,7 @@ namespace GainGround.Game
         public struct PlayerInput
         {
             public Vector2 movement;
+            public bool analogMovement;
             public bool fire, special, dash, switchMember;
         }
         sealed class Enemy
@@ -68,8 +79,15 @@ namespace GainGround.Game
             public PlayerState lastHitPlayer;
             public PS2EnemyVisual model;
             public float cooldown, frozen, age, confusionAngle;
+            public int burstShotsRemaining;
+            public bool chargeReturning;
+            public EnemyWalkingPattern walkingPattern;
+            public float walkingDistance, patrolDistance, moveSpeed;
             public float nextLaserSphereVolley = 8f;
+            public EnemyPrefabDefaults prefabDefaults;
             public bool vulnerable = true, triggered, waterConfused;
+            public bool patrolChasing, patrolReturning;
+            public List<Vector2> patrolTrail;
             public SpriteRenderer visual;
         }
         sealed class Shot
@@ -79,6 +97,7 @@ namespace GainGround.Game
             public float remaining, age, orbitAngle, travel;
             public bool hostile, elevated, special, returning;
             public bool directionalSprite;
+            public float spinDegreesPerSecond;
             public bool computerLaserSphere;
             public float nextLaserSphereTurn;
             public int damage;
@@ -150,6 +169,7 @@ namespace GainGround.Game
         public void NewCampaign(int firstStage = 0)
         {
             DestroyEndingAnimation();
+            recordToBeat = HighScore;
             campaignDifficulty = settings.Difficulty; campaignClassicMode = settings.ClassicMode;
             ResetCampaignParty();
             stageIndex = Mathf.Clamp(firstStage, 0, stages.Length - 1); score = 0; LoadStage();
@@ -213,6 +233,7 @@ namespace GainGround.Game
 
         void LoadStage()
         {
+            CancelStageIntro();
             if (streamStageMedia) { BeginStageMediaLoad(); return; }
             BuildStage();
         }
@@ -238,6 +259,7 @@ namespace GainGround.Game
                 foreach (var member in p.party) { member.escaped = false; member.dashCooldown = 0; }
                 p.active = p.party.FindIndex(member => !member.lost);
                 p.awaitingSelection = ClassicMode && p.active >= 0;
+                p.selectionReadyAt = 0;
                 p.selectionIndex = Mathf.Max(0, p.active);
                 if (p.awaitingSelection) p.active = -1;
                 p.position = SpawnPosition(p); p.facing = Vector2.up;
@@ -264,7 +286,21 @@ namespace GainGround.Game
             }
             foreach (var spawn in stage.enemies)
             {
-                var enemy = new Enemy { position = spawn.position, data = spawn, health = DifficultyRules.EnemyHealth(campaignDifficulty, spawn.health, spawn.boss), cooldown = spawn.initialShotDelay > 0 ? spawn.initialShotDelay : 1 + enemies.Count * .17f, spawnIndex = enemies.Count };
+                var defaults = spawn.modelPrefab != null ? spawn.modelPrefab.GetComponent<EnemyPrefabDefaults>() : null;
+                int baseHealth = defaults != null ? Mathf.Max(spawn.health, defaults.health) : spawn.health;
+                var enemy = new Enemy { position = spawn.position, data = spawn, prefabDefaults = defaults,
+                    health = DifficultyRules.EnemyHealth(campaignDifficulty, baseHealth, spawn.boss),
+                    moveSpeed = defaults != null ? Mathf.Max(spawn.speed, defaults.speed) : spawn.speed,
+                    walkingPattern = spawn.walkingPattern != EnemyWalkingPattern.UseBehavior ? spawn.walkingPattern :
+                        defaults != null ? defaults.walkingPattern : EnemyWalkingPattern.UseBehavior,
+                    walkingDistance = spawn.walkingDistance > 0 ? spawn.walkingDistance :
+                        defaults != null && defaults.walkingDistance > 0 ? defaults.walkingDistance : 4f,
+                    patrolDistance = spawn.patrolDistance > 0 ? spawn.patrolDistance :
+                        defaults != null && defaults.patrolDistance > 0 ? defaults.patrolDistance : 4f,
+                    cooldown = spawn.initialShotDelay > 0 ? spawn.initialShotDelay : 1 + enemies.Count * .17f,
+                    spawnIndex = enemies.Count };
+                if (enemy.walkingPattern == EnemyWalkingPattern.Patrol && enemy.moveSpeed <= 0)
+                    enemy.moveSpeed = .7f;
                 enemy.visual = Visual(spawn.boss ? "Boss " + spawn.behavior : spawn.behavior.ToString(), spawn.sprite != null ? spawn.sprite : enemySprite,
                     enemy.position, spawn.sprite != null ? spawn.visualSize : new Vector2(.65f, .8f),
                     spawn.sprite != null ? Color.white : spawn.elevated ? new Color(.6f, .8f, 1) : spawn.melee ? Color.white : new Color(1, .75f, .35f), 2);
@@ -286,16 +322,26 @@ namespace GainGround.Game
             BuildCampaignObjects();
             if (gameCamera != null)
             {
-                gameCamera.rect = new Rect(0, 0, 1, 1);
                 gameCamera.clearFlags = CameraClearFlags.SolidColor;
-                gameCamera.orthographicSize = Mathf.Max(stage.size.y / 2 + 3.7f,
-                    (stage.size.x / 2 + .7f) / gameCamera.aspect);
-                gameCamera.transform.position = new Vector3(0, -.35f, -10);
+                gameCamera.orthographic = true;
+                // PS2 maps are centered on their native terrain bounds and viewed from above.
+                gameCamera.transform.SetPositionAndRotation(new Vector3(0, 0, -10), Quaternion.identity);
+                if (hudView == null)
+                {
+                    gameCamera.rect = new Rect(0, 0, 1, 1);
+                    gameCamera.orthographicSize = Mathf.Max((stage.size.y + 1f) * .5f,
+                        (stage.size.x + 1f) / (2f * gameCamera.aspect));
+                }
             }
-            if (hudView != null) hudView.InvalidateLayout();
+            if (hudView != null)
+            {
+                hudView.InvalidateLayout();
+                hudView.UpdateLayout(gameCamera, stage.size);
+            }
             state = ScreenState.Playing; message = stage.noExit ? "Eliminem todos os inimigos e o chefe." : "Eliminem os inimigos ou levem todas as equipes ate EXIT.";
             CheckTeamOutcome();
             FinishRestoredStage();
+            if (state == ScreenState.Playing) BeginStageIntro();
         }
 
         void LateUpdate()
@@ -317,6 +363,7 @@ namespace GainGround.Game
                 if (clip != null) musicSource.Play();
             }
             ApplyAudioVolumes();
+            RefreshClockWarning();
             bool shouldPause = stageMusic && paused;
             if (shouldPause != musicPaused)
             {
@@ -328,6 +375,7 @@ namespace GainGround.Game
             if (state != ScreenState.Title) ReleaseTitleArtwork();
             RefreshStageSelectUI();
             RefreshHud();
+            ApplyStageIntroCamera();
         }
 
         void EnsureMusicSource()
@@ -343,6 +391,10 @@ namespace GainGround.Game
 
         void OnDisable()
         {
+            CancelStageIntro();
+            if (clockSource != null) clockSource.Stop();
+            clockPaused = false;
+            clockCrossfade = 0f;
             CancelHudPortraitLoad();
             if (hudView != null) { Destroy(hudView.gameObject); hudView = null; }
             if (titleView != null) { Destroy(titleView.gameObject); titleView = null; }
@@ -401,6 +453,7 @@ namespace GainGround.Game
             shot.position = shot.velocity = shot.origin = shot.launchDirection = Vector2.zero;
             shot.boomerangSide = shot.remaining = shot.age = shot.orbitAngle = shot.travel = 0;
             shot.hostile = shot.elevated = shot.special = shot.returning = shot.directionalSprite = false;
+            shot.spinDegreesPerSecond = 0;
             shot.computerLaserSphere = false; shot.nextLaserSphereTurn = 0;
             shot.damage = 0; shot.visual = null; shot.weapon = null;
             shot.animationFrames = null; shot.animationFramesPerSecond = 0;
@@ -427,7 +480,34 @@ namespace GainGround.Game
         }
 
         SpriteRenderer AcquireShotVisual(string name, Sprite sprite, Vector2 position, Vector2 size, Color tint, int order)
-            => AcquireTransientVisual(spareShotVisuals, name, sprite, position, size, tint, order);
+        {
+            var visual = AcquireTransientVisual(spareShotVisuals, name, sprite, position, size, tint, order);
+            var oldGlow = visual.transform.Find("Projectile glow");
+            if (oldGlow != null) oldGlow.gameObject.SetActive(false);
+            return visual;
+        }
+
+        static void ConfigureProjectileGlow(SpriteRenderer visual, Sprite sprite, Vector2 size, Color tint)
+        {
+            if (visual == null || sprite == null) return;
+            var child = visual.transform.Find("Projectile glow");
+            var glow = child != null ? child.GetComponent<SpriteRenderer>() : null;
+            if (glow == null)
+            {
+                var objectGlow = new GameObject("Projectile glow");
+                objectGlow.transform.SetParent(visual.transform, false);
+                glow = objectGlow.AddComponent<SpriteRenderer>();
+            }
+            glow.sprite = sprite;
+            glow.color = tint;
+            glow.sortingOrder = visual.sortingOrder - 1;
+            glow.transform.localPosition = Vector3.zero;
+            glow.transform.localRotation = Quaternion.identity;
+            glow.transform.localScale = new Vector3(
+                size.x / (sprite.bounds.size.x * visual.transform.localScale.x),
+                size.y / (sprite.bounds.size.y * visual.transform.localScale.y), 1);
+            glow.gameObject.SetActive(true);
+        }
 
         SpriteRenderer AcquireTransientVisual(Stack<SpriteRenderer> pool, string name, Sprite sprite,
             Vector2 position, Vector2 size, Color tint, int order)
@@ -571,7 +651,13 @@ namespace GainGround.Game
                 if (Input.GetKeyDown(KeyCode.Return) || MenuDown(GameAction.Fire)) Continue();
                 return;
             }
-            if (Input.GetKeyDown(KeyCode.Escape) || MenuDown(GameAction.Pause)) paused = !paused;
+            if (stageIntroPlaying) { AdvanceStageIntro(Time.unscaledDeltaTime); return; }
+            if (Input.GetKeyDown(KeyCode.Escape) || MenuDown(GameAction.Pause))
+            {
+                paused = !paused;
+                mobileGameScroll = Vector2.zero;
+                foreach (var p in players) ResetDirectionalDashTap(p);
+            }
             bool secondJoined = !paused && players.Count == 1 &&
                 (ActionDown(1, GameAction.Special) || mobileInputs[1].special) && JoinSecondPlayer();
             var first = ReadMappedControls(0); var second = ReadMappedControls(1);
@@ -605,10 +691,17 @@ namespace GainGround.Game
             foreach (var member in p.party) member.dashCooldown = Mathf.Max(0, member.dashCooldown - dt);
             p.dashProtectedThisFrame = false;
             p.fireCooldown -= dt; p.specialCooldown -= dt; p.invulnerability -= dt;
-            if (!p.HasActive) { p.dashRequested = false; return; }
+            if (!p.HasActive)
+            {
+                p.dashRequested = false;
+                ResetMovementRamp(p);
+                ResetDirectionalDashTap(p);
+                return;
+            }
             if (input.switchMember) SwitchMember(p);
-            var direction = input.movement.normalized;
-            if (direction != Vector2.zero) p.facing = direction;
+            var direction = Vector2.ClampMagnitude(input.movement, 1f);
+            if (direction != Vector2.zero) p.facing = direction.normalized;
+            if (UpdateDirectionalDashTap(p, direction, Time.unscaledTime)) input.dash = true;
             var character = p.party[p.active].definition;
             UpdatePlayerFacingSprite(p, character);
             p.swordSweepRemaining = Mathf.Max(0, p.swordSweepRemaining - dt);
@@ -622,7 +715,13 @@ namespace GainGround.Game
             if (input.dash || p.dashRequested) TryDash(p);
             p.dashRequested = false;
             if (p.dashRemaining > 0) MoveDash(p, dt);
-            else p.position = ArenaRules.Move(p.position, direction * character.speed * (p.carrying || p.carryingFallen ? .8f : 1) * dt, .23f, stage.size, movementWalls);
+            else
+            {
+                float intensity = MovementIntensity(p, direction, input.analogMovement, dt);
+                p.position = ArenaRules.Move(p.position, direction.normalized * intensity *
+                    character.speed * (p.carrying || p.carryingFallen ? .8f : 1) * dt,
+                    .23f, stage.size, movementWalls);
+            }
             p.player.transform.position = p.position;
             Color tint = p.Tint * character.characterTint;
             if (p.dashProtectedThisFrame) tint = Color.Lerp(tint, Color.white, .7f);
@@ -630,7 +729,7 @@ namespace GainGround.Game
             p.player.color = tint;
             if (p.modelBinding != null && p.modelBinding.Model != null)
                 p.modelBinding.Model.Tick(dt, p.facing, direction != Vector2.zero, p.dashRemaining > 0, p.player.enabled);
-            if (input.fire && p.fireCooldown <= 0)
+            if ((input.fire || settings.AutoFire) && p.fireCooldown <= 0)
             {
                 if (character.normalWeapon != null && !string.IsNullOrEmpty(character.normalWeapon.label))
                 {
@@ -669,6 +768,73 @@ namespace GainGround.Game
             }
         }
 
+        const float DashTapInterval = .32f;
+        const float DashTapMaximumHold = .25f;
+
+        static bool UpdateDirectionalDashTap(PlayerState player, Vector2 direction, float now)
+        {
+            // A tap starts only after the direction is deliberately pushed and ends at neutral.
+            if (!player.dashTapHeld)
+            {
+                if (direction.sqrMagnitude < .55f * .55f) return false;
+                player.dashTapHeld = true;
+                player.dashTapDirection = direction.normalized;
+                player.dashTapStartedAt = now;
+                bool repeated = now - player.previousDashTapReleasedAt <= DashTapInterval &&
+                    Vector2.Dot(player.dashTapDirection, player.previousDashTapDirection) >= .85f;
+                player.previousDashTapReleasedAt = float.NegativeInfinity;
+                return repeated;
+            }
+            if (direction.sqrMagnitude <= .2f * .2f)
+            {
+                player.dashTapHeld = false;
+                if (now - player.dashTapStartedAt <= DashTapMaximumHold)
+                {
+                    player.previousDashTapDirection = player.dashTapDirection;
+                    player.previousDashTapReleasedAt = now;
+                }
+                else player.previousDashTapReleasedAt = float.NegativeInfinity;
+            }
+            else if (direction.sqrMagnitude >= .55f * .55f)
+                player.dashTapDirection = direction.normalized;
+            return false;
+        }
+
+        static void ResetDirectionalDashTap(PlayerState player)
+        {
+            player.dashTapHeld = false;
+            player.dashTapDirection = player.previousDashTapDirection = Vector2.zero;
+            player.previousDashTapReleasedAt = float.NegativeInfinity;
+        }
+
+        float MovementIntensity(PlayerState player, Vector2 direction, bool analog, float dt)
+        {
+            if (analog)
+            {
+                ResetMovementRamp(player);
+                return direction.magnitude;
+            }
+            if (direction.sqrMagnitude < .0001f)
+            {
+                ResetMovementRamp(player);
+                return 0;
+            }
+            var heading = direction.normalized;
+            if (Vector2.Dot(player.lastMovementDirection, heading) < .5f)
+                player.keyboardMovementRamp = 0;
+            player.lastMovementDirection = heading;
+            float rampSeconds = keyboardAccelerationSeconds > 0 ? keyboardAccelerationSeconds : .3f;
+            player.keyboardMovementRamp = Mathf.Min(1,
+                player.keyboardMovementRamp + dt / rampSeconds);
+            return player.keyboardMovementRamp;
+        }
+
+        static void ResetMovementRamp(PlayerState player)
+        {
+            player.keyboardMovementRamp = 0;
+            player.lastMovementDirection = Vector2.zero;
+        }
+
         void UpdateRescues(PlayerState p)
         {
             if (captive != null && !rescued)
@@ -695,6 +861,7 @@ namespace GainGround.Game
             if (state != ScreenState.Playing || paused || !p.HasActive || p.dashRemaining > 0) return;
             var member = p.party[p.active];
             if (member.dashCooldown > 0 || member.definition.Distancia <= 0) return;
+            ResetMovementRamp(p);
             PlaySfx(member.definition.dashSound != null ? member.definition.dashSound : dashSound);
             p.dashDirection = p.facing.normalized; p.dashSpeed = member.definition.Distancia / DashDuration;
             p.dashRemaining = DashDuration; p.dashInvincible = member.definition.Invencivel;
@@ -710,10 +877,11 @@ namespace GainGround.Game
         void CancelDash(PlayerState p)
         {
             p.dashRemaining = 0; p.dashInvincible = p.dashProtectedThisFrame = p.dashRequested = false;
+            ResetDirectionalDashTap(p);
         }
         void SetMember(PlayerState p, int index)
         {
-            CancelDash(p); p.awaitingSelection = false; p.active = index;
+            CancelDash(p); ResetMovementRamp(p); p.awaitingSelection = false; p.selectionReadyAt = 0; p.active = index;
             SetPlayerCharacterVisual(p, p.party[index].definition); p.player.enabled = true;
             p.modelBinding = PS2VisualBinding.Bind(p.player, p.party[index].definition);
         }
@@ -790,6 +958,7 @@ namespace GainGround.Game
                 if (captive != null) captive.transform.position = stage.rescuePosition;
             }
             if (SelectAvailable(p)) Respawn(p, 2);
+            else if (p.awaitingSelection) p.selectionReadyAt = Time.unscaledTime + hitSelectionDelaySeconds;
             CheckTeamOutcome();
             return true;
         }
@@ -820,6 +989,31 @@ namespace GainGround.Game
                 if (next < distance) { closest = p; distance = next; }
             }
             return closest;
+        }
+        PlayerState ClosestVisiblePlayer(Enemy enemy)
+        {
+            PlayerState closest = null;
+            float distance = float.PositiveInfinity;
+            foreach (var player in players)
+            {
+                if (!player.HasActive) continue;
+                float next = (player.position - enemy.position).sqrMagnitude;
+                if (next >= distance || !HasEnemyLineOfSight(enemy, player.position)) continue;
+                closest = player;
+                distance = next;
+            }
+            return closest;
+        }
+
+        bool HasEnemyLineOfSight(Enemy enemy, Vector2 target)
+        {
+            foreach (var wall in movementWalls)
+            {
+                // Raised sentries stand inside their own platform's footprint.
+                if (enemy.data.elevated && wall.Contains(enemy.position)) continue;
+                if (ArenaRules.SegmentIntersects(wall, enemy.position, target)) return false;
+            }
+            return true;
         }
         void UpdateEnemies(float dt)
         {
@@ -853,15 +1047,22 @@ namespace GainGround.Game
                 var target = ClosestPlayer(enemy.position);
                 if (target == null) continue;
                 Vector2 direction = (target.position - enemy.position).normalized;
-                if (!enemy.data.sentry && (enemy.data.melee || (target.position - enemy.position).sqrMagnitude > 3))
+                if (!enemy.data.sentry && (enemy.data.melee ||
+                    (target.position - enemy.position).sqrMagnitude > 3 ||
+                    !HasEnemyLineOfSight(enemy, target.position)))
                     enemy.position = ArenaRules.Move(enemy.position, direction * enemy.data.speed * dt, .25f, stage.size, movementWalls);
                 enemy.visual.transform.position = enemy.position; enemy.cooldown -= dt;
                 if (!enemy.data.melee && enemy.cooldown <= 0)
                 {
-                    PlayEnemyAttackSound(enemy);
-                    Fire(enemy.position, direction, true, enemy.data.elevated, 3.2f, 16, 1, new Color(1, .35f, .25f), enemy);
-                    enemy.cooldown = enemy.data.shotInterval;
-                    if(enemy.model != null) enemy.model.Attack();
+                    var visible = ClosestVisiblePlayer(enemy);
+                    if (visible != null)
+                    {
+                        direction = (visible.position - enemy.position).normalized;
+                        PlayEnemyAttackSound(enemy);
+                        Fire(enemy.position, direction, true, enemy.data.elevated, 3.2f, 16, 1, new Color(1, .35f, .25f), enemy);
+                        enemy.cooldown = enemy.data.shotInterval;
+                        if(enemy.model != null) enemy.model.Attack();
+                    }
                 }
                 foreach (var p in players)
                     if (p.HasActive && !enemy.data.elevated && (p.position - enemy.position).sqrMagnitude < .25f && HitPlayer(p))
@@ -874,7 +1075,8 @@ namespace GainGround.Game
         {
             if(enemy.model == null)return;
             var target=ClosestPlayer(enemy.position);
-            var facing=target == null ? Vector2.down : (target.position-enemy.position).normalized;
+            var facing=enemy.patrolReturning ? (enemy.data.position-enemy.position).normalized :
+                target == null ? Vector2.down : (target.position-enemy.position).normalized;
             enemy.model.Tick(dt,facing,(enemy.position-before).sqrMagnitude>.000001f);
             if (enemy.waterConfused && enemy.frozen > 0 && !enemy.data.boss && enemy.model.rig != null)
                 enemy.model.rig.localRotation *= Quaternion.Euler(0, enemy.confusionAngle, 0);
@@ -887,18 +1089,24 @@ namespace GainGround.Game
             shot.velocity = direction * speed; shot.remaining = range; shot.hostile = hostile;
             shot.elevated = elevated; shot.damage = damage; shot.age = 0;
             var effects = source != null ? source.model : null;
-            var frames = effects != null ? effects.projectileFrames : null;
+            var overrideSprite = source != null ? source.data.projectileSprite : null;
+            var frames = overrideSprite == null && effects != null ? effects.projectileFrames : null;
             Sprite prefabSprite = effects != null ? SpriteFromEffectPrefab(effects.projectileVisualPrefab) : null;
-            shot.directionalSprite = prefabSprite != null;
-            Sprite sprite = frames != null && frames.Length > 0 && frames[0] != null ? frames[0] :
+            shot.directionalSprite = overrideSprite == null && prefabSprite != null;
+            shot.spinDegreesPerSecond = overrideSprite != null ? source.data.projectileSpinDegreesPerSecond : 0;
+            Sprite sprite = overrideSprite != null ? overrideSprite : frames != null && frames.Length > 0 && frames[0] != null ? frames[0] :
                 prefabSprite != null ? prefabSprite : effects != null && effects.projectileSprite != null ?
                     effects.projectileSprite : projectileSprite;
-            Vector2 size = effects != null && effects.projectileSize.sqrMagnitude > 0 ? effects.projectileSize :
+            Vector2 size = overrideSprite != null && source.data.projectileSize.sqrMagnitude > 0 ? source.data.projectileSize :
+                effects != null && effects.projectileSize.sqrMagnitude > 0 ? effects.projectileSize :
                 Vector2.one * (elevated ? .24f : .16f);
-            Color tint = effects != null && prefabSprite != null ? effects.projectileTint :
+            Color tint = overrideSprite != null ? Color.white : effects != null && prefabSprite != null ? effects.projectileTint :
                 effects != null ? color * effects.projectileTint : color;
             shot.visual = AcquireShotVisual(hostile ? "Enemy shot" : "Player shot", sprite, origin, size, tint, 6);
-            if (prefabSprite != null)
+            if (effects != null && effects.projectileGlowSprite != null)
+                ConfigureProjectileGlow(shot.visual, effects.projectileGlowSprite,
+                    effects.projectileGlowSize, effects.projectileGlowTint);
+            if (shot.directionalSprite)
                 shot.visual.transform.rotation = Quaternion.Euler(0, 0,
                     Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90);
             shot.animationFrames = frames;
@@ -978,6 +1186,9 @@ namespace GainGround.Game
                 if (shot.directionalSprite)
                     shot.visual.transform.rotation = Quaternion.Euler(0, 0,
                         Mathf.Atan2(shot.velocity.y, shot.velocity.x) * Mathf.Rad2Deg - 90);
+                else if (shot.spinDegreesPerSecond != 0)
+                    shot.visual.transform.rotation = Quaternion.Euler(0, 0,
+                        shot.age * shot.spinDegreesPerSecond);
                 if (shot.animationFrames != null && shot.animationFrames.Length > 0)
                 {
                     var frame = shot.animationFrames[Mathf.FloorToInt(shot.age * shot.animationFramesPerSecond) % shot.animationFrames.Length];
@@ -995,6 +1206,7 @@ namespace GainGround.Game
         void ClearStage()
         {
             if (state != ScreenState.Playing) return;
+            CancelStageIntro();
             BuildStageScore();
             state = stageIndex == stages.Length - 1 ? ScreenState.Victory : ScreenState.Cleared;
             BeginVictoryMusicDownload();
@@ -1055,11 +1267,24 @@ namespace GainGround.Game
                 GUI.Label(new Rect(230, 196, 540, 50), heading, SelectionHeading);
                 if (!paused && (state == ScreenState.Cleared || pendingEndingScore)) DrawStageScoreSummary();
                 if (pendingEndingScore) { GUI.matrix = old; return; }
-                if (IronButton(new Rect(340, paused ? 313 : 407, 320, 45), paused ? "CONTINUAR" : state == ScreenState.Title ? "JOGAR [ENTER]" : state == ScreenState.Cleared ? "CONTINUAR [ENTER]" : "JOGAR NOVAMENTE [ENTER]"))
+                if (paused)
+                {
+                    GUI.Label(new Rect(310, 252, 120, 30), "BGM  " + settings.BGM, GoldMenuText(labelStyle));
+                    SetPauseVolume(true, Mathf.RoundToInt(GUI.HorizontalSlider(new Rect(450, 264, 220, 25),
+                        settings.BGM, 0, 100, GUI.skin.horizontalSlider, SwordSliderThumb)));
+                    GUI.Label(new Rect(310, 294, 120, 30), "SFX  " + settings.SFX, GoldMenuText(labelStyle));
+                    SetPauseVolume(false, Mathf.RoundToInt(GUI.HorizontalSlider(new Rect(450, 306, 220, 25),
+                        settings.SFX, 0, 100, GUI.skin.horizontalSlider, SwordSliderThumb)));
+                }
+                if (IronButton(new Rect(340, paused ? 350 : 407, 320, paused ? 42 : 45), paused ? "CONTINUAR" : state == ScreenState.Title ? "JOGAR [ENTER]" : state == ScreenState.Cleared ? "CONTINUAR [ENTER]" : "JOGAR NOVAMENTE [ENTER]"))
                 { if (paused) paused = false; else Continue(); }
+                if (paused && IronButton(new Rect(340, 398, 320, 42),
+                    "Tiro Automático: " + (settings.AutoFire ? "Ligado" : "Desligado"))) ToggleAutoFire();
                 if(state==ScreenState.Cleared||state==ScreenState.Victory)
                 {if(IronButton(new Rect(340,461,320,40),"Salvar e voltar para o menu"))OpenSaveSlots(true);}
-                else if (IronButton(new Rect(340, paused ? 373 : 484, 320, paused ? 45 : 35), "Menu Principal")) ReturnToMenu();
+                else if (IronButton(new Rect(340, paused ? 446 : 484, 320, paused ? 42 : 35), "Menu Principal")) ReturnToMenu();
+                if (paused && !string.IsNullOrEmpty(settingsError))
+                    GUI.Label(new Rect(280, 493, 440, 38), settingsError, GoldMenuText(smallStyle));
             }
             GUI.matrix = old;
         }

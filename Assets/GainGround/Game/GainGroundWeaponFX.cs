@@ -5,19 +5,20 @@ namespace GainGround.Game
 {
     public sealed partial class GainGroundGame
     {
-        Sprite[] waterFrames, blastFrames;
+        Sprite[] waterFrames, blastFrames, electricFrames;
         Sprite detailedBoomerang;
-        sealed class BlastVisual { public SpriteRenderer renderer; public float age; }
+        sealed class BlastVisual { public SpriteRenderer renderer; public float age; public bool electric; }
         readonly List<BlastVisual> blastVisuals = new List<BlastVisual>();
 
         void EnsureWeaponFX()
         {
             if (waterFrames != null) return;
-            waterFrames = new Sprite[8]; blastFrames = new Sprite[8];
+            waterFrames = new Sprite[8]; blastFrames = new Sprite[8]; electricFrames = new Sprite[8];
             for (int i=0;i<8;i++)
             {
                 waterFrames[i]=CreateWeaponFX("Water "+i,32,(x,y)=>WaterPixel(x,y,i));
                 blastFrames[i]=CreateWeaponFX("Blast "+i,48,(x,y)=>BlastPixel(x,y,i));
+                electricFrames[i]=CreateWeaponFX("Electric shock "+i,48,(x,y)=>ElectricPixel(x,y,i));
             }
             detailedBoomerang=CreateWeaponFX("Boomerang blade",32,(x,y)=>
             {
@@ -76,6 +77,23 @@ namespace GainGround.Game
             if(r>outer*.36f)return new Color(1,.76f,.15f);
             return new Color(1,1,.86f);
         }
+        static Color ElectricPixel(int x,int y,int frame)
+        {
+            float dx=x-23.5f,dy=y-23.5f,r=Mathf.Sqrt(dx*dx+dy*dy),angle=Mathf.Atan2(dy,dx);
+            float outer=4+18*Mathf.Sin((frame/7f)*Mathf.PI*.55f);
+            float edge=outer+Mathf.Sin(angle*9+frame*1.7f)*2.2f;
+            if(r>edge || r<outer*.55f && frame<5)return Color.clear;
+            if(r>edge-2.2f || Mathf.Abs(Mathf.Sin(angle*13+frame))>.93f)return new Color(.72f,.94f,1,.96f);
+            return new Color(.12f,.55f,1,.78f);
+        }
+        void SpawnElectricShock(Vector2 position,float radius)
+        {
+            EnsureWeaponFX();
+            if(blastVisuals.Count>=32)
+            { if(blastVisuals[0].renderer!=null)Destroy(blastVisuals[0].renderer.gameObject);blastVisuals.RemoveAt(0); }
+            var renderer=Visual("Electric shockwave",electricFrames[0],position,Vector2.one*radius*2,new Color(.38f,.78f,1),7);
+            blastVisuals.Add(new BlastVisual {renderer=renderer, electric=true});
+        }
         void AnimateWater(Shot shot)
         {
             EnsureWeaponFX();
@@ -88,7 +106,7 @@ namespace GainGround.Game
             if(blastVisuals.Count>=32)
             { if(blastVisuals[0].renderer!=null)Destroy(blastVisuals[0].renderer.gameObject);blastVisuals.RemoveAt(0); }
             var renderer=Visual("Animated explosion",blastFrames[0],position,Vector2.one*radius*2,Color.white,7);
-            blastVisuals.Add(new BlastVisual {renderer=renderer});
+            blastVisuals.Add(new BlastVisual {renderer=renderer, electric=true});
         }
         void UpdateBlastVisuals(float dt)
         {
@@ -97,15 +115,16 @@ namespace GainGround.Game
                 var blast=blastVisuals[i];blast.age+=dt;
                 if(blast.renderer==null || blast.age>=.48f)
                 { if(blast.renderer!=null)Destroy(blast.renderer.gameObject);blastVisuals.RemoveAt(i);continue; }
-                blast.renderer.sprite=blastFrames[Mathf.Min(7,(int)(blast.age/.06f))];
+                blast.renderer.sprite=blast.electric ? electricFrames[Mathf.Min(7,(int)(blast.age/.06f))] : blastFrames[Mathf.Min(7,(int)(blast.age/.06f))];
             }
         }
         void DisposeWeaponFX()
         {
             if(waterFrames!=null)foreach(var sprite in waterFrames) {Destroy(sprite.texture);Destroy(sprite);}
             if(blastFrames!=null)foreach(var sprite in blastFrames) {Destroy(sprite.texture);Destroy(sprite);}
+            if(electricFrames!=null)foreach(var sprite in electricFrames) {Destroy(sprite.texture);Destroy(sprite);}
             if(detailedBoomerang!=null) {Destroy(detailedBoomerang.texture);Destroy(detailedBoomerang);}
-            waterFrames=blastFrames=null;detailedBoomerang=null;blastVisuals.Clear();
+            waterFrames=blastFrames=electricFrames=null;detailedBoomerang=null;blastVisuals.Clear();
         }
     }
 }

@@ -5,6 +5,7 @@ namespace GainGround.Game
     // forceRenderingOff hides only its drawing, preserving all death/rescue rules.
     public sealed class PS2VisualBinding : MonoBehaviour
     {
+        public const float InGameCharacterScale = 1.2f;
         SpriteRenderer anchor;
         PS2CharacterModel prefab;
         public PS2CharacterModel Model { get; private set; }
@@ -31,7 +32,8 @@ namespace GainGround.Game
         {
             if (Model == null || anchor == null) return;
             var scale = anchor.transform.lossyScale;
-            Model.transform.localScale = new Vector3(1/scale.x, 1/scale.y, 1/scale.z);
+            Model.transform.localScale = new Vector3(InGameCharacterScale / scale.x,
+                InGameCharacterScale / scale.y, InGameCharacterScale / scale.z);
             Model.transform.localPosition = new Vector3(0, -.32f/scale.y, -.4f/scale.z);
             foreach (var renderer in Model.renderers)
             {

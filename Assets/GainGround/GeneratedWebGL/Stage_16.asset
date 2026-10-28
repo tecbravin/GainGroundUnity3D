@@ -41,8 +41,9 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
-    elevated: 1
+    elevated: 0
     melee: 0
     spawnDelay: 0
     behavior: 0
@@ -61,8 +62,9 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
-    elevated: 1
+    elevated: 0
     melee: 0
     spawnDelay: 0
     behavior: 0
@@ -81,8 +83,9 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
-    elevated: 1
+    elevated: 0
     melee: 0
     spawnDelay: 0
     behavior: 0
@@ -101,8 +104,9 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
-    elevated: 1
+    elevated: 0
     melee: 0
     spawnDelay: 0
     behavior: 0
@@ -121,6 +125,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -141,6 +146,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -161,6 +167,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -181,6 +188,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -201,6 +209,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -221,6 +230,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -241,6 +251,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -261,6 +272,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -281,6 +293,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -301,6 +314,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -321,6 +335,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -341,6 +356,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -361,6 +377,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -381,6 +398,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -401,6 +419,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -421,6 +440,7 @@ MonoBehaviour:
     health: 1
     speed: 1.1
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 0
     elevated: 0
     melee: 1
@@ -441,6 +461,7 @@ MonoBehaviour:
     health: 1
     speed: 1.1
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 0
     elevated: 0
     melee: 1
@@ -461,6 +482,7 @@ MonoBehaviour:
     health: 1
     speed: 1.1
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 0
     elevated: 0
     melee: 1
@@ -481,6 +503,7 @@ MonoBehaviour:
     health: 1
     speed: 1.1
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 0
     elevated: 0
     melee: 1
@@ -497,16 +520,17 @@ MonoBehaviour:
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
-  rescue: {fileID: 11400000, guid: 5107fad7148f7f34faab52f89eeb0a39, type: 2}
+  rescue: {fileID: 11400000, guid: 5551b96e5404f9a4297161c15cbce02b, type: 2}
   rescuePosition: {x: -5, y: 6}
   background: {fileID: 0}
+  paintedLayout: {fileID: 0}
   noExit: 0
   additionalExits: []
   additionalCaptives:
   - character: {fileID: 11400000, guid: f2ec22f816a3bfa4bae9e6097f5dcc79, type: 2}
     position: {x: -2.5, y: 6}
     minimumPlayers: 1
-  - character: {fileID: 11400000, guid: 5ceed4367a40b34429984962bf0a7016, type: 2}
+  - character: {fileID: 11400000, guid: b8f0398b2cdf65343bcef33ee3f3d8dc, type: 2}
     position: {x: -1.25, y: 6}
     minimumPlayers: 2
   objects: []

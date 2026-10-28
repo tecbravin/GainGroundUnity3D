@@ -65,12 +65,33 @@ MonoBehaviour:
   - {x: 8, y: 192}
   - {x: 8, y: 192}
   - {x: 8, y: 192}
-  walls: []
+  walls:
+  - serializedVersion: 2
+    x: -5.4
+    y: -4.75
+    width: 1.2
+    height: 1.1
+  - serializedVersion: 2
+    x: 4.2000003
+    y: -4.75
+    width: 1.2
+    height: 1.1
+  - serializedVersion: 2
+    x: -5.4
+    y: -1.8499999
+    width: 1.2
+    height: 1.1
+  - serializedVersion: 2
+    x: 4.2000003
+    y: 2.25
+    width: 1.2
+    height: 1.1
   enemies:
   - position: {x: -4.875, y: 4.875}
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -91,6 +112,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -111,6 +133,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -131,6 +154,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -151,6 +175,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -171,6 +196,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -187,11 +213,92 @@ MonoBehaviour:
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
-  rescue: {fileID: 11400000, guid: 9829d2c75e740494da7d1a566c80fc58, type: 2}
+  rescue: {fileID: 11400000, guid: 4a22b0485eef50541bf0af84bff45f40, type: 2}
   rescuePosition: {x: -1.5, y: 1.5}
   background: {fileID: 0}
+  paintedLayout: {fileID: 0}
   noExit: 0
   additionalExits: []
   additionalCaptives: []
-  objects: []
+  objects:
+  - id: PAINT:STAGE11_ROCK_0
+    prefab: {fileID: 0}
+    area:
+      serializedVersion: 2
+      x: -5.4
+      y: -4.75
+      width: 1.2
+      height: 1.1
+    teleportGroup: 0
+    health: 0
+  - id: PAINT:STAGE11_ROCK_1
+    prefab: {fileID: 0}
+    area:
+      serializedVersion: 2
+      x: 4.2000003
+      y: -4.75
+      width: 1.2
+      height: 1.1
+    teleportGroup: 0
+    health: 0
+  - id: PAINT:STAGE11_ROCK_2
+    prefab: {fileID: 0}
+    area:
+      serializedVersion: 2
+      x: -5.4
+      y: -1.8499999
+      width: 1.2
+      height: 1.1
+    teleportGroup: 0
+    health: 0
+  - id: PAINT:STAGE11_ROCK_3
+    prefab: {fileID: 0}
+    area:
+      serializedVersion: 2
+      x: 4.2000003
+      y: 2.25
+      width: 1.2
+      height: 1.1
+    teleportGroup: 0
+    health: 0
+  - id: PAINT:STAGE11_BUSH_0
+    prefab: {fileID: 0}
+    area:
+      serializedVersion: 2
+      x: -5.5249996
+      y: -3.1000001
+      width: 0.65
+      height: 0.8
+    teleportGroup: 0
+    health: 0
+  - id: PAINT:STAGE11_BUSH_1
+    prefab: {fileID: 0}
+    area:
+      serializedVersion: 2
+      x: 4.8250003
+      y: -3.1000001
+      width: 0.65
+      height: 0.8
+    teleportGroup: 0
+    health: 0
+  - id: PAINT:STAGE11_BUSH_2
+    prefab: {fileID: 0}
+    area:
+      serializedVersion: 2
+      x: -5.4249997
+      y: 1.8000001
+      width: 0.65
+      height: 0.8
+    teleportGroup: 0
+    health: 0
+  - id: PAINT:STAGE11_BUSH_3
+    prefab: {fileID: 0}
+    area:
+      serializedVersion: 2
+      x: 4.775
+      y: 4.2999997
+      width: 0.65
+      height: 0.8
+    teleportGroup: 0
+    health: 0
   hazards: []

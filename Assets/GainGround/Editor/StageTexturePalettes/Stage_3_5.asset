@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 301cc55ee90d4d5093def297019eb795, type: 3}
+  m_Name: Stage_3_5
+  m_EditorClassIdentifier: 
+  stage: {fileID: 11400000, guid: 09235055b860c804095910f435feba09, type: 2}
+  floor: {fileID: 2800000, guid: cb2a7beff5344e5b98a795ba7ba9d391, type: 3}
+  elevations: {fileID: 2800000, guid: a6ccdcf8e3064e92b5d0d592ccfacfcd, type: 3}
+  constructions: {fileID: 2800000, guid: d38549b6c30e4e0e8b7dff5bd5f4df2b, type: 3}
+  exitBanner: {fileID: 2800000, guid: 65de2f5007554fa0b70563c51cba1448, type: 3}
+  objects:
+  - id: PS2Model:r3s05_01
+    prefab: {fileID: 8489108657322442493, guid: 8fe53b890a726144eb22e8f71b94b45a, type: 3}
+  - id: PS2Model:r3s05_02
+    prefab: {fileID: 7810303292489140243, guid: f38357fc2edca1c4a9987c9f2ce3cd6f, type: 3}
+  - id: PS2Model:r3s05_03
+    prefab: {fileID: 4300438452084505186, guid: c93f03873d7d4024f89d8ec9696d3423, type: 3}
+  - id: PS2Model:r3s05_04
+    prefab: {fileID: 8038343254489500392, guid: a751b03adea65984782d4c7c496e7433, type: 3}
+  - id: PS2Model:r3s05_05
+    prefab: {fileID: 2558109550798213230, guid: dce92b9171e83a545bcb62c7be0a3e7a, type: 3}
+  - id: PS2Model:r3s05_06
+    prefab: {fileID: 3498285375523876366, guid: e544b8689ba0e2c42858dbced8ac31b9, type: 3}
+  - id: PS2Model:r3s05_b1
+    prefab: {fileID: 7437295892967387004, guid: 7e8c4020b7090784dbf6840c37092742, type: 3}
+  - id: PS2Model:r3s05_b2
+    prefab: {fileID: 5373206337428336584, guid: e24a59487f3d0fc489fc2ada54adfb77, type: 3}
+  - id: PS2Model:r3s05_ex
+    prefab: {fileID: 5754223060655043008, guid: 83391a0537f49f743a007ab1aa3687c9, type: 3}

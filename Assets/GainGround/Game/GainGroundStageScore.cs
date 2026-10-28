@@ -49,7 +49,7 @@ namespace GainGround.Game
             stageScoreElapsed = 0;
             scoreCountEndTime = 0;
             nextScoreCountSound = 0;
-            mobileScroll = Vector2.zero;
+            mobileGameScroll = Vector2.zero;
 
             int seconds = Mathf.Max(0, Mathf.CeilToInt(remainingTime));
             AddStageScore("TEMPO " + seconds + "s × 100", seconds * 100);
@@ -135,11 +135,33 @@ namespace GainGround.Game
             }
         }
 
-        void DrawMobileStageScoreSummary()
+        float MobileStageScoreSummaryHeight(float width)
         {
+            var style = GoldMenuText(mobileLabel);
+            float height = 0;
             for (int i = 0; i < stageScoreEntries.Count; i++)
-                GUILayout.Label(stageScoreEntries[i].label + "   " + StageScorePoints(i),
-                    GoldMenuText(mobileLabel), GUILayout.MinHeight(34));
+            {
+                height += Mathf.Max(30, style.CalcHeight(new GUIContent(stageScoreEntries[i].label), width)) + 3;
+                height += Mathf.Max(28, style.CalcHeight(new GUIContent("+" + stageScoreEntries[i].points.ToString("N0")), width)) + 12;
+            }
+            return height;
+        }
+
+        float DrawMobileStageScoreSummary(float y, float width)
+        {
+            var style = GoldMenuText(mobileLabel);
+            for (int i = 0; i < stageScoreEntries.Count; i++)
+            {
+                string label = stageScoreEntries[i].label;
+                float labelHeight = Mathf.Max(30, style.CalcHeight(new GUIContent(label), width));
+                GUI.Label(new Rect(0, y, width, labelHeight), label, style);
+                y += labelHeight + 3;
+                string points = StageScorePoints(i);
+                float pointsHeight = Mathf.Max(28, style.CalcHeight(new GUIContent(points), width));
+                GUI.Label(new Rect(0, y, width, pointsHeight), points, style);
+                y += pointsHeight + 12;
+            }
+            return y;
         }
     }
 }

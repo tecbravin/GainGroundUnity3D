@@ -86,6 +86,7 @@ namespace GainGround.Game
    GUILayout.Label(captureAction>=0?"Solte os botões e pressione "+(captureJoystick?"um botão ou direção do joystick":"uma tecla")+". Esc: cancelar.":"Cada ação aceita teclado e joystick simultaneamente. P1: tiro = mouse esquerdo, especial = direito, dash = meio.",SelectionHeading);
    if(captureAction>=0&&IronLayoutButton("Cancelar captura",GUILayout.Height(40)))captureAction=-1;
    bindingsScroll=GUILayout.BeginScrollView(bindingsScroll);
+   ScrollActiveViewWithMouseWheel(ref bindingsScroll);
    GUILayout.BeginVertical(GUILayout.Width(size.x-40-GUI.skin.verticalScrollbar.fixedWidth));
    for(int a=0;a<9;a++)
    {

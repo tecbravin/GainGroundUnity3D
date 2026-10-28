@@ -99,6 +99,7 @@ namespace GainGround.Game
 
         void Update()
         {
+            ScrollMenuFromAnywhere();
             if (canvas == null || !canvas.enabled || gainButton == null ||
                 !gainButton.interactable || gainClickAction == null) return;
             var hitArea = gainButton.transform as RectTransform;
@@ -116,6 +117,22 @@ namespace GainGround.Game
             else if (Input.GetMouseButtonDown(0) &&
                 RectTransformUtility.RectangleContainsScreenPoint(hitArea, Input.mousePosition, null))
                 gainClickAction();
+        }
+
+        void ScrollMenuFromAnywhere()
+        {
+            if (canvas == null || !canvas.enabled || menuScroll == null ||
+                menuScroll.viewport == null || menuScroll.content == null ||
+                !menuPanel.gameObject.activeInHierarchy) return;
+            float wheel = Input.mouseScrollDelta.y;
+            if (Mathf.Approximately(wheel, 0) ||
+                RectTransformUtility.RectangleContainsScreenPoint(menuScroll.viewport,
+                    Input.mousePosition, canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera))
+                return;
+            float overflow = menuScroll.content.rect.height - menuScroll.viewport.rect.height;
+            if (overflow > 0)
+                menuScroll.verticalNormalizedPosition = Mathf.Clamp01(
+                    menuScroll.verticalNormalizedPosition + wheel * menuScroll.scrollSensitivity / overflow);
         }
 
         public void Refresh(bool visible, float elapsed, bool menuVisible, bool canUse,

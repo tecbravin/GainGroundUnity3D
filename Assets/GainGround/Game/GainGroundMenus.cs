@@ -10,14 +10,100 @@ namespace GainGround.Game
         string settingsPath;
         string settingsError = "";
         int menuIndex, optionsIndex;
+        const string DifficultyTooltip = "Fácil: 5 personagens, HP do chefe -20%.\nNormal: dificuldade padrão.\nDifícil: 1 personagem, HP do chefe +20%.";
+        const string ClassicTooltip = "clássico ligado: personagens do grupo e resgatáveis fixos; desligado: todos os personagens são aleatórios";
+        string mobileOptionsTooltip;
+        float mobileOptionsTooltipUntil;
+        GUIStyle optionsTooltipStyle;
         LocalSettings AudioSettings => state == ScreenState.Options && draftSettings != null ? draftSettings : settings;
 
         void ApplyAudioVolumes()
         {
-            if (musicSource != null) musicSource.volume = (stage != null ? stage.musicVolume : 1) * AudioSettings.BGM / 100f;
+            float musicVolume = AudioSettings.BGM / 100f;
+            if (musicSource != null)
+                musicSource.volume = (stage != null ? stage.musicVolume : 1) * musicVolume * (1f - clockCrossfade);
             if (sfxSource != null) sfxSource.volume = AudioSettings.SFX / 100f;
+            if (clockSource != null) clockSource.volume = musicVolume * clockCrossfade;
         }
         AudioSource sfxSource;
+        AudioSource clockSource;
+        const float ClockCrossfadeSeconds = 1.5f;
+        float clockCrossfade;
+        bool clockPaused;
+        bool clockLoadWarningIssued;
+        [Header("Time warning")]
+        public AudioClip lowTimeClockSound;
+
+        void RefreshClockWarning()
+        {
+            bool activeCountdown = lowTimeClockSound != null && stage != null &&
+                state == ScreenState.Playing && !WaitingForSelection &&
+                remainingTime > 0f;
+            if (lowTimeClockSound != null && stage != null && state == ScreenState.Playing &&
+                lowTimeClockSound.loadState == AudioDataLoadState.Unloaded &&
+                !lowTimeClockSound.LoadAudioData() && !clockLoadWarningIssued)
+            {
+                Debug.LogWarning("Não foi possível carregar o aviso de tempo: " + lowTimeClockSound.name, this);
+                clockLoadWarningIssued = true;
+            }
+            bool shouldPlay = activeCountdown && remainingTime <= 30f;
+            if (!shouldPlay)
+            {
+                if (clockSource != null && (clockSource.isPlaying || clockPaused)) clockSource.Stop();
+                clockPaused = false;
+                if (clockCrossfade > 0f)
+                {
+                    clockCrossfade = 0f;
+                    ApplyAudioVolumes();
+                }
+                return;
+            }
+            if (lowTimeClockSound.loadState != AudioDataLoadState.Loaded)
+            {
+                if (lowTimeClockSound.loadState == AudioDataLoadState.Failed && !clockLoadWarningIssued)
+                {
+                    Debug.LogWarning("Falha ao carregar o aviso de tempo: " + lowTimeClockSound.name, this);
+                    clockLoadWarningIssued = true;
+                }
+                return;
+            }
+            if (clockSource == null)
+            {
+                clockSource = gameObject.AddComponent<AudioSource>();
+                clockSource.playOnAwake = false;
+                clockSource.spatialBlend = 0f;
+                clockSource.loop = true;
+                clockSource.priority = 32;
+            }
+            if (clockSource.clip != lowTimeClockSound)
+            {
+                clockSource.Stop();
+                clockSource.clip = lowTimeClockSound;
+                clockPaused = false;
+            }
+            if (paused)
+            {
+                if (clockSource.isPlaying)
+                {
+                    clockSource.Pause();
+                    clockPaused = true;
+                }
+                return;
+            }
+            if (clockPaused)
+            {
+                clockSource.UnPause();
+                clockPaused = false;
+            }
+            else if (!clockSource.isPlaying)
+            {
+                clockSource.volume = 0f;
+                clockSource.Play();
+            }
+            clockCrossfade = Mathf.MoveTowards(clockCrossfade, 1f,
+                Time.unscaledDeltaTime / ClockCrossfadeSeconds);
+            ApplyAudioVolumes();
+        }
         [Header("Default sound effects (used when actor sound is empty)")]
         public AudioClip shotSound, hitSound, rescueSound;
         public AudioClip dashSound, impactSound, explosionSound, switchSound;
@@ -48,6 +134,7 @@ namespace GainGround.Game
         }
         void StartNewGameFromMenu(int count)
         {
+            stageIntroRequested = true;
             if (!hasFinished) { StartGame(count); return; }
             ResetMobileInput();
             pendingPlayerCount = playerCount = Mathf.Clamp(count, 1, 2);
@@ -56,11 +143,14 @@ namespace GainGround.Game
         }
         void StartAtSelectedStage(int index)
         {
+            stageIntroRequested = true;
             playerCount = pendingPlayerCount;
             NewCampaign(index);
         }
         void ReturnToMenu()
         {
+            CancelStageIntro();
+            stageIntroRequested = false;
             CancelStageMediaRequests();
             CancelHudPortraitLoad();
             pendingRestoredVictory = false;
@@ -81,6 +171,7 @@ namespace GainGround.Game
         {
             bindingsOpen=false;captureAction=-1;
             mobileScroll = Vector2.zero;
+            mobileOptionsTooltip = null;
             draftSettings = settings.Copy(); settingsError = "";
             optionsIndex = 0; state = ScreenState.Options;
         }
@@ -92,6 +183,7 @@ namespace GainGround.Game
                 draftSettings.Save(settingsPath ?? LocalSettings.FilePath);
                 settings = draftSettings.Copy(); draftSettings = null;
                 settingsError = ""; state = ScreenState.Title;
+                mobileOptionsTooltip = null;
                 ApplyAudioVolumes();
             }
             catch (Exception e) { settingsError = "Could not save settings: " + e.Message; }
@@ -99,7 +191,53 @@ namespace GainGround.Game
         void DiscardOptions()
         {
             draftSettings = null; settingsError = ""; state = ScreenState.Title;
+            mobileOptionsTooltip = null;
             ApplyAudioVolumes();
+        }
+        void ToggleAutoFire()
+        {
+            bool previous = settings.AutoFire;
+            settings.AutoFire = !previous;
+            try
+            {
+                settings.Save(settingsPath ?? LocalSettings.FilePath);
+                if (draftSettings != null) draftSettings.AutoFire = settings.AutoFire;
+                settingsError = "";
+            }
+            catch (Exception e)
+            {
+                settings.AutoFire = previous;
+                if (draftSettings != null) draftSettings.AutoFire = previous;
+                settingsError = "Não foi possível salvar Tiro Automático: " + e.Message;
+                Debug.LogWarning(settingsError);
+            }
+        }
+        void SetPauseVolume(bool music, int value)
+        {
+            value = Mathf.Clamp(value, 0, 100);
+            int previous = music ? settings.BGM : settings.SFX;
+            if (value == previous) return;
+            if (music) settings.BGM = value;
+            else settings.SFX = value;
+            ApplyAudioVolumes();
+            try
+            {
+                settings.Save(settingsPath ?? LocalSettings.FilePath);
+                if (draftSettings != null)
+                {
+                    if (music) draftSettings.BGM = value;
+                    else draftSettings.SFX = value;
+                }
+                settingsError = "";
+            }
+            catch (Exception e)
+            {
+                if (music) settings.BGM = previous;
+                else settings.SFX = previous;
+                ApplyAudioVolumes();
+                settingsError = "Não foi possível salvar o volume: " + e.Message;
+                Debug.LogWarning(settingsError);
+            }
         }
         void ExitGame()
         {
@@ -178,13 +316,32 @@ namespace GainGround.Game
                 default: return "Normal";
             }
         }
+        void ShowMobileOptionsTooltip(string message)
+        {
+            mobileOptionsTooltip = message;
+            mobileOptionsTooltipUntil = Time.unscaledTime + 6f;
+        }
+        void DrawOptionsTooltip(Rect bounds, string message, GUIStyle style)
+        {
+            var previousColor = GUI.color;
+            GUI.color = new Color(0, 0, 0, .85f);
+            GUI.DrawTexture(bounds, Texture2D.whiteTexture);
+            GUI.color = previousColor;
+            DrawSelectionPanel(bounds);
+            float insetX = Mathf.Max(16f, bounds.width * .09f);
+            float insetY = Mathf.Max(12f, bounds.height * .10f);
+            GUI.Label(new Rect(bounds.x + insetX, bounds.y + insetY,
+                bounds.width - insetX * 2, bounds.height - insetY * 2),
+                message, GoldMenuText(style));
+        }
         void UpdateMenuInput()
         {
             if ((state == ScreenState.Title || state == ScreenState.Options || state == ScreenState.StageSelect) && Input.GetKeyDown(KeyCode.F11))
                 CountSecretF11Press();
             if (state == ScreenState.StageSelect)
             {
-                if (Input.GetKeyDown(KeyCode.Escape)) { state = ScreenState.Title; return; }
+                if (Input.GetKeyDown(KeyCode.Escape))
+                { stageIntroRequested = false; state = ScreenState.Title; return; }
                 int delta = Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow) ||
                     MenuDown(GameAction.Right) || MenuDown(GameAction.Down) ? 1 :
                     Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.UpArrow) ||
@@ -205,7 +362,7 @@ namespace GainGround.Game
                 return;
             }
             if (Input.GetKeyDown(KeyCode.Escape)) { DiscardOptions(); return; }
-            int optionsCount = CanMapControls ? 7 : 6;
+            int optionsCount = CanMapControls ? 8 : 7;
             optionsIndex = (optionsIndex + vertical + optionsCount) % optionsCount;
             int horizontal = Input.GetKeyDown(KeyCode.RightArrow) || MenuDown(GameAction.Right) ? 1 :
                 Input.GetKeyDown(KeyCode.LeftArrow) || MenuDown(GameAction.Left) ? -1 : 0;
@@ -213,10 +370,11 @@ namespace GainGround.Game
             if (optionsIndex == 1) draftSettings.SFX = Mathf.Clamp(draftSettings.SFX + horizontal * 5, 0, 100);
             ApplyAudioVolumes();
             if (optionsIndex == 2 && (horizontal != 0 || confirm)) draftSettings.ClassicMode = !draftSettings.ClassicMode;
-            if (optionsIndex == 3 && (horizontal != 0 || confirm)) CycleDifficulty(horizontal != 0 ? horizontal : 1);
-            if (CanMapControls && confirm && optionsIndex == 4) bindingsOpen=true;
-            else if (confirm && optionsIndex == (CanMapControls ? 5 : 4)) SaveOptions();
-            else if (confirm && optionsIndex == (CanMapControls ? 6 : 5)) DiscardOptions();
+            if (optionsIndex == 3 && (horizontal != 0 || confirm)) ToggleAutoFire();
+            if (optionsIndex == 4 && (horizontal != 0 || confirm)) CycleDifficulty(horizontal != 0 ? horizontal : 1);
+            if (CanMapControls && confirm && optionsIndex == 5) bindingsOpen=true;
+            else if (confirm && optionsIndex == (CanMapControls ? 6 : 5)) SaveOptions();
+            else if (confirm && optionsIndex == (CanMapControls ? 7 : 6)) DiscardOptions();
         }
         void DrawMenu()
         {
@@ -252,21 +410,29 @@ namespace GainGround.Game
             else
             {
                 GUI.Label(new Rect(200, 153, 600, 38), "Menu", GoldMenuText(labelStyle));
-                GUI.Label(new Rect(265, 215 + optionsIndex * 56, 30, 30), ">", GoldMenuText(labelStyle));
-                GUI.Label(new Rect(310, 214, 120, 30), "BGM  " + draftSettings.BGM, GoldMenuText(labelStyle));
-                draftSettings.BGM = Mathf.RoundToInt(GUI.HorizontalSlider(new Rect(450, 226, 220, 25), draftSettings.BGM, 0, 100,
+                GUI.Label(new Rect(265, 190 + optionsIndex * 48, 30, 30), ">", GoldMenuText(labelStyle));
+                GUI.Label(new Rect(310, 190, 120, 30), "BGM  " + draftSettings.BGM, GoldMenuText(labelStyle));
+                draftSettings.BGM = Mathf.RoundToInt(GUI.HorizontalSlider(new Rect(450, 202, 220, 25), draftSettings.BGM, 0, 100,
                     GUI.skin.horizontalSlider, SwordSliderThumb));
-                GUI.Label(new Rect(310, 270, 120, 30), "SFX  " + draftSettings.SFX, GoldMenuText(labelStyle));
-                draftSettings.SFX = Mathf.RoundToInt(GUI.HorizontalSlider(new Rect(450, 282, 220, 25), draftSettings.SFX, 0, 100,
+                GUI.Label(new Rect(310, 238, 120, 30), "SFX  " + draftSettings.SFX, GoldMenuText(labelStyle));
+                draftSettings.SFX = Mathf.RoundToInt(GUI.HorizontalSlider(new Rect(450, 250, 220, 25), draftSettings.SFX, 0, 100,
                     GUI.skin.horizontalSlider, SwordSliderThumb));
                 ApplyAudioVolumes();
-                if (IronButton(new Rect(300, 326, 400, 45), "Modo Clássico: " + (draftSettings.ClassicMode ? "Sim" : "Não")))
+                Rect classicBounds = new Rect(300, 286, 400, 42);
+                Rect difficultyBounds = new Rect(300, 382, 400, 42);
+                if (IronButton(classicBounds, "Modo Clássico: " + (draftSettings.ClassicMode ? "Sim" : "Não")))
                     draftSettings.ClassicMode = !draftSettings.ClassicMode;
-                if (IronButton(new Rect(300, 382, 400, 45), "Dificuldade: " + DifficultyLabel(draftSettings.Difficulty))) CycleDifficulty();
-                if(IronButton(new Rect(300,438,400,45),"Mapear controles — P1 / P2"))bindingsOpen=true;
-                if (IronButton(new Rect(300, 494, 400, 45), "Salvar e voltar")) SaveOptions();
-                if (IronButton(new Rect(300, 550, 400, 45), "Não salvar")) DiscardOptions();
-                GUI.Label(new Rect(210, 610, 580, 54), "Fácil: 5 personagens, HP chefe -20%. Difícil: 1 personagem, HP chefe +20%.\nMédio: dificuldade normal.", GoldMenuText(smallStyle));
+                if (IronButton(new Rect(300, 334, 400, 42), "Tiro Automático: " + (settings.AutoFire ? "Ligado" : "Desligado"))) ToggleAutoFire();
+                if (IronButton(difficultyBounds, "Dificuldade: " + DifficultyLabel(draftSettings.Difficulty))) CycleDifficulty();
+                if (CanMapControls && IronButton(new Rect(300, 430, 400, 42), "Mapear controles — P1 / P2")) bindingsOpen = true;
+                if (IronButton(new Rect(300, CanMapControls ? 478 : 430, 400, 42), "Salvar e voltar")) SaveOptions();
+                if (IronButton(new Rect(300, CanMapControls ? 526 : 478, 400, 42), "Não salvar")) DiscardOptions();
+                if (optionsTooltipStyle == null)
+                    optionsTooltipStyle = new GUIStyle(labelStyle) { fontSize = 15, wordWrap = true };
+                if (state == ScreenState.Options && classicBounds.Contains(Event.current.mousePosition))
+                    DrawOptionsTooltip(new Rect(700, 272, 290, 150), ClassicTooltip, optionsTooltipStyle);
+                else if (state == ScreenState.Options && difficultyBounds.Contains(Event.current.mousePosition))
+                    DrawOptionsTooltip(new Rect(700, 362, 290, 150), DifficultyTooltip, optionsTooltipStyle);
             }
             GUI.enabled=previousEnabled;
             if (!string.IsNullOrEmpty(settingsError)) GUI.Label(new Rect(110, 598, 780, 85), settingsError, GoldMenuText(smallStyle));
@@ -274,7 +440,8 @@ namespace GainGround.Game
         void ChooseCharacter(PlayerState p, int index)
         {
             if (!ClassicMode || state != ScreenState.Playing || paused || selectionPortraitsLoading ||
-                !p.awaitingSelection || index < 0 || index >= p.party.Count) return;
+                !p.awaitingSelection || Time.unscaledTime < p.selectionReadyAt ||
+                index < 0 || index >= p.party.Count) return;
             if (p.party[index].lost || p.party[index].escaped) return;
             var sound = p.party[index].definition.switchSound;
             SetMember(p, index); Respawn(p, 2);

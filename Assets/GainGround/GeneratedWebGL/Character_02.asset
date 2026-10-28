@@ -12,26 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a5eb2034508c1f4e90fe4962b08330b, type: 3}
   m_Name: Character_02
   m_EditorClassIdentifier: 
-  displayName: Mamu
-  sprite: {fileID: 21300000, guid: 3a0d7d7be189ac348ae546da8e9f1af6, type: 3}
+  displayName: Babalu
+  sprite: {fileID: 21300000, guid: e4985465c5398ac4ea8c15184f58c1ec, type: 3}
   hudPortrait: {fileID: 0}
   directionalSpriteSheet: {fileID: 0}
-  modelPrefab: {fileID: 1933619587251180154, guid: 00ca9e55f5823d7449c47eb530a7304c, type: 3}
-  speed: 3
+  modelPrefab: {fileID: 8537331716817211574, guid: 65f1653248da7b94081052cdb4ebe0c1, type: 3}
+  speed: 2.9
   shotInterval: 0.32
-  projectileSpeed: 8
-  range: 5.5
+  projectileSpeed: 9
+  range: 8
   damage: 1
-  shotColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  specialPassesWalls: 0
+  shotColor: {r: 0.95, g: 0.42, b: 0.4, a: 1}
+  specialPassesWalls: 1
   normalWeapon:
-    label: Pistola
-    fireSound: {fileID: 8300000, guid: 6cdd576e48767c04e90bda42b6aea15a, type: 3}
+    label: Flecha
+    fireSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
     direction: 0
-    kind: 0
+    kind: 2
     cooldown: 0.32
-    speed: 8
-    range: 5.5
+    speed: 9
+    range: 8
     damage: 1
     radius: 0.12
     maxActive: 3
@@ -44,37 +44,7 @@ MonoBehaviour:
     mode: 0
     arcDegrees: 120
     effectSpriteSheet: {fileID: 0}
-    projectileVisualPrefab: {fileID: 100000, guid: 6e3a7018fc0446098c4ac69ccc564454, type: 3}
-    projectileFrames: []
-    impactVisualPrefab: {fileID: 100000, guid: 18592ae028ca4c72a55c337fb8a165f2, type: 3}
-    impactFrames: []
-    impactFramesPerSecond: 45
-    effectColumns: 3
-    effectRows: 2
-    effectDuration: 0
-    effectScale: 1
-    projectileFramesPerSecond: 12
-  specialWeapon:
-    label: 'Bumerangue: cima'
-    fireSound: {fileID: 8300000, guid: f816be56df731c741b9ab49b64233e7b, type: 3}
-    direction: 1
-    kind: 5
-    cooldown: 0.45
-    speed: 7
-    range: 6
-    damage: 1
-    radius: 0.12
-    maxActive: 2
-    lobbed: 0
-    pierces: 1
-    blastRadius: 0
-    freezeSeconds: 0
-    duration: 2
-    color: {r: 0, g: 1, b: 1, a: 1}
-    mode: 0
-    arcDegrees: 120
-    effectSpriteSheet: {fileID: 0}
-    projectileVisualPrefab: {fileID: 100000, guid: 3f0ea09c40294daab8c441b791849cdd, type: 3}
+    projectileVisualPrefab: {fileID: 100000, guid: f217119c4ff14c28a67e3467695ac7b6, type: 3}
     projectileFrames: []
     impactVisualPrefab: {fileID: 0}
     impactFrames: []
@@ -84,13 +54,45 @@ MonoBehaviour:
     effectDuration: 0
     effectScale: 1
     projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
+  specialWeapon:
+    label: Flecha em arco
+    fireSound: {fileID: 8300000, guid: 50faef9d7c3480c40a6e359d4a52a279, type: 3}
+    direction: 0
+    kind: 2
+    cooldown: 0.6
+    speed: 6
+    range: 9
+    damage: 1
+    radius: 0.52
+    maxActive: 3
+    lobbed: 1
+    pierces: 0
+    blastRadius: 0.1
+    freezeSeconds: 0
+    duration: 2
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    mode: 0
+    arcDegrees: 120
+    effectSpriteSheet: {fileID: 0}
+    projectileVisualPrefab: {fileID: 100000, guid: f217119c4ff14c28a67e3467695ac7b6, type: 3}
+    projectileFrames: []
+    impactVisualPrefab: {fileID: 0}
+    impactFrames: []
+    impactFramesPerSecond: 45
+    effectColumns: 3
+    effectRows: 2
+    effectDuration: 0
+    effectScale: 1
+    projectileFramesPerSecond: 12
+    projectileSpinDegreesPerSecond: 0
   characterTint: {r: 1, g: 1, b: 1, a: 1}
-  normalAttackSound: {fileID: 8300000, guid: 6cdd576e48767c04e90bda42b6aea15a, type: 3}
-  specialAttackSound: {fileID: 8300000, guid: f816be56df731c741b9ab49b64233e7b, type: 3}
+  normalAttackSound: {fileID: 8300000, guid: e7739d8ed08a2b344a253ef95dc043a0, type: 3}
+  specialAttackSound: {fileID: 8300000, guid: 50faef9d7c3480c40a6e359d4a52a279, type: 3}
   dashSound: {fileID: 0}
-  hitSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: 3f5bded55d225d84db8e0601835b2db0, type: 3}
   switchSound: {fileID: 0}
   rescueSound: {fileID: 0}
   TempodeCooldown: 2
-  Distancia: 3
+  Distancia: 2.5
   Invencivel: 1

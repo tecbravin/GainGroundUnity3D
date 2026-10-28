@@ -100,12 +100,33 @@ MonoBehaviour:
   - {x: 8, y: 192}
   - {x: 8, y: 192}
   - {x: 8, y: 192}
-  walls: []
+  walls:
+  - serializedVersion: 2
+    x: -4.3
+    y: -7
+    width: 0.2
+    height: 5.3
+  - serializedVersion: 2
+    x: -4.3
+    y: 1.3
+    width: 0.2
+    height: 5.7
+  - serializedVersion: 2
+    x: 4.1
+    y: -7
+    width: 0.2
+    height: 5.3
+  - serializedVersion: 2
+    x: 4.1
+    y: 1.3
+    width: 0.2
+    height: 5.7
   enemies:
   - position: {x: -5, y: 4.875}
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -126,6 +147,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -146,6 +168,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -166,6 +189,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -186,6 +210,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -206,6 +231,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -226,6 +252,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -246,6 +273,7 @@ MonoBehaviour:
     health: 1
     speed: 1.1
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 0
     elevated: 0
     melee: 1
@@ -266,6 +294,7 @@ MonoBehaviour:
     health: 1
     speed: 1.1
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 0
     elevated: 0
     melee: 1
@@ -286,6 +315,7 @@ MonoBehaviour:
     health: 1
     speed: 1.1
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 0
     elevated: 0
     melee: 1
@@ -306,6 +336,7 @@ MonoBehaviour:
     health: 1
     speed: 1.1
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 0
     elevated: 0
     melee: 1
@@ -326,6 +357,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -346,6 +378,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 1
     elevated: 0
     melee: 0
@@ -366,6 +399,7 @@ MonoBehaviour:
     health: 1
     speed: 1.1
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 0
     elevated: 0
     melee: 1
@@ -386,6 +420,7 @@ MonoBehaviour:
     health: 1
     speed: 1.1
     shotInterval: 2.8
+    initialShotDelay: 0
     sentry: 0
     elevated: 0
     melee: 1
@@ -402,6 +437,7 @@ MonoBehaviour:
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
+  introCameraTargets: []
   rescue: {fileID: 11400000, guid: 4c5e8b2c0fe2cf5499c67cdfe3d519f8, type: 2}
   rescuePosition: {x: 0, y: 0.875}
   background: {fileID: 21300000, guid: a53556a70363984409430686ac9b06a6, type: 3}
@@ -409,5 +445,29 @@ MonoBehaviour:
   noExit: 0
   additionalExits: []
   additionalCaptives: []
-  objects: []
+  objects:
+  - id: PS2:Native:Stage15BorderLeft
+    prefab: {fileID: 459275243350900450, guid: d073c01b3415c504bb15c33fcd07cc1e, type: 3}
+    area:
+      serializedVersion: 2
+      x: -6.09
+      y: -6.3
+      width: 2.94
+      height: 14
+    rotationDegrees: 0
+    modelScale: {x: 0.9230769, y: 1.45, z: 1}
+    teleportGroup: 0
+    health: 0
+  - id: PS2:Native:Stage15BorderRight
+    prefab: {fileID: 7002178888910591407, guid: a8a11fd4eb506e743bf4657893d4ebc6, type: 3}
+    area:
+      serializedVersion: 2
+      x: 3.1499999
+      y: -6.3
+      width: 2.94
+      height: 14
+    rotationDegrees: 0
+    modelScale: {x: 0.9230769, y: 1.45, z: 1}
+    teleportGroup: 0
+    health: 0
   hazards: []

@@ -6,8 +6,11 @@ namespace GainGround.Game
     {
         const string HighScoreKey = "GainGround.HighScore";
         public int HighScore { get; private set; }
+        int recordToBeat;
+        bool continueNewRecord;
         int continueCount;
         float continueElapsed, gameOverElapsed;
+        GUIStyle continueHeading, gameOverHeading;
         [Header("Continue screen")]
         public AudioClip gameOverSound;
         void LoadHighScore() { HighScore = Mathf.Max(0, PlayerPrefs.GetInt(HighScoreKey, 0)); }
@@ -22,6 +25,10 @@ namespace GainGround.Game
         }
         void BeginContinue(string reason)
         {
+            CancelStageIntro();
+            continueNewRecord = false;
+            foreach (var player in players)
+                if (player.score > recordToBeat) { continueNewRecord = true; break; }
             UpdateHighScore();
             state = ScreenState.Defeat; paused = false; message = reason;
             continueCount = 10; continueElapsed = 0; gameOverElapsed = 0;
@@ -59,6 +66,7 @@ namespace GainGround.Game
         void RestartCurrentStage()
         {
             UpdateHighScore();
+            recordToBeat = HighScore;
             // Keep the campaign mode, difficulty and stage; reset both scores/parties.
             ResetCampaignParty(false); score = 0; LoadStage();
         }
@@ -66,17 +74,35 @@ namespace GainGround.Game
         {
             DrawSelectionPanel(bounds);
             float x = bounds.x + 20, width = bounds.width - 40;
-            var heading = new GUIStyle(SelectionHeading) { fontSize = 36 };
-            if (state == ScreenState.GameOver) heading.normal.textColor = Color.red;
-            GUI.Label(new Rect(x,bounds.y+30,width,65), state == ScreenState.GameOver ? "GAME OVER" : "CONTINUE?  " + continueCount, heading);
-            GUI.Label(new Rect(x,bounds.y+100,width,50), "RECORDE: " + HighScore, SelectionHeading);
+            var baseHeading = SelectionHeading;
+            if (continueHeading == null || continueHeading.font != baseHeading.font)
+            {
+                continueHeading = new GUIStyle(baseHeading) { fontSize = 36 };
+                gameOverHeading = new GUIStyle(continueHeading);
+                gameOverHeading.normal.textColor = Color.red;
+                gameOverHeading.hover.textColor = Color.red;
+                gameOverHeading.active.textColor = Color.red;
+                gameOverHeading.focused.textColor = Color.red;
+            }
+            var heading = state == ScreenState.GameOver ? gameOverHeading : continueHeading;
+            float headingY = bounds.y + Mathf.Min(30f, bounds.height * .08f);
+            float headingHeight = Mathf.Min(65f, bounds.height * .17f);
+            float recordY = bounds.y + Mathf.Min(100f, bounds.height * .3f);
+            GUI.Label(new Rect(x,headingY,width,headingHeight), state == ScreenState.GameOver ? "GAME OVER" : "CONTINUE?  " + continueCount, heading);
+            GUI.Label(new Rect(x,recordY,width,42), "RECORDE: " + HighScore, SelectionHeading);
+            float buttonHeight = Mathf.Min(48f, Mathf.Max(36f, bounds.height * .14f));
+            float buttonGap = Mathf.Min(10f, bounds.height * .03f);
+            float lastButtonY = bounds.yMax - Mathf.Max(20f, bounds.height * .05f) - buttonHeight;
+            float firstButtonY = lastButtonY - buttonGap - buttonHeight;
+            if (continueNewRecord)
+                GUI.Label(new Rect(x, Mathf.Min(recordY + 46f, firstButtonY - 40f), width, 34f),
+                    "NOVO RECORDE!!!", SelectionHeading);
             if (state == ScreenState.GameOver) return;
-            GUI.Label(new Rect(x,bounds.y+150,width,70), "Especial: continuar na mesma fase\nDash: diminuir o contador", SelectionHeading);
             float buttonInset = Mathf.Min(bounds.width * .085f + 20f, bounds.width * .35f);
             float buttonX = bounds.x + buttonInset;
             float buttonWidth = bounds.width - 2f * buttonInset;
-            if (IronButton(new Rect(buttonX,bounds.y+230,buttonWidth,48), "ESPECIAL — CONTINUAR")) RestartCurrentStage();
-            if (IronButton(new Rect(buttonX,bounds.y+286,buttonWidth,48), "DASH — CONTADOR -1")) AdvanceContinue(0,true,false);
+            if (IronButton(new Rect(buttonX,firstButtonY,buttonWidth,buttonHeight), "ESPECIAL — CONTINUAR")) RestartCurrentStage();
+            if (IronButton(new Rect(buttonX,lastButtonY,buttonWidth,buttonHeight), "DASH — CONTADOR -1")) AdvanceContinue(0,true,false);
         }
     }
 }

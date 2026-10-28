@@ -110,7 +110,7 @@ public static class OriginalStagesBuilder
             AssetDatabase.CreateAsset(s, Root + "/Stage_1_" + (i + 1) + ".asset"); stages[i] = s;
         }
         EditorSceneManager.OpenScene(Scene);
-        var game = UnityEngine.Object.FindObjectOfType<GainGroundGame>();
+        var game = UnityEngine.Object.FindAnyObjectByType<GainGroundGame>();
         game.stages = stages; game.playerCount = 2;
         game.startingParty = new[] { johnny, athra, betty };
         game.secondStartingParty = new[] { johnny, athra, betty };

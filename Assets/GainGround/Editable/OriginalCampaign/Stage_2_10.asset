@@ -44,13 +44,15 @@ MonoBehaviour:
   enemies:
   - position: {x: 0, y: 4.625}
     health: 36
-    speed: 0
+    speed: 0.7
     shotInterval: 2.8
-    sentry: 1
+    sentry: 0
     elevated: 0
     melee: 0
     spawnDelay: 0
     behavior: 9
+    walkingPattern: 5
+    patrolDistance: 3
     sprite: {fileID: 21300000, guid: e69ca4ce5cdbd984d93de939e0a706b5, type: 3}
     modelPrefab: {fileID: 1219459295959286586, guid: 4bafa3e2fae9d4f4ba6026ef500ae5fb, type: 3}
     visualSize: {x: 4, y: 4.25}
@@ -66,7 +68,7 @@ MonoBehaviour:
     health: 1
     speed: 0
     shotInterval: 2.8
-    sentry: 1
+    sentry: 0
     elevated: 1
     melee: 0
     spawnDelay: 0

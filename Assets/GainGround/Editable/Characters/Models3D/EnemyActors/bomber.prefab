@@ -220,6 +220,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
+  - component: {fileID: 8200000000000000002}
   - component: {fileID: 6740839996091128520}
   - component: {fileID: 6591756458878035779}
   m_Layer: 0
@@ -1706,3 +1707,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 4
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8200000000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1043536218860499987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e3b7c126e0c4b8a91f5ae2e50120804, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  health: 0
+  speed: 0
+  walkingPattern: 0
+  walkingDistance: 0

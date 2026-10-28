@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 9
+  serializedVersion: 10
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -42,8 +42,8 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
-  m_GIWorkflowMode: 1
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -66,9 +66,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -234,6 +231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a781dd8a6a165944b154b9815df78d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameOverSound: {fileID: 8300000, guid: fa87f187c3684faeb33297b79b0ff273, type: 3}
   stages:
   - {fileID: 11400000, guid: 0d5048d22c6cf1e4a84fe711ed669c96, type: 2}
   - {fileID: 11400000, guid: 785a319b61fe24844b8a66d2507a7da7, type: 2}
@@ -319,6 +317,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d3d76626c7f84874e89e1ff26a0e4af4, type: 2}
   - {fileID: 11400000, guid: 808fce2b69068b044b05231f73058766, type: 2}
   - {fileID: 11400000, guid: e53c1ac013174cf8a37a4c160da668bb, type: 2}
+  keyboardAccelerationSeconds: 0.3
+  hitSelectionDelaySeconds: 1.6
   useFullRoster: 0
   hasFinished: 0
   floorSprite: {fileID: 21300000, guid: b3ca2475ebdd9f6498b2fb05681811b6, type: 3}
@@ -329,6 +329,7 @@ MonoBehaviour:
   gameCamera: {fileID: 446990266}
   titleMusic: {fileID: 8300000, guid: 59cdc6a83b3d89247a6f7a77cc904682, type: 3}
   endingSequence: {fileID: 11400000, guid: 2380629867df43908f37b184be5fb25f, type: 2}
+  lowTimeClockSound: {fileID: 8300000, guid: 28c923d4f8fc4884ebfca828cb65acaf, type: 3}
   shotSound: {fileID: 8300000, guid: 6cdd576e48767c04e90bda42b6aea15a, type: 3}
   hitSound: {fileID: 8300000, guid: 27df425d2b984dc419c92b6f5dfc8008, type: 3}
   rescueSound: {fileID: 8300000, guid: a5c0eb7d2f1201e43940f39d2ff543fa, type: 3}
@@ -338,8 +339,12 @@ MonoBehaviour:
   switchSound: {fileID: 8300000, guid: da87825f440be934f9869a24ad73cbf4, type: 3}
   secretUnlockSound: {fileID: 8300000, guid: 440ef03d6456f3e40b0f004ba05f80eb, type: 3}
   titlePressSound: {fileID: 8300000, guid: a5c0eb7d2f1201e43940f39d2ff543fa, type: 3}
-  gameOverSound: {fileID: 8300000, guid: fa87f187c3684faeb33297b79b0ff273, type: 3}
   previewMobileControls: 0
+  showStageIntro: 1
+  introFocusSeconds: 0.7
+  introTravelSeconds: 0.9
+  introReturnSeconds: 1.1
+  introZoomFraction: 0.58
   scoreCountSound: {fileID: 8300000, guid: da87825f440be934f9869a24ad73cbf4, type: 3}
 --- !u!4 &1138118620
 Transform:
