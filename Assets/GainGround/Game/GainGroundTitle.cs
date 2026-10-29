@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 namespace GainGround.Game
 {
  public sealed partial class GainGroundGame
@@ -40,14 +41,13 @@ namespace GainGround.Game
   bool UpdateTitleIntro()
   {
    if(state!=ScreenState.Title)return false;
-   bool pressed=Input.anyKeyDown;
-   for(int i=0;i<Input.touchCount;i++)pressed|=Input.GetTouch(i).phase==TouchPhase.Began;
+   bool pressed=AnyKeyDown||TouchPressed;
    bool wasVisible=titleMenuVisible;
-   AdvanceTitleIntro(Time.unscaledDeltaTime,pressed,Input.anyKey||Input.touchCount>0);
+   AdvanceTitleIntro(Time.unscaledDeltaTime,pressed,AnyKeyHeld||TouchCount>0);
    return !wasVisible||!CanUseTitleMenu;
   }
   void ShowTitleMenuImmediately()
-  {titleMenuVisible=true;titleElapsed=TitleIntroDuration;titleRevealFrame=Time.frameCount;titleInputBlocked=Input.anyKey||Input.touchCount>0;}
+  {titleMenuVisible=true;titleElapsed=TitleIntroDuration;titleRevealFrame=Time.frameCount;titleInputBlocked=AnyKeyHeld||TouchCount>0;}
   void DrawTitleArtwork(Rect area)
   {
    LoadTitleArtwork();var color=GUI.color;

@@ -14,7 +14,9 @@ namespace GainGround.Game
     public struct StageMediaFiles
     {
         public StageBundleFile preview;
+        public string previewAddress;
         public StageBundleFile map;
+        public string mapAddress;
         public StageBundleFile music;
         public StageBundleFile victoryMusic;
         public StageBundleFile objects;
@@ -30,6 +32,8 @@ namespace GainGround.Game
     public struct EnemyVisualFiles
     {
         public StageBundleFile bundle;
+        public StageBundleFile modelBundle;
+        public string modelAddress;
         public bool hasSprite;
         public bool hasModel;
     }
@@ -39,5 +43,6 @@ namespace GainGround.Game
     {
         public CharacterDefinition character;
         public StageBundleFile portrait;
+        public string portraitAddress;
     }
 }

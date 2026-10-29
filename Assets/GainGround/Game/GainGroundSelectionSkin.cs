@@ -89,7 +89,7 @@ namespace GainGround.Game
             get
             {
                 if (swordSliderThumb != null) return swordSliderThumb;
-                const int width = 20, height = 40;
+                const int width = 20, height = 48;
                 swordSliderTexture = new Texture2D(width, height, TextureFormat.RGBA32, false)
                 {
                     name = "Vertical sword slider marker",
@@ -106,16 +106,17 @@ namespace GainGround.Game
                     for (int x = 0; x < width; x++)
                     {
                         Color32 color = new Color32(0, 0, 0, 0);
-                        // The blade points straight down; hilt and guard remain above it.
-                        if (y == 1 && (x == 9 || x == 10)) color = silver;
-                        else if (y >= 2 && y <= 22 && x >= 7 && x <= 12)
+                        // The blade points down and ends at the slider track's center line.
+                        if (y == 23 && x == 9) color = shine;
+                        else if (y == 24 && x >= 8 && x <= 11) color = silver;
+                        else if (y >= 25 && y <= 36 && x >= 7 && x <= 12)
                             color = x == 7 || x == 12 ? dark : x == 9 ? shine : silver;
-                        else if (y >= 23 && y <= 25 && x >= 2 && x <= 17)
-                            color = y == 24 ? gold : dark;
-                        else if (y >= 26 && y <= 35 && x >= 8 && x <= 11)
+                        else if (y >= 37 && y <= 39 && x >= 2 && x <= 17)
+                            color = y == 38 ? gold : dark;
+                        else if (y >= 40 && y <= 45 && x >= 8 && x <= 11)
                             color = x == 8 || x == 11 ? dark : gold;
-                        else if (y >= 36 && y <= 38 && x >= 7 && x <= 12)
-                            color = y == 37 ? gold : dark;
+                        else if (y >= 46 && y <= 47 && x >= 7 && x <= 12)
+                            color = y == 46 ? gold : dark;
                         pixels[y * width + x] = color;
                     }
                 swordSliderTexture.SetPixels32(pixels);

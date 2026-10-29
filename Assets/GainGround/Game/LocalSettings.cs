@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace GainGround.Game
@@ -37,24 +38,33 @@ namespace GainGround.Game
         {
             if (BindingDefaultsVersion != 0) return;
             var actions = Player1.actions;
-            if (actions[(int)GameAction.Fire].keyboard == KeyCode.Z &&
-                actions[(int)GameAction.Special].keyboard == KeyCode.X &&
-                actions[(int)GameAction.Dash].keyboard == KeyCode.C)
+            if (actions[(int)GameAction.Fire].keyboard == "<Keyboard>/z" &&
+                actions[(int)GameAction.Special].keyboard == "<Keyboard>/x" &&
+                actions[(int)GameAction.Dash].keyboard == "<Keyboard>/c")
             {
-                actions[(int)GameAction.Fire].keyboard = KeyCode.Q;
-                actions[(int)GameAction.Special].keyboard = KeyCode.E;
-                actions[(int)GameAction.Dash].keyboard = KeyCode.F;
+                actions[(int)GameAction.Fire].keyboard = "<Keyboard>/q";
+                actions[(int)GameAction.Special].keyboard = "<Keyboard>/e";
+                actions[(int)GameAction.Dash].keyboard = "<Keyboard>/f";
             }
             BindingDefaultsVersion = 1;
         }
 
+        static string NormalizeLegacyKeyboardBindings(string json)
+        {
+            return Regex.Replace(json, "\"keyboard\"\\s*:\\s*(-?\\d+)", match =>
+            {
+                int code = int.Parse(match.Groups[1].Value);
+                string path = PlayerBindings.LegacyKeyPath(code, string.Empty);
+                return "\"keyboard\":\"" + path + "\"";
+            });
+        }
         public static LocalSettings Load(string path)
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
             var browserSettings = new LocalSettings();
             var stored = BrowserStorage.Read(BrowserSettingsKey);
             if (!string.IsNullOrEmpty(stored))
-                JsonUtility.FromJsonOverwrite(stored, browserSettings);
+                JsonUtility.FromJsonOverwrite(NormalizeLegacyKeyboardBindings(stored), browserSettings);
             browserSettings.Clamp();
             browserSettings.UpgradeBindingDefaults();
             return browserSettings;
@@ -67,7 +77,7 @@ namespace GainGround.Game
             }
             // Overwrite a default instance so missing fields retain their default values.
             var result = new LocalSettings();
-            JsonUtility.FromJsonOverwrite(File.ReadAllText(path), result);
+            JsonUtility.FromJsonOverwrite(NormalizeLegacyKeyboardBindings(File.ReadAllText(path)), result);
             result.Clamp();
             result.UpgradeBindingDefaults();
             return result;

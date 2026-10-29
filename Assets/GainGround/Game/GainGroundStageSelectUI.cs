@@ -8,7 +8,8 @@ namespace GainGround.Game
 
         void InitializeStageSelectUI()
         {
-            var existingEventSystem = FindObjectOfType<UnityEngine.EventSystems.EventSystem>();
+            var existingEventSystem = FindAnyObjectByType<UnityEngine.EventSystems.EventSystem>();
+            EnsureInputSystemEventSystem(existingEventSystem);
             var prefab = Resources.Load<GameObject>("HUD/GainGroundStageSelectUI");
             if (prefab == null || prefab.GetComponent<GainGroundStageSelectView>() == null)
             {
@@ -21,6 +22,7 @@ namespace GainGround.Game
             {
                 var ownEventSystem = instance.GetComponentInChildren<UnityEngine.EventSystems.EventSystem>();
                 if (ownEventSystem != null) ownEventSystem.gameObject.SetActive(false);
+                RestoreInputSystemUIActions(existingEventSystem);
             }
             stageSelectView = instance.GetComponent<GainGroundStageSelectView>();
             stageSelectView.Bind(ChangeSelectedStage, StartSelectedStage, BackFromStageSelection);

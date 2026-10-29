@@ -100,10 +100,11 @@ namespace GainGround.Game
                 if (bundle == null) { mediaError = "Bundle da prévia inválido."; yield break; }
                 try
                 {
-                    var load = bundle.LoadAssetAsync<Sprite>("background");
+                    string address = string.IsNullOrEmpty(files.previewAddress) ? "background" : files.previewAddress;
+                    var load = bundle.LoadAssetAsync<Sprite>(address);
                     yield return load;
                     stages[index].background = load.asset as Sprite;
-                    if (stages[index].background == null) mediaError = "Prévia do mapa ausente no bundle.";
+                    if (stages[index].background == null) mediaError = "Prévia " + address + " ausente no bundle.";
                 }
                 finally { bundle.Unload(false); }
             }
@@ -122,7 +123,16 @@ namespace GainGround.Game
                 if (bundle == null) { mediaError = "O bundle do mapa está inválido."; yield break; }
                 try
                 {
-                    if (files.hasBackground && !files.preview.IsAssigned)
+                    bool rasterMap = files.hasBackground && !files.hasPaintedLayout;
+                    if (rasterMap)
+                    {
+                        string address = string.IsNullOrEmpty(files.mapAddress) ? "background" : files.mapAddress;
+                        var load = bundle.LoadAssetAsync<Sprite>(address);
+                        yield return load;
+                        stages[index].background = load.asset as Sprite;
+                        if (stages[index].background == null) mediaError = "Imagem do mapa " + address + " ausente no bundle.";
+                    }
+                    else if (files.hasBackground && !files.preview.IsAssigned)
                     {
                         var load = bundle.LoadAssetAsync<Sprite>("background");
                         yield return load;
@@ -143,6 +153,36 @@ namespace GainGround.Game
                         yield return load;
                         stages[index].terrainAtlas = load.asset as Texture2D;
                         if (stages[index].terrainAtlas == null) mediaError = "Textura do terreno ausente no bundle.";
+                    }
+                    if (mediaError.Length == 0 && files.objects.IsAssigned &&
+                        files.objects.fileName == files.map.fileName &&
+                        files.objectAddresses != null && files.hazardAddresses != null)
+                    {
+                        var target = stages[index];
+                        if (target.objects == null || target.hazards == null ||
+                            files.objectAddresses.Length != target.objects.Length ||
+                            files.hazardAddresses.Length != target.hazards.Length)
+                        { mediaError = "Catálogo de objetos incompleto para a fase " + (index + 1); yield break; }
+                        for (int i = 0; i < target.objects.Length; i++)
+                        {
+                            string address = files.objectAddresses[i];
+                            if (string.IsNullOrEmpty(address)) continue;
+                            var load = bundle.LoadAssetAsync<GameObject>(address);
+                            yield return load;
+                            target.objects[i].prefab = load.asset as GameObject;
+                            if (target.objects[i].prefab == null)
+                            { mediaError = "Objeto " + address + " ausente no bundle da fase."; yield break; }
+                        }
+                        for (int i = 0; i < target.hazards.Length; i++)
+                        {
+                            string address = files.hazardAddresses[i];
+                            if (string.IsNullOrEmpty(address)) continue;
+                            var load = bundle.LoadAssetAsync<GameObject>(address);
+                            yield return load;
+                            target.hazards[i].prefab = load.asset as GameObject;
+                            if (target.hazards[i].prefab == null)
+                            { mediaError = "Perigo " + address + " ausente no bundle da fase."; yield break; }
+                        }
                     }
                 }
                 finally { bundle.Unload(false); }
@@ -174,6 +214,8 @@ namespace GainGround.Game
         {
             var files = webStageMedia[index];
             if (!files.objects.IsAssigned) yield break;
+            if (files.map.IsAssigned && files.objects.fileName == files.map.fileName &&
+                files.hasBackground && !files.hasPaintedLayout) yield break;
             var target = stages[index];
             if (files.objectAddresses == null || files.hazardAddresses == null ||
                 target.objects == null || files.objectAddresses.Length != target.objects.Length ||
@@ -229,28 +271,27 @@ namespace GainGround.Game
             for (int e = 0; e < spawns.Length; e++)
             {
                 var entry = visualFiles[e];
-                if (!entry.bundle.IsAssigned)
+                if (!entry.bundle.IsAssigned && !entry.modelBundle.IsAssigned)
                 {
                     if (entry.hasSprite || entry.hasModel)
                     { mediaError = "Bundle ausente para inimigo da fase " + (index + 1); yield break; }
                     continue;
                 }
+                if (entry.hasSprite && spawns[e].sprite == null)
+                    spawns[e].sprite = FindLoadedEnemySprite(entry.bundle);
+                if (entry.hasModel && spawns[e].modelPrefab == null)
+                    spawns[e].modelPrefab = FindLoadedEnemyModel(entry.modelBundle.IsAssigned ? entry.modelBundle : entry.bundle,
+                        entry.modelAddress);
                 if ((!entry.hasSprite || spawns[e].sprite != null) &&
                     (!entry.hasModel || spawns[e].modelPrefab != null)) continue;
-                var reused = FindLoadedEnemy(entry.bundle);
-                if (reused != null)
-                {
-                    spawns[e].sprite = reused.sprite;
-                    spawns[e].modelPrefab = reused.modelPrefab;
-                    continue;
-                }
                 yield return DownloadEnemyVisual(entry, spawns[e]);
                 if (mediaError.Length > 0) yield break;
             }
         }
 
-        EnemySpawn FindLoadedEnemy(StageBundleFile file)
+        Sprite FindLoadedEnemySprite(StageBundleFile file)
         {
+            if (!file.IsAssigned) return null;
             for (int s = 0; s < stages.Length; s++)
             {
                 var entries = webStageMedia[s].enemyVisuals;
@@ -258,9 +299,27 @@ namespace GainGround.Game
                 for (int e = 0; e < entries.Length; e++)
                 {
                     var spawn = stages[s].enemies[e];
-                    if (entries[e].bundle.fileName == file.fileName &&
-                        (!entries[e].hasSprite || spawn.sprite != null) &&
-                        (!entries[e].hasModel || spawn.modelPrefab != null)) return spawn;
+                    if (entries[e].hasSprite && entries[e].bundle.fileName == file.fileName && spawn.sprite != null)
+                        return spawn.sprite;
+                }
+            }
+            return null;
+        }
+
+        PS2EnemyVisual FindLoadedEnemyModel(StageBundleFile file, string address)
+        {
+            if (!file.IsAssigned) return null;
+            for (int s = 0; s < stages.Length; s++)
+            {
+                var entries = webStageMedia[s].enemyVisuals;
+                if (entries == null) continue;
+                for (int e = 0; e < entries.Length; e++)
+                {
+                    var entry = entries[e];
+                    var spawn = stages[s].enemies[e];
+                    string entryAddress = string.IsNullOrEmpty(entry.modelAddress) ? "model" : entry.modelAddress;
+                    if (entry.hasModel && (entry.modelBundle.IsAssigned ? entry.modelBundle.fileName : entry.bundle.fileName) == file.fileName &&
+                        entryAddress == address && spawn.modelPrefab != null) return spawn.modelPrefab;
                 }
             }
             return null;
@@ -268,34 +327,62 @@ namespace GainGround.Game
 
         IEnumerator DownloadEnemyVisual(EnemyVisualFiles files, EnemySpawn spawn)
         {
-            using (var request = UnityWebRequestAssetBundle.GetAssetBundle(StageBundleUrl(files.bundle),
-                Hash128.Parse(files.bundle.hash), 0))
+            var modelFile = files.modelBundle.IsAssigned ? files.modelBundle : files.bundle;
+            bool modelInPrimaryBundle = files.modelBundle.IsAssigned && files.bundle.IsAssigned &&
+                files.modelBundle.fileName == files.bundle.fileName;
+            if (files.bundle.IsAssigned && ((files.hasSprite && spawn.sprite == null) ||
+                (files.hasModel && modelInPrimaryBundle && spawn.modelPrefab == null)))
             {
-                yield return request.SendWebRequest();
-                if (request.result != UnityWebRequest.Result.Success)
-                { mediaError = "Falha ao baixar inimigo: " + request.error; yield break; }
-                var bundle = DownloadHandlerAssetBundle.GetContent(request);
-                if (bundle == null) { mediaError = "O bundle de inimigo está inválido."; yield break; }
-                try
+                using (var request = UnityWebRequestAssetBundle.GetAssetBundle(StageBundleUrl(files.bundle),
+                    Hash128.Parse(files.bundle.hash), 0))
                 {
-                    if (files.hasSprite)
+                    yield return request.SendWebRequest();
+                    if (request.result != UnityWebRequest.Result.Success)
+                    { mediaError = "Falha ao baixar inimigo: " + request.error; yield break; }
+                    var bundle = DownloadHandlerAssetBundle.GetContent(request);
+                    if (bundle == null) { mediaError = "O bundle de inimigo está inválido."; yield break; }
+                    try
                     {
-                        var load = bundle.LoadAssetAsync<Sprite>("sprite");
-                        yield return load;
-                        spawn.sprite = load.asset as Sprite;
-                        if (spawn.sprite == null) mediaError = "Sprite de inimigo ausente no bundle.";
+                        if (files.hasSprite && spawn.sprite == null)
+                        {
+                            var load = bundle.LoadAssetAsync<Sprite>("sprite");
+                            yield return load;
+                            spawn.sprite = load.asset as Sprite;
+                            if (spawn.sprite == null) mediaError = "Sprite de inimigo ausente no bundle.";
+                        }
+                        if (files.hasModel && modelInPrimaryBundle && spawn.modelPrefab == null && mediaError.Length == 0)
+                            yield return LoadEnemyModel(bundle, spawn, files.modelAddress);
                     }
-                    if (files.hasModel && mediaError.Length == 0)
-                    {
-                        var load = bundle.LoadAssetAsync<GameObject>("model");
-                        yield return load;
-                        var prefab = load.asset as GameObject;
-                        spawn.modelPrefab = prefab != null ? prefab.GetComponentInChildren<PS2EnemyVisual>(true) : null;
-                        if (spawn.modelPrefab == null) mediaError = "Modelo de inimigo ausente no bundle.";
-                    }
+                    finally { bundle.Unload(false); }
                 }
-                finally { bundle.Unload(false); }
             }
+            if (files.hasModel && spawn.modelPrefab == null && mediaError.Length == 0)
+            {
+                using (var request = UnityWebRequestAssetBundle.GetAssetBundle(StageBundleUrl(modelFile),
+                    Hash128.Parse(modelFile.hash), 0))
+                {
+                    yield return request.SendWebRequest();
+                    if (request.result != UnityWebRequest.Result.Success)
+                    { mediaError = "Falha ao baixar modelo de inimigo: " + request.error; yield break; }
+                    var bundle = DownloadHandlerAssetBundle.GetContent(request);
+                    if (bundle == null) { mediaError = "O bundle do modelo de inimigo está inválido."; yield break; }
+                    try
+                    {
+                        yield return LoadEnemyModel(bundle, spawn, files.modelAddress);
+                    }
+                    finally { bundle.Unload(false); }
+                }
+            }
+        }
+
+        IEnumerator LoadEnemyModel(AssetBundle bundle, EnemySpawn spawn, string address)
+        {
+            address = string.IsNullOrEmpty(address) ? "model" : address;
+            var load = bundle.LoadAssetAsync<GameObject>(address);
+            yield return load;
+            var prefab = load.asset as GameObject;
+            spawn.modelPrefab = prefab != null ? prefab.GetComponentInChildren<PS2EnemyVisual>(true) : null;
+            if (spawn.modelPrefab == null) mediaError = "Modelo de inimigo " + address + " ausente no bundle.";
         }
 
         IEnumerator DownloadSelectionPortraits(bool onlyAwaiting = false)
@@ -311,7 +398,7 @@ namespace GainGround.Game
                     if (hero == null || member.lost || (onlyAwaiting && member.escaped) || !seen.Add(hero)) continue;
                     var file = PortraitFile(hero);
                     if (!file.IsAssigned || hero.hudPortrait != null) continue;
-                    yield return DownloadPortrait(file, hero);
+                    yield return DownloadPortrait(file, hero, PortraitAddress(hero));
                     if (mediaError.Length > 0) yield break;
                 }
             }
@@ -325,7 +412,15 @@ namespace GainGround.Game
             return default;
         }
 
-        IEnumerator DownloadPortrait(StageBundleFile file, CharacterDefinition hero)
+        string PortraitAddress(CharacterDefinition hero)
+        {
+            if (webCharacterPortraits == null) return "portrait";
+            foreach (var entry in webCharacterPortraits)
+                if (entry.character == hero) return string.IsNullOrEmpty(entry.portraitAddress) ? "portrait" : entry.portraitAddress;
+            return "portrait";
+        }
+
+        IEnumerator DownloadPortrait(StageBundleFile file, CharacterDefinition hero, string address)
         {
             using (var request = UnityWebRequestAssetBundle.GetAssetBundle(StageBundleUrl(file), Hash128.Parse(file.hash), 0))
             {
@@ -336,12 +431,12 @@ namespace GainGround.Game
                 if (bundle == null) { mediaError = "O bundle de retrato está inválido."; yield break; }
                 try
                 {
-                    var load = bundle.LoadAssetAsync<Texture2D>("portrait");
+                    var load = bundle.LoadAssetAsync<Texture2D>(address);
                     yield return load;
                     hero.hudPortrait = load.asset as Texture2D;
                     if (hero.hudPortrait == null)
                     {
-                        var spriteLoad = bundle.LoadAssetAsync<Sprite>("portrait");
+                        var spriteLoad = bundle.LoadAssetAsync<Sprite>(address);
                         yield return spriteLoad;
                         var portraitSprite = spriteLoad.asset as Sprite;
                         if (portraitSprite != null) hero.hudPortrait = portraitSprite.texture;

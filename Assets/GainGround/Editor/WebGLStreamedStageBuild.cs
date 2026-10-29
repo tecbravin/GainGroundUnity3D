@@ -22,85 +22,125 @@ public static class WebGLStreamedStageBuild
         if (source == null) throw new FileNotFoundException("Cena principal não encontrada", SourceScene);
 
         var originalStages = ReadStageList();
-        if (AssetDatabase.IsValidFolder(GeneratedFolder)) AssetDatabase.DeleteAsset(GeneratedFolder);
-        AssetDatabase.CreateFolder("Assets/GainGround", "GeneratedWebGL");
+        if (!AssetDatabase.IsValidFolder(GeneratedFolder)) AssetDatabase.CreateFolder("Assets/GainGround", "GeneratedWebGL");
+        CleanupLegacyGeneratedAssets();
         string projectRoot = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
         string output = Path.GetFullPath(Path.Combine(projectRoot, OutputFolder));
         string candidate = Path.GetFullPath(Path.Combine(projectRoot, "Build", "WebGLStreamingNext"));
         string content = Path.GetFullPath(Path.Combine(projectRoot, "Build", "WebGLStageContentTemp"));
+        string bundleCache = Path.GetFullPath(Path.Combine(projectRoot, "Library", "WebGLStageAssetBundleCache"));
         EnsureGeneratedPath(projectRoot, output);
         EnsureGeneratedPath(projectRoot, candidate);
         EnsureGeneratedPath(projectRoot, content);
+        EnsureGeneratedPath(projectRoot, bundleCache);
         if (Directory.Exists(candidate)) Directory.Delete(candidate, true);
         if (Directory.Exists(content)) Directory.Delete(content, true);
         Directory.CreateDirectory(candidate);
         Directory.CreateDirectory(content);
+        Directory.CreateDirectory(bundleCache);
 
         var builds = new List<AssetBundleBuild>();
         var previewNames = new string[originalStages.Length];
+        var previewAddresses = new string[originalStages.Length];
         var mapNames = new string[originalStages.Length];
+        var mapAddresses = new string[originalStages.Length];
         var musicNames = new string[originalStages.Length];
         var victoryNames = new string[originalStages.Length];
         var enemyNames = new string[originalStages.Length][];
+        var enemyModelNames = new string[originalStages.Length][];
+        var enemyModelAddresses = new string[originalStages.Length][];
         var objectNames = new string[originalStages.Length];
         var objectAddresses = new string[originalStages.Length][];
         var hazardAddresses = new string[originalStages.Length][];
         var musicByPath = new Dictionary<string, string>();
-        var enemyByPair = new Dictionary<string, string>();
+        var enemyBundleByGroup = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        var enemyModelOwners = new Dictionary<string, KeyValuePair<string, string>>(StringComparer.OrdinalIgnoreCase);
+        var enemySpriteBundles = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         for (int i = 0; i < originalStages.Length; i++)
         {
             var stage = originalStages[i];
             if (stage == null) throw new InvalidOperationException("Fase " + i + " não atribuída na cena.");
-            if (stage.background != null)
+            if (stage.paintedLayout == null && stage.name != "Stage_1_7")
+                throw new InvalidOperationException(stage.name + " não possui layout para gerar o mapa compactado.");
+
+            string bundleName = "stage-" + (i + 1).ToString("D2") + "-map";
+            mapNames[i] = bundleName;
+            mapAddresses[i] = "background";
+            var packageAssets = new List<string>();
+            var packageAddresses = new List<string>();
+            // Stage 1-7 keeps its ISO map directly on the lightweight stage definition,
+            // so its object bundle does not need a duplicate raster background.
+            if (stage.name != "Stage_1_7")
             {
-                string name = "stage-" + (i + 1).ToString("D2") + "-preview";
-                string previewPath = stage.paintedLayout != null ?
-                    WebGLStageAtlasGenerator.CreatePreview(stage, i) : RequireAssetPath(stage.background);
-                builds.Add(new AssetBundleBuild { assetBundleName = name,
-                    assetNames = new[] { previewPath },
-                    addressableNames = new[] { "background" } });
-                previewNames[i] = name;
+                packageAssets.Add(WebGLStageAtlasGenerator.CreateRuntimeMap(stage, i));
+                packageAddresses.Add(mapAddresses[i]);
             }
-            var mapAssets = new List<string>();
-            var mapAddresses = new List<string>();
-            if (stage.paintedLayout != null)
-            {
-                mapAssets.Add(WebGLStageAtlasGenerator.Create(stage, i));
-                mapAddresses.Add("layout");
-            }
-            if (stage.background == null && stage.terrainAtlas != null)
-            { mapAssets.Add(RequireAssetPath(stage.terrainAtlas)); mapAddresses.Add("terrain"); }
-            if (mapAssets.Count > 0)
-            {
-                string bundleName = "stage-" + (i + 1).ToString("D2") + "-map";
-                builds.Add(new AssetBundleBuild {
-                    assetBundleName = bundleName,
-                    assetNames = mapAssets.ToArray(),
-                    addressableNames = mapAddresses.ToArray()
-                });
-                mapNames[i] = bundleName;
-            }
+            objectAddresses[i] = new string[stage.objects == null ? 0 : stage.objects.Length];
+            hazardAddresses[i] = new string[stage.hazards == null ? 0 : stage.hazards.Length];
+            var packagePathAliases = new Dictionary<string, string>();
+            for (int o = 0; o < objectAddresses[i].Length; o++)
+                objectAddresses[i][o] = AddStagePrefab(stage.objects[o]?.prefab,
+                    packageAssets, packageAddresses, packagePathAliases);
+            for (int h = 0; h < hazardAddresses[i].Length; h++)
+                hazardAddresses[i][h] = AddStagePrefab(stage.hazards[h]?.prefab,
+                    packageAssets, packageAddresses, packagePathAliases);
+            builds.Add(new AssetBundleBuild {
+                assetBundleName = bundleName,
+                assetNames = packageAssets.ToArray(),
+                addressableNames = packageAddresses.ToArray()
+            });
+
             musicNames[i] = AddMusicBundle(stage.stageMusic, builds, musicByPath);
             victoryNames[i] = AddMusicBundle(stage.victoryMusic, builds, musicByPath);
             enemyNames[i] = new string[stage.enemies.Length];
+            enemyModelNames[i] = new string[stage.enemies.Length];
+            enemyModelAddresses[i] = new string[stage.enemies.Length];
             for (int e = 0; e < stage.enemies.Length; e++)
-                enemyNames[i][e] = AddEnemyBundle(stage.enemies[e], builds, enemyByPair);
-            objectNames[i] = AddStageObjectBundle(stage, i, builds,
-                out objectAddresses[i], out hazardAddresses[i]);
+                enemyNames[i][e] = AddEnemyBundle(stage.enemies[e], builds, enemyBundleByGroup,
+                    enemyModelOwners, enemySpriteBundles, out enemyModelNames[i][e], out enemyModelAddresses[i][e]);
+            objectNames[i] = objectAddresses[i].Length > 0 || hazardAddresses[i].Length > 0 ? bundleName : null;
+        }
+
+        for (int world = 0; world < Mathf.CeilToInt(originalStages.Length / 10f); world++)
+        {
+            string previewPath = WebGLStageAtlasGenerator.CreatePreviewAtlas(originalStages, world);
+            string bundleName = "stage-previews-" + (world + 1).ToString("D2");
+            builds.Add(new AssetBundleBuild { assetBundleName = bundleName,
+                assetNames = new[] { previewPath }, addressableNames = new[] { "preview-atlas" } });
+            int first = world * 10, end = Mathf.Min(first + 10, originalStages.Length);
+            for (int i = first; i < end; i++)
+            {
+                previewNames[i] = bundleName;
+                previewAddresses[i] = "stage-" + (i + 1).ToString("D2") + "-preview";
+            }
         }
 
         var portraitNames = new Dictionary<string, string>();
+        var portraitAddresses = new Dictionary<string, string>();
         var portraitByPath = new Dictionary<string, string>();
         foreach (string path in AssetDatabase.GetDependencies(SourceScene, true))
         {
             var character = AssetDatabase.LoadAssetAtPath<CharacterDefinition>(path);
             if (character != null && !portraitNames.ContainsKey(path) &&
                 !path.StartsWith(GeneratedFolder + "/", StringComparison.Ordinal))
-                portraitNames.Add(path, AddPortraitBundle(character.hudPortrait, builds, portraitByPath));
+            {
+                string portraitPath = character.hudPortrait != null ? RequireAssetPath(character.hudPortrait) : null;
+                if (!string.IsNullOrEmpty(portraitPath) && enemySpriteBundles.TryGetValue(portraitPath, out string enemyBundle))
+                {
+                    portraitNames.Add(path, enemyBundle);
+                    portraitAddresses.Add(path, "sprite");
+                }
+                else
+                {
+                    portraitNames.Add(path, AddPortraitBundle(character.hudPortrait, builds, portraitByPath));
+                    portraitAddresses.Add(path, "portrait");
+                }
+            }
         }
 
         EnsureResourcesStayInPlayer(builds);
-        var manifest = BuildPipeline.BuildAssetBundles(content, builds.ToArray(),
+        // Keep the raw-name bundles and manifests in Library so Unity can skip unchanged bundles next time.
+        var manifest = BuildPipeline.BuildAssetBundles(bundleCache, builds.ToArray(),
             BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.StrictMode, BuildTarget.WebGL);
         if (manifest == null) throw new InvalidOperationException("A criação dos AssetBundles WebGL falhou.");
 
@@ -111,14 +151,25 @@ public static class WebGLStreamedStageBuild
                 throw new InvalidOperationException("Bundle com dependências externas não suportadas: " + name);
             string hash = manifest.GetAssetBundleHash(name).ToString();
             string fileName = name + "-" + hash + ".bundle";
-            File.Move(Path.Combine(content, name), Path.Combine(content, fileName));
+            File.Copy(Path.Combine(bundleCache, name), Path.Combine(content, fileName), true);
             files.Add(name, new StageBundleFile { fileName = fileName, hash = hash });
+        }
+        string cacheRootName = Path.GetFileName(bundleCache);
+        File.Copy(Path.Combine(bundleCache, cacheRootName), Path.Combine(content, "WebGLStageContentTemp"), true);
+        File.Copy(Path.Combine(bundleCache, cacheRootName + ".manifest"),
+            Path.Combine(content, "WebGLStageContentTemp.manifest"), true);
+        foreach (string bundleManifest in Directory.GetFiles(bundleCache, "*.manifest"))
+        {
+            if (Path.GetFileName(bundleManifest) == cacheRootName + ".manifest") continue;
+            File.Copy(bundleManifest, Path.Combine(content, Path.GetFileName(bundleManifest)), true);
         }
 
         // Building bundles can reload imported assets. Resolve fresh references before cloning them.
         originalStages = ReadStageList();
-        GenerateLightweightScene(originalStages, previewNames, mapNames, musicNames, victoryNames,
-            enemyNames, objectNames, objectAddresses, hazardAddresses, portraitNames, files);
+        GenerateLightweightScene(originalStages, previewNames, previewAddresses, mapNames, mapAddresses,
+            musicNames, victoryNames, enemyNames, enemyModelNames, enemyModelAddresses,
+            objectNames, objectAddresses, hazardAddresses,
+            portraitNames, portraitAddresses, files);
         var options = new BuildPlayerOptions {
             scenes = new[] { GeneratedScene },
             locationPathName = candidate,
@@ -226,41 +277,54 @@ public static class WebGLStreamedStageBuild
     }
 
     static string AddEnemyBundle(EnemySpawn spawn, List<AssetBundleBuild> builds,
-        Dictionary<string, string> byPair)
+        Dictionary<string, int> bundleByGroup,
+        Dictionary<string, KeyValuePair<string, string>> modelOwners,
+        Dictionary<string, string> spriteBundles,
+        out string modelBundle, out string modelAddress)
     {
+        modelBundle = null;
+        modelAddress = null;
         if (spawn == null || (spawn.sprite == null && spawn.modelPrefab == null)) return null;
         string spritePath = spawn.sprite != null ? RequireAssetPath(spawn.sprite) : "";
         string modelPath = spawn.modelPrefab != null ? RequireAssetPath(spawn.modelPrefab) : "";
-        string pair = spritePath + "|" + modelPath;
-        if (byPair.TryGetValue(pair, out string existing)) return existing;
-        var assetNames = new List<string>();
-        var aliases = new List<string>();
-        if (spawn.sprite != null) { assetNames.Add(spritePath); aliases.Add("sprite"); }
-        if (spawn.modelPrefab != null) { assetNames.Add(modelPath); aliases.Add("model"); }
-        string name = "enemy-" + byPair.Count.ToString("D2");
-        builds.Add(new AssetBundleBuild { assetBundleName = name,
-            assetNames = assetNames.ToArray(), addressableNames = aliases.ToArray() });
-        byPair.Add(pair, name);
-        return name;
-    }
+        string group = !string.IsNullOrEmpty(spritePath) ? "sprite:" + spritePath : "model:" + modelPath;
+        if (!bundleByGroup.TryGetValue(group, out int buildIndex))
+        {
+            string name = "enemy-" + bundleByGroup.Count.ToString("D2");
+            var assetNames = new List<string>();
+            var aliases = new List<string>();
+            if (!string.IsNullOrEmpty(spritePath)) { assetNames.Add(spritePath); aliases.Add("sprite"); }
+            builds.Add(new AssetBundleBuild { assetBundleName = name,
+                assetNames = assetNames.ToArray(), addressableNames = aliases.ToArray() });
+            buildIndex = builds.Count - 1;
+            bundleByGroup.Add(group, buildIndex);
+        }
 
-    static string AddStageObjectBundle(StageDefinition stage, int index, List<AssetBundleBuild> builds,
-        out string[] objectAddresses, out string[] hazardAddresses)
-    {
-        var paths = new List<string>();
-        var aliases = new List<string>();
-        var byPath = new Dictionary<string, string>();
-        objectAddresses = new string[stage.objects == null ? 0 : stage.objects.Length];
-        hazardAddresses = new string[stage.hazards == null ? 0 : stage.hazards.Length];
-        for (int i = 0; i < objectAddresses.Length; i++)
-            objectAddresses[i] = AddStagePrefab(stage.objects[i]?.prefab, paths, aliases, byPath);
-        for (int i = 0; i < hazardAddresses.Length; i++)
-            hazardAddresses[i] = AddStagePrefab(stage.hazards[i]?.prefab, paths, aliases, byPath);
-        if (paths.Count == 0) return null;
-        string name = "stage-" + (index + 1).ToString("D2") + "-objects";
-        builds.Add(new AssetBundleBuild { assetBundleName = name,
-            assetNames = paths.ToArray(), addressableNames = aliases.ToArray() });
-        return name;
+        string bundleName = builds[buildIndex].assetBundleName;
+        if (!string.IsNullOrEmpty(spritePath)) spriteBundles[spritePath] = bundleName;
+        if (!string.IsNullOrEmpty(modelPath))
+        {
+            if (!modelOwners.TryGetValue(modelPath, out var owner))
+            {
+                var bundle = builds[buildIndex];
+                var paths = new List<string>(bundle.assetNames);
+                var aliases = new List<string>(bundle.addressableNames);
+                modelAddress = "model-" + paths.Count;
+                paths.Add(modelPath);
+                aliases.Add(modelAddress);
+                bundle.assetNames = paths.ToArray();
+                bundle.addressableNames = aliases.ToArray();
+                builds[buildIndex] = bundle;
+                modelBundle = bundleName;
+                modelOwners.Add(modelPath, new KeyValuePair<string, string>(modelBundle, modelAddress));
+            }
+            else
+            {
+                modelBundle = owner.Key;
+                modelAddress = owner.Value;
+            }
+        }
+        return bundleName;
     }
 
     static string AddStagePrefab(GameObject prefab, List<string> paths, List<string> aliases,
@@ -274,10 +338,11 @@ public static class WebGLStreamedStageBuild
         return alias;
     }
 
-    static void GenerateLightweightScene(StageDefinition[] originals, string[] previews, string[] maps, string[] music,
-        string[] victory, string[][] enemies, string[] objects, string[][] objectAddresses,
-        string[][] hazardAddresses, Dictionary<string, string> portraits,
-        Dictionary<string, StageBundleFile> files)
+    static void GenerateLightweightScene(StageDefinition[] originals, string[] previews,
+        string[] previewAddresses, string[] maps, string[] mapAddresses, string[] music,
+        string[] victory, string[][] enemies, string[][] enemyModelBundles, string[][] enemyModelAddresses,
+        string[] objects, string[][] objectAddresses, string[][] hazardAddresses, Dictionary<string, string> portraits,
+        Dictionary<string, string> portraitAddresses, Dictionary<string, StageBundleFile> files)
     {
         var characterCopies = new Dictionary<string, CharacterDefinition>();
         var portraitFiles = new List<CharacterPortraitFiles>();
@@ -288,9 +353,11 @@ public static class WebGLStreamedStageBuild
             var copy = UnityEngine.Object.Instantiate(original);
             copy.name = original.name;
             copy.hudPortrait = null;
-            AssetDatabase.CreateAsset(copy, GeneratedFolder + "/Character_" + characterCopies.Count.ToString("D2") + ".asset");
+            copy = CreateOrUpdateAsset(copy, GeneratedFolder + "/Character_" + characterCopies.Count.ToString("D2") + ".asset");
             characterCopies.Add(entry.Key, copy);
-            portraitFiles.Add(new CharacterPortraitFiles { character = copy, portrait = Resolve(entry.Value, files) });
+            portraitFiles.Add(new CharacterPortraitFiles {
+                character = copy, portrait = Resolve(entry.Value, files), portraitAddress = portraitAddresses[entry.Key]
+            });
         }
         var clones = new StageDefinition[originals.Length];
         var media = new StageMediaFiles[originals.Length];
@@ -298,7 +365,14 @@ public static class WebGLStreamedStageBuild
         {
             var copy = UnityEngine.Object.Instantiate(originals[i]);
             copy.name = originals[i].name;
-            copy.background = null;
+            // Stage 1-7 keeps its small source-map texture in the lightweight stage asset.
+            // Its painted tilemap data is not included in this build, so clearing the
+            // background leaves the Web scene showing only the generic fallback floor
+            // until a streamed preview happens to be available.
+            copy.background = originals[i].name == "Stage_1_7"
+                ? originals[i].background ?? AssetDatabase.LoadAssetAtPath<Sprite>(
+                    "Assets/GainGround/Editable/OriginalCampaign/Complete/Maps/1-07.png")
+                : null;
             copy.paintedLayout = null;
             copy.terrainAtlas = null;
             copy.stageMusic = null;
@@ -311,6 +385,8 @@ public static class WebGLStreamedStageBuild
             {
                 enemyFiles[e] = new EnemyVisualFiles {
                     bundle = Resolve(enemies[i][e], files),
+                    modelBundle = Resolve(enemyModelBundles[i][e], files),
+                    modelAddress = enemyModelAddresses[i][e],
                     hasSprite = originals[i].enemies[e].sprite != null,
                     hasModel = originals[i].enemies[e].modelPrefab != null
                 };
@@ -323,23 +399,26 @@ public static class WebGLStreamedStageBuild
             if (copy.hazards != null)
                 foreach (var item in copy.hazards)
                     if (item != null) { item.prefab = null; item.sprite = null; }
-            AssetDatabase.CreateAsset(copy, GeneratedFolder + "/Stage_" + (i + 1).ToString("D2") + ".asset");
+            copy = CreateOrUpdateAsset(copy, GeneratedFolder + "/Stage_" + (i + 1).ToString("D2") + ".asset");
             clones[i] = copy;
             media[i] = new StageMediaFiles {
                 preview = Resolve(previews[i], files),
+                previewAddress = previewAddresses[i],
                 map = Resolve(maps[i], files),
+                mapAddress = mapAddresses[i],
                 objects = Resolve(objects[i], files),
                 music = Resolve(music[i], files),
                 victoryMusic = Resolve(victory[i], files),
-                hasBackground = originals[i].background != null,
-                hasPaintedLayout = originals[i].paintedLayout != null,
-                hasTerrainAtlas = originals[i].background == null && originals[i].terrainAtlas != null,
+                hasBackground = true,
+                hasPaintedLayout = false,
+                hasTerrainAtlas = false,
                 enemyVisuals = enemyFiles,
                 objectAddresses = objectAddresses[i],
                 hazardAddresses = hazardAddresses[i]
             };
         }
         AssetDatabase.SaveAssets();
+        AssetDatabase.DeleteAsset(GeneratedScene);
         if (!AssetDatabase.CopyAsset(SourceScene, GeneratedScene))
             throw new IOException("Não foi possível copiar a cena WebGL.");
         AssetDatabase.Refresh();
@@ -364,6 +443,36 @@ public static class WebGLStreamedStageBuild
             if (!EditorSceneManager.SaveScene(scene)) throw new IOException("Falha ao salvar a cena WebGL.");
         }
         finally { EditorSceneManager.CloseScene(scene, true); }
+    }
+
+    static T CreateOrUpdateAsset<T>(T generated, string path) where T : UnityEngine.Object
+    {
+        var existing = AssetDatabase.LoadMainAssetAtPath(path) as T;
+        if (existing == null)
+        {
+            AssetDatabase.CreateAsset(generated, path);
+            return generated;
+        }
+        else
+        {
+            EditorUtility.CopySerialized(generated, existing);
+            UnityEngine.Object.DestroyImmediate(generated);
+            EditorUtility.SetDirty(existing);
+            return existing;
+        }
+    }
+
+    static void CleanupLegacyGeneratedAssets()
+    {
+        AssetDatabase.DeleteAsset(GeneratedFolder + "/StageAtlases");
+        string previewFolder = GeneratedFolder + "/StagePreviews";
+        if (!AssetDatabase.IsValidFolder(previewFolder)) return;
+        foreach (string guid in AssetDatabase.FindAssets("t:Texture2D", new[] { previewFolder }))
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            if (Path.GetFileName(path).StartsWith("Stage_", StringComparison.Ordinal))
+                AssetDatabase.DeleteAsset(path);
+        }
     }
 
     static StageBundleFile Resolve(string name, Dictionary<string, StageBundleFile> files)

@@ -175,7 +175,15 @@ public sealed class GainGroundStagePainter : EditorWindow
     {
         var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(layoutPath);
         if (prefab == null) throw new FileNotFoundException("Layout ausente", layoutPath);
-        string mapPath = AssetDatabase.GetAssetPath(stage.background);
+        // `stage.background` becomes the compressed/baked runtime preview after the
+        // first bake. Recreating editable tiles must keep reading the original ISO
+        // raster retained by the layout, whose dimensions still match the grid.
+        var sourceLayout = prefab.GetComponent<StagePaintLayout>();
+        var sourceBackground = sourceLayout != null && sourceLayout.sourceBackground != null
+            ? sourceLayout.sourceBackground : LoadOriginalSourceMap(stage);
+        if (sourceBackground == null)
+            throw new FileNotFoundException("Mapa ISO original ausente para " + stage.name + ".");
+        string mapPath = AssetDatabase.GetAssetPath(sourceBackground);
         var source = new Texture2D(2, 2, TextureFormat.RGBA32, false);
         var root = PrefabUtility.LoadPrefabContents(layoutPath);
         try
@@ -252,6 +260,19 @@ public sealed class GainGroundStagePainter : EditorWindow
         if (saved == null || saved.ground == null || saved.ground.GetUsedTilesCount() == 0)
             throw new InvalidOperationException("A conversão não persistiu os tiles no prefab.");
     }
+
+    static Sprite LoadOriginalSourceMap(StageDefinition selected)
+    {
+        const string prefix = "Stage_";
+        if (selected == null || !selected.name.StartsWith(prefix, StringComparison.Ordinal)) return null;
+        var parts = selected.name.Substring(prefix.Length).Split('_');
+        if (parts.Length != 2 || !int.TryParse(parts[0], out int round) ||
+            !int.TryParse(parts[1], out int number)) return null;
+        string path = "Assets/GainGround/Editable/OriginalCampaign/Complete/Maps/" +
+            round + "-" + number.ToString("D2") + ".png";
+        return AssetDatabase.LoadAssetAtPath<Sprite>(path);
+    }
+
 
     StagePaintLayout CurrentLayout()
     {

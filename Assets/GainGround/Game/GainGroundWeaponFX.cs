@@ -7,7 +7,13 @@ namespace GainGround.Game
     {
         Sprite[] waterFrames, blastFrames, electricFrames;
         Sprite detailedBoomerang;
-        sealed class BlastVisual { public SpriteRenderer renderer; public float age; public bool electric; }
+        sealed class BlastVisual
+        {
+            public SpriteRenderer renderer;
+            public readonly List<SpriteRenderer> additionalRenderers = new List<SpriteRenderer>();
+            public float age, duration = .48f;
+            public bool electric, prefabBased;
+        }
         readonly List<BlastVisual> blastVisuals = new List<BlastVisual>();
 
         void EnsureWeaponFX()
@@ -86,11 +92,37 @@ namespace GainGround.Game
             if(r>edge-2.2f || Mathf.Abs(Mathf.Sin(angle*13+frame))>.93f)return new Color(.72f,.94f,1,.96f);
             return new Color(.12f,.55f,1,.78f);
         }
-        void SpawnElectricShock(Vector2 position,float radius)
+        void SpawnElectricShock(Vector2 position,float radius,PS2EnemyVisual source)
         {
+            if (source != null && source.lightningStrikePrefabs != null && source.lightningStrikePrefabs.Length > 0 &&
+                source.lightningBurstPrefabs != null && source.lightningBurstPrefabs.Length > 0)
+            {
+                if (blastVisuals.Count >= 32) RemoveBlastVisual(blastVisuals[0]);
+                var blast = new BlastVisual { prefabBased = true, duration = .5f };
+                blast.renderer = SpawnLightningVisualPrefab(source.lightningBurstPrefabs[0], position,
+                    Vector2.one * radius * 2, 0, 7);
+                if (blast.renderer != null)
+                    blast.additionalRenderers.Add(SpawnLightningVisualPrefab(source.lightningBurstPrefabs[
+                        source.lightningBurstPrefabs.Length > 1 ? 1 : 0], position,
+                        Vector2.one * radius * 1.45f, 0, 8));
+                for (int i = 0; i < source.lightningStrikePrefabs.Length; i++)
+                {
+                    float angle = i * 360f / source.lightningStrikePrefabs.Length;
+                    float radians = angle * Mathf.Deg2Rad;
+                    Vector2 offset = new Vector2(Mathf.Cos(radians), Mathf.Sin(radians)) * radius * .42f;
+                    var bolt = SpawnLightningVisualPrefab(source.lightningStrikePrefabs[i], position + offset,
+                        new Vector2(radius * .34f, radius * .82f), angle, 9);
+                    if (bolt != null) blast.additionalRenderers.Add(bolt);
+                }
+                if (blast.renderer != null) blastVisuals.Add(blast);
+                else
+                    foreach (var effectRenderer in blast.additionalRenderers)
+                        if (effectRenderer != null) Destroy(effectRenderer.gameObject);
+                if (blast.renderer != null) return;
+            }
             EnsureWeaponFX();
             if(blastVisuals.Count>=32)
-            { if(blastVisuals[0].renderer!=null)Destroy(blastVisuals[0].renderer.gameObject);blastVisuals.RemoveAt(0); }
+                RemoveBlastVisual(blastVisuals[0]);
             var renderer=Visual("Electric shockwave",electricFrames[0],position,Vector2.one*radius*2,new Color(.38f,.78f,1),7);
             blastVisuals.Add(new BlastVisual {renderer=renderer, electric=true});
         }
@@ -104,19 +136,39 @@ namespace GainGround.Game
         {
             EnsureWeaponFX();
             if(blastVisuals.Count>=32)
-            { if(blastVisuals[0].renderer!=null)Destroy(blastVisuals[0].renderer.gameObject);blastVisuals.RemoveAt(0); }
+                RemoveBlastVisual(blastVisuals[0]);
             var renderer=Visual("Animated explosion",blastFrames[0],position,Vector2.one*radius*2,Color.white,7);
-            blastVisuals.Add(new BlastVisual {renderer=renderer, electric=true});
+            blastVisuals.Add(new BlastVisual {renderer=renderer, electric=false});
         }
         void UpdateBlastVisuals(float dt)
         {
             for(int i=blastVisuals.Count-1;i>=0;i--)
             {
                 var blast=blastVisuals[i];blast.age+=dt;
-                if(blast.renderer==null || blast.age>=.48f)
-                { if(blast.renderer!=null)Destroy(blast.renderer.gameObject);blastVisuals.RemoveAt(i);continue; }
-                blast.renderer.sprite=blast.electric ? electricFrames[Mathf.Min(7,(int)(blast.age/.06f))] : blastFrames[Mathf.Min(7,(int)(blast.age/.06f))];
+                if(blast.renderer==null || blast.age>=blast.duration)
+                { RemoveBlastVisualAt(i); continue; }
+                if(blast.prefabBased)
+                {
+                    float alpha = 1 - blast.age / blast.duration;
+                    blast.renderer.color = new Color(1,1,1,alpha);
+                    foreach (var renderer in blast.additionalRenderers)
+                        if (renderer != null) renderer.color = new Color(1,1,1,alpha);
+                }
+                else blast.renderer.sprite=blast.electric ? electricFrames[Mathf.Min(7,(int)(blast.age/.06f))] : blastFrames[Mathf.Min(7,(int)(blast.age/.06f))];
             }
+        }
+        void RemoveBlastVisual(BlastVisual blast)
+        {
+            int index = blastVisuals.IndexOf(blast);
+            if (index >= 0) RemoveBlastVisualAt(index);
+        }
+        void RemoveBlastVisualAt(int index)
+        {
+            var blast = blastVisuals[index];
+            if (blast.renderer != null) Destroy(blast.renderer.gameObject);
+            foreach (var renderer in blast.additionalRenderers)
+                if (renderer != null) Destroy(renderer.gameObject);
+            blastVisuals.RemoveAt(index);
         }
         void DisposeWeaponFX()
         {
@@ -124,7 +176,8 @@ namespace GainGround.Game
             if(blastFrames!=null)foreach(var sprite in blastFrames) {Destroy(sprite.texture);Destroy(sprite);}
             if(electricFrames!=null)foreach(var sprite in electricFrames) {Destroy(sprite.texture);Destroy(sprite);}
             if(detailedBoomerang!=null) {Destroy(detailedBoomerang.texture);Destroy(detailedBoomerang);}
-            waterFrames=blastFrames=electricFrames=null;detailedBoomerang=null;blastVisuals.Clear();
+            waterFrames=blastFrames=electricFrames=null;detailedBoomerang=null;
+            for (int i = blastVisuals.Count - 1; i >= 0; i--) RemoveBlastVisualAt(i);
         }
     }
 }

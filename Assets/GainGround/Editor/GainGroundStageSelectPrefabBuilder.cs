@@ -2,6 +2,7 @@ using GainGround.Game;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.UI;
 
 public static class GainGroundStageSelectPrefabBuilder
 {
@@ -35,7 +36,7 @@ public static class GainGroundStageSelectPrefabBuilder
         scaler.screenMatchMode = UnityEngine.UI.CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
         scaler.matchWidthOrHeight = .5f;
 
-        var eventSystem = new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
+        var eventSystem = new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
         eventSystem.transform.SetParent(rootRect, false);
 
         var backdrop = Image(rootRect, "Black backdrop", Vector2.zero, Vector2.one,

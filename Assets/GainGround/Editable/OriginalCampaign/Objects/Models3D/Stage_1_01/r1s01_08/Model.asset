@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efc2dbf1ef257524c9464d78454b62fe, type: 3}
+  m_Name: Model
+  m_EditorClassIdentifier: GainGround.Game::GainGround.Game.PS2ModelData
+  bones:
+  - part: 0
+    parent: -1
+    translation: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 0, y: 0, z: 0}
+  - part: 1
+    parent: -1
+    translation: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 0, y: 0, z: 0}
+  - part: 2
+    parent: -1
+    translation: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 0, y: 0, z: 0}
+  - part: 3
+    parent: -1
+    translation: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    pivot: {x: 0, y: 0, z: 0}
+  clips: []
+  meshes:
+  - {fileID: 4300000, guid: b659f299c9ce236449ccb54b78c8a8b7, type: 2}
+  - {fileID: 4300000, guid: c616e2aa8e7a5aa4bb472b31d65cc7a9, type: 2}
+  - {fileID: 4300000, guid: 3134ce3a8d79dcb4094efc53ade4b734, type: 2}
+  - {fileID: 4300000, guid: a4eacd73a3052a24b943557301796418, type: 2}
+  partIds: 00000000010000000200000003000000
+  material: {fileID: 2100000, guid: 48de8524cff647045a4f7fbfa46fca73, type: 2}
+  modelScale: 0.03125
+  idleClip: 0
+  walkClip: 2
+  fireClip: 3
+  specialClip: 4

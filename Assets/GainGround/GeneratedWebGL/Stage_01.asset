@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 93413a03c81cf4d43b90f090ab79ab29, type: 3}
-  m_Name: Stage_01
+  m_Name: Stage_1_1
   m_EditorClassIdentifier: 
   displayName: 1-1 / Planicie
   stageMusic: {fileID: 0}
@@ -86,6 +86,7 @@ MonoBehaviour:
     y: 2.25
     width: 1.2
     height: 1.1
+  projectileShelterAreas: []
   enemies:
   - position: {x: -4.875, y: 4.875}
     health: 1
@@ -97,14 +98,22 @@ MonoBehaviour:
     melee: 0
     spawnDelay: 0
     behavior: 0
+    walkingPattern: 0
+    walkingDistance: 0
+    patrolDistance: 0
     sprite: {fileID: 0}
     modelPrefab: {fileID: 0}
+    projectileSprite: {fileID: 0}
+    projectileSize: {x: 0, y: 0}
+    projectileSpinDegreesPerSecond: 0
     visualSize: {x: 1.5, y: 1.5}
     hitRadius: 0.23
+    verticalHitRadius: 0
     obstacleSize: {x: 0, y: 0}
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    teleportOnVanishDistance: 0
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
@@ -118,14 +127,22 @@ MonoBehaviour:
     melee: 0
     spawnDelay: 0
     behavior: 0
+    walkingPattern: 0
+    walkingDistance: 0
+    patrolDistance: 0
     sprite: {fileID: 0}
     modelPrefab: {fileID: 0}
+    projectileSprite: {fileID: 0}
+    projectileSize: {x: 0, y: 0}
+    projectileSpinDegreesPerSecond: 0
     visualSize: {x: 1.5, y: 1.5}
     hitRadius: 0.23
+    verticalHitRadius: 0
     obstacleSize: {x: 0, y: 0}
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    teleportOnVanishDistance: 0
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
@@ -139,14 +156,22 @@ MonoBehaviour:
     melee: 0
     spawnDelay: 0
     behavior: 0
+    walkingPattern: 0
+    walkingDistance: 0
+    patrolDistance: 0
     sprite: {fileID: 0}
     modelPrefab: {fileID: 0}
+    projectileSprite: {fileID: 0}
+    projectileSize: {x: 0, y: 0}
+    projectileSpinDegreesPerSecond: 0
     visualSize: {x: 1.5, y: 1.5}
     hitRadius: 0.23
+    verticalHitRadius: 0
     obstacleSize: {x: 0, y: 0}
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    teleportOnVanishDistance: 0
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
@@ -160,14 +185,22 @@ MonoBehaviour:
     melee: 0
     spawnDelay: 0
     behavior: 0
+    walkingPattern: 0
+    walkingDistance: 0
+    patrolDistance: 0
     sprite: {fileID: 0}
     modelPrefab: {fileID: 0}
+    projectileSprite: {fileID: 0}
+    projectileSize: {x: 0, y: 0}
+    projectileSpinDegreesPerSecond: 0
     visualSize: {x: 1.5, y: 1.5}
     hitRadius: 0.23
+    verticalHitRadius: 0
     obstacleSize: {x: 0, y: 0}
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    teleportOnVanishDistance: 0
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
@@ -181,14 +214,22 @@ MonoBehaviour:
     melee: 0
     spawnDelay: 0
     behavior: 0
+    walkingPattern: 0
+    walkingDistance: 0
+    patrolDistance: 0
     sprite: {fileID: 0}
     modelPrefab: {fileID: 0}
+    projectileSprite: {fileID: 0}
+    projectileSize: {x: 0, y: 0}
+    projectileSpinDegreesPerSecond: 0
     visualSize: {x: 1.5, y: 1.5}
     hitRadius: 0.23
+    verticalHitRadius: 0
     obstacleSize: {x: 0, y: 0}
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    teleportOnVanishDistance: 0
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
@@ -202,18 +243,27 @@ MonoBehaviour:
     melee: 0
     spawnDelay: 0
     behavior: 0
+    walkingPattern: 0
+    walkingDistance: 0
+    patrolDistance: 0
     sprite: {fileID: 0}
     modelPrefab: {fileID: 0}
+    projectileSprite: {fileID: 0}
+    projectileSize: {x: 0, y: 0}
+    projectileSpinDegreesPerSecond: 0
     visualSize: {x: 1.5, y: 1.5}
     hitRadius: 0.23
+    verticalHitRadius: 0
     obstacleSize: {x: 0, y: 0}
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    teleportOnVanishDistance: 0
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
-  rescue: {fileID: 11400000, guid: 4a22b0485eef50541bf0af84bff45f40, type: 2}
+  introCameraTargets: []
+  rescue: {fileID: 11400000, guid: 9a5494703d478214a985882beae927dd, type: 2}
   rescuePosition: {x: -1.5, y: 1.5}
   background: {fileID: 0}
   paintedLayout: {fileID: 0}
@@ -221,6 +271,18 @@ MonoBehaviour:
   additionalExits: []
   additionalCaptives: []
   objects:
+  - id: PS2:NativePerimeter
+    prefab: {fileID: 0}
+    area:
+      serializedVersion: 2
+      x: -6
+      y: -7
+      width: 12
+      height: 14
+    rotationDegrees: 0
+    modelScale: {x: 1.75, y: 1.6, z: 1}
+    teleportGroup: 0
+    health: 0
   - id: PAINT:STAGE11_ROCK_0
     prefab: {fileID: 0}
     area:
@@ -229,6 +291,8 @@ MonoBehaviour:
       y: -4.75
       width: 1.2
       height: 1.1
+    rotationDegrees: 0
+    modelScale: {x: 0, y: 0, z: 0}
     teleportGroup: 0
     health: 0
   - id: PAINT:STAGE11_ROCK_1
@@ -239,6 +303,8 @@ MonoBehaviour:
       y: -4.75
       width: 1.2
       height: 1.1
+    rotationDegrees: 0
+    modelScale: {x: 0, y: 0, z: 0}
     teleportGroup: 0
     health: 0
   - id: PAINT:STAGE11_ROCK_2
@@ -249,6 +315,8 @@ MonoBehaviour:
       y: -1.8499999
       width: 1.2
       height: 1.1
+    rotationDegrees: 0
+    modelScale: {x: 0, y: 0, z: 0}
     teleportGroup: 0
     health: 0
   - id: PAINT:STAGE11_ROCK_3
@@ -259,6 +327,8 @@ MonoBehaviour:
       y: 2.25
       width: 1.2
       height: 1.1
+    rotationDegrees: 0
+    modelScale: {x: 0, y: 0, z: 0}
     teleportGroup: 0
     health: 0
   - id: PAINT:STAGE11_BUSH_0
@@ -269,6 +339,8 @@ MonoBehaviour:
       y: -3.1000001
       width: 0.65
       height: 0.8
+    rotationDegrees: 0
+    modelScale: {x: 0, y: 0, z: 0}
     teleportGroup: 0
     health: 0
   - id: PAINT:STAGE11_BUSH_1
@@ -279,6 +351,8 @@ MonoBehaviour:
       y: -3.1000001
       width: 0.65
       height: 0.8
+    rotationDegrees: 0
+    modelScale: {x: 0, y: 0, z: 0}
     teleportGroup: 0
     health: 0
   - id: PAINT:STAGE11_BUSH_2
@@ -289,6 +363,8 @@ MonoBehaviour:
       y: 1.8000001
       width: 0.65
       height: 0.8
+    rotationDegrees: 0
+    modelScale: {x: 0, y: 0, z: 0}
     teleportGroup: 0
     health: 0
   - id: PAINT:STAGE11_BUSH_3
@@ -299,6 +375,8 @@ MonoBehaviour:
       y: 4.2999997
       width: 0.65
       height: 0.8
+    rotationDegrees: 0
+    modelScale: {x: 0, y: 0, z: 0}
     teleportGroup: 0
     health: 0
   hazards: []

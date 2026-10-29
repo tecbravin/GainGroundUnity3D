@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 namespace GainGround.Game
 {
@@ -35,22 +36,22 @@ namespace GainGround.Game
         }
         bool TryGetHeldPointer(out Vector2 position)
         {
-            if (pointerId >= 0)
+            if (pointerId >= 0 && Touchscreen.current != null)
             {
-                for (int i = 0; i < Input.touchCount; i++)
+                for (int i = 0; i < Touchscreen.current.touches.Count; i++)
                 {
-                    var touch = Input.GetTouch(i);
-                    if (touch.fingerId != pointerId) continue;
-                    if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled) break;
-                    position = touch.position;
+                    var touch = Touchscreen.current.touches[i];
+                    if (touch.touchId.ReadValue() != pointerId) continue;
+                    if (!touch.press.isPressed) break;
+                    position = touch.position.ReadValue();
                     return true;
                 }
             }
             // The Device Simulator can stop reporting a touch after it crosses
             // a control's bounds while the simulated mouse button is still held.
-            if ((pointerId < 0 || Input.touchCount == 0) && Input.GetMouseButton(0))
+            if ((pointerId < 0 || Touchscreen.current == null || GainGroundGame.TouchCount == 0) && GainGroundGame.MouseDown(0))
             {
-                position = Input.mousePosition;
+                position = Mouse.current.position.ReadValue();
                 return true;
             }
             position = Vector2.zero;

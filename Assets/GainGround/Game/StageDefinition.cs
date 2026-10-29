@@ -60,6 +60,8 @@ namespace GainGround.Game
         public float projectileSpinDegreesPerSecond;
         public Vector2 visualSize = new Vector2(.65f,.8f);
         [Min(.05f)] public float hitRadius = .23f;
+        [Min(0), Tooltip("Optional vertical hit radius. Zero uses hitRadius.")]
+        public float verticalHitRadius;
         public Vector2 obstacleSize;
         public bool boss;
         public bool freezeImmune;
@@ -95,6 +97,8 @@ namespace GainGround.Game
         public RectInt[] terrainPatches = new RectInt[0];
         public Vector2Int[] patchSources = new Vector2Int[0];
         public Rect[] walls = new Rect[0];
+        [Tooltip("Areas where players are sheltered from ground-level hostile projectiles.")]
+        public Rect[] projectileShelterAreas = new Rect[0];
         public EnemySpawn[] enemies = new EnemySpawn[0];
         [Header("Apresentação da fase")]
         [Tooltip("Pontos que a câmera visita antes de liberar o jogo. Vazio: percorre automaticamente os grupos de inimigos visíveis.")]

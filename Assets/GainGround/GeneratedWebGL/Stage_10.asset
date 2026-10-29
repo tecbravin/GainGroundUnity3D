@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 93413a03c81cf4d43b90f090ab79ab29, type: 3}
-  m_Name: Stage_10
+  m_Name: Stage_1_10
   m_EditorClassIdentifier: 
   displayName: 1-10 / Guardiao de duas cabecas
   stageMusic: {fileID: 0}
@@ -41,6 +41,7 @@ MonoBehaviour:
     y: 4
     width: 3
     height: 3
+  projectileShelterAreas: []
   enemies:
   - position: {x: 0, y: 5.375}
     health: 32
@@ -52,14 +53,22 @@ MonoBehaviour:
     melee: 0
     spawnDelay: 0
     behavior: 8
+    walkingPattern: 0
+    walkingDistance: 0
+    patrolDistance: 0
     sprite: {fileID: 0}
     modelPrefab: {fileID: 0}
+    projectileSprite: {fileID: 0}
+    projectileSize: {x: 0, y: 0}
+    projectileSpinDegreesPerSecond: 0
     visualSize: {x: 6, y: 3}
     hitRadius: 1.8
+    verticalHitRadius: 0
     obstacleSize: {x: 0, y: 0}
     boss: 1
     freezeImmune: 1
     triggerDistance: 0
+    teleportOnVanishDistance: 0
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
@@ -73,14 +82,22 @@ MonoBehaviour:
     melee: 0
     spawnDelay: 0
     behavior: 9
+    walkingPattern: 0
+    walkingDistance: 0
+    patrolDistance: 0
     sprite: {fileID: 0}
     modelPrefab: {fileID: 0}
+    projectileSprite: {fileID: 0}
+    projectileSize: {x: 0, y: 0}
+    projectileSpinDegreesPerSecond: 0
     visualSize: {x: 2.75, y: 3.5}
     hitRadius: 0.8
+    verticalHitRadius: 0
     obstacleSize: {x: 0, y: 0}
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    teleportOnVanishDistance: 0
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
@@ -94,14 +111,22 @@ MonoBehaviour:
     melee: 0
     spawnDelay: 0
     behavior: 9
+    walkingPattern: 0
+    walkingDistance: 0
+    patrolDistance: 0
     sprite: {fileID: 0}
     modelPrefab: {fileID: 0}
+    projectileSprite: {fileID: 0}
+    projectileSize: {x: 0, y: 0}
+    projectileSpinDegreesPerSecond: 0
     visualSize: {x: 2.75, y: 3.5}
     hitRadius: 0.8
+    verticalHitRadius: 0
     obstacleSize: {x: 0, y: 0}
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    teleportOnVanishDistance: 0
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
@@ -115,14 +140,22 @@ MonoBehaviour:
     melee: 0
     spawnDelay: 0
     behavior: 9
+    walkingPattern: 0
+    walkingDistance: 0
+    patrolDistance: 0
     sprite: {fileID: 0}
     modelPrefab: {fileID: 0}
+    projectileSprite: {fileID: 0}
+    projectileSize: {x: 0, y: 0}
+    projectileSpinDegreesPerSecond: 0
     visualSize: {x: 2.75, y: 3.5}
     hitRadius: 0.8
+    verticalHitRadius: 0
     obstacleSize: {x: 0, y: 0}
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    teleportOnVanishDistance: 0
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
@@ -136,14 +169,22 @@ MonoBehaviour:
     melee: 0
     spawnDelay: 0
     behavior: 9
+    walkingPattern: 0
+    walkingDistance: 0
+    patrolDistance: 0
     sprite: {fileID: 0}
     modelPrefab: {fileID: 0}
+    projectileSprite: {fileID: 0}
+    projectileSize: {x: 0, y: 0}
+    projectileSpinDegreesPerSecond: 0
     visualSize: {x: 2.75, y: 3.5}
     hitRadius: 0.8
+    verticalHitRadius: 0
     obstacleSize: {x: 0, y: 0}
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    teleportOnVanishDistance: 0
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
@@ -157,14 +198,22 @@ MonoBehaviour:
     melee: 0
     spawnDelay: 0
     behavior: 0
+    walkingPattern: 0
+    walkingDistance: 0
+    patrolDistance: 0
     sprite: {fileID: 0}
     modelPrefab: {fileID: 0}
+    projectileSprite: {fileID: 0}
+    projectileSize: {x: 0, y: 0}
+    projectileSpinDegreesPerSecond: 0
     visualSize: {x: 1.5, y: 1.5}
     hitRadius: 0.23
+    verticalHitRadius: 0
     obstacleSize: {x: 0, y: 0}
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    teleportOnVanishDistance: 0
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
@@ -178,14 +227,22 @@ MonoBehaviour:
     melee: 0
     spawnDelay: 0
     behavior: 0
+    walkingPattern: 0
+    walkingDistance: 0
+    patrolDistance: 0
     sprite: {fileID: 0}
     modelPrefab: {fileID: 0}
+    projectileSprite: {fileID: 0}
+    projectileSize: {x: 0, y: 0}
+    projectileSpinDegreesPerSecond: 0
     visualSize: {x: 1.5, y: 1.5}
     hitRadius: 0.23
+    verticalHitRadius: 0
     obstacleSize: {x: 0, y: 0}
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    teleportOnVanishDistance: 0
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
@@ -199,14 +256,22 @@ MonoBehaviour:
     melee: 0
     spawnDelay: 0
     behavior: 0
+    walkingPattern: 0
+    walkingDistance: 0
+    patrolDistance: 0
     sprite: {fileID: 0}
     modelPrefab: {fileID: 0}
+    projectileSprite: {fileID: 0}
+    projectileSize: {x: 0, y: 0}
+    projectileSpinDegreesPerSecond: 0
     visualSize: {x: 1.5, y: 1.5}
     hitRadius: 0.23
+    verticalHitRadius: 0
     obstacleSize: {x: 0, y: 0}
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    teleportOnVanishDistance: 0
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
@@ -220,17 +285,26 @@ MonoBehaviour:
     melee: 0
     spawnDelay: 0
     behavior: 0
+    walkingPattern: 0
+    walkingDistance: 0
+    patrolDistance: 0
     sprite: {fileID: 0}
     modelPrefab: {fileID: 0}
+    projectileSprite: {fileID: 0}
+    projectileSize: {x: 0, y: 0}
+    projectileSpinDegreesPerSecond: 0
     visualSize: {x: 1.5, y: 1.5}
     hitRadius: 0.23
+    verticalHitRadius: 0
     obstacleSize: {x: 0, y: 0}
     boss: 0
     freezeImmune: 0
     triggerDistance: 0
+    teleportOnVanishDistance: 0
     attackSound: {fileID: 0}
     hitSound: {fileID: 0}
     deathSound: {fileID: 0}
+  introCameraTargets: []
   rescue: {fileID: 0}
   rescuePosition: {x: -6, y: 2}
   background: {fileID: 0}
@@ -238,5 +312,29 @@ MonoBehaviour:
   noExit: 1
   additionalExits: []
   additionalCaptives: []
-  objects: []
+  objects:
+  - id: PS2:Native:Stage110Platform0
+    prefab: {fileID: 0}
+    area:
+      serializedVersion: 2
+      x: -6
+      y: 4
+      width: 3
+      height: 3
+    rotationDegrees: 0
+    modelScale: {x: 1.3913044, y: 1.5, z: 1}
+    teleportGroup: 0
+    health: 0
+  - id: PS2:Native:Stage110Platform1
+    prefab: {fileID: 0}
+    area:
+      serializedVersion: 2
+      x: 3
+      y: 4
+      width: 3
+      height: 3
+    rotationDegrees: 0
+    modelScale: {x: 1.3913044, y: 1.5, z: 1}
+    teleportGroup: 0
+    health: 0
   hazards: []

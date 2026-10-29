@@ -16,6 +16,47 @@ public static class CompleteStages31To310
         Debug.Log("Estágios 3-1 a 3-10 montados em Tilemaps editáveis.");
     }
 
+    [MenuItem("Gain Ground/Recriar estágio 3-3 da ISO")]
+    public static void BuildStage33()
+    {
+        BuildStage(3);
+        AssetDatabase.SaveAssets();
+        Debug.Log("Estágio 3-3 reconstruído com o mapa e as elevações da ISO.");
+    }
+
+    [MenuItem("Gain Ground/Recriar elevações 3-4 e 3-5 da ISO")]
+    public static void BuildStages34And35()
+    {
+        RebuildElevationVisuals(4);
+        RebuildElevationVisuals(5);
+        AssetDatabase.SaveAssets();
+        Debug.Log("Elevações 3-4 e 3-5 reconstruídas com frentes texturizadas da ISO.");
+    }
+
+    static void RebuildElevationVisuals(int number)
+    {
+        string name = "Stage_3_" + number;
+        string stagePath = Root + "/" + name + ".asset";
+        string layoutPath = Root + "/PaintedStages/" + name + "_Layout.prefab";
+        var stage = AssetDatabase.LoadAssetAtPath<StageDefinition>(stagePath);
+        if (stage == null || stage.walls == null || stage.walls.Length != 2)
+            throw new InvalidOperationException("As duas elevações da fase " + name + " não foram encontradas.");
+        var root = PrefabUtility.LoadPrefabContents(layoutPath);
+        try
+        {
+            var layout = root.GetComponent<StagePaintLayout>();
+            if (layout == null || layout.elevations == null)
+                throw new InvalidOperationException("Layout incompleto: " + layoutPath);
+            AddElevationFrontFaces(layout, stage.walls, number);
+            layout.lastBakedWalls = (Rect[])stage.walls.Clone();
+            EditorUtility.SetDirty(layout);
+            PrefabUtility.SaveAsPrefabAsset(root, layoutPath);
+            GainGroundStagePaintBaker.Bake(layout);
+            PrefabUtility.SaveAsPrefabAsset(root, layoutPath);
+        }
+        finally { PrefabUtility.UnloadPrefabContents(root); }
+    }
+
     static void BuildStage(int number)
     {
         string name = "Stage_3_" + number;
@@ -36,8 +77,11 @@ public static class CompleteStages31To310
                 throw new InvalidOperationException("Layout incompleto: " + layoutPath);
 
             var walls = (Rect[])(stage.walls ?? Array.Empty<Rect>()).Clone();
-            var floor = layout.ground.GetTile(new Vector3Int(0, -6, 0));
-            if (floor == null) throw new InvalidOperationException("Tile de chão ausente: " + name);
+            // The 3-3 sample at (0, -6) is inside the brown trench floor. Using it
+            // beneath elevations paints brown squares through the raised ground.
+            var floorCell = number == 3 ? new Vector3Int(0, 0, 0) : new Vector3Int(0, -6, 0);
+            var floor = layout.ground.GetTile(floorCell);
+            if (floor == null) throw new InvalidOperationException("Tile de chão ausente em " + floorCell + ": " + name);
             int columns = Mathf.RoundToInt(stage.size.x);
             int rows = Mathf.RoundToInt(stage.size.y);
             for (int row = 0; row < rows; row++)
@@ -53,6 +97,8 @@ public static class CompleteStages31To310
                     else if (raised) layout.elevations.SetTile(cell, original);
                     if (exitArt || raised) layout.ground.SetTile(cell, floor);
                 }
+
+            if (number == 4 || number == 5) AddElevationFrontFaces(layout, walls, number);
 
             foreach (var marker in layout.GetComponentsInChildren<StagePaintMarker>(true))
                 if (marker.id != null && marker.id.StartsWith("PAINT:STAGE3" + number + "_BLOCK_", StringComparison.Ordinal))
@@ -91,6 +137,42 @@ public static class CompleteStages31To310
                 (stage.objects == null ? 0 : stage.objects.Length) + " objetos preservados.");
         }
         finally { PrefabUtility.UnloadPrefabContents(root); }
+    }
+
+    static void AddElevationFrontFaces(StagePaintLayout layout, Rect[] walls, int number)
+    {
+        const float pixelsPerUnit = 128f;
+        const float frontEdgeOffsetPixels = 10f;
+        string prefix = "ISO elevation front face ";
+        string legacyPrefix = "Stage " + number + " elevation face ";
+        for (int i = layout.transform.childCount - 1; i >= 0; i--)
+        {
+            var child = layout.transform.GetChild(i);
+            if (child.name.StartsWith(prefix, StringComparison.Ordinal) ||
+                child.name.StartsWith(legacyPrefix, StringComparison.Ordinal))
+                UnityEngine.Object.DestroyImmediate(child.gameObject);
+        }
+
+        if (walls.Length != 2)
+            throw new InvalidOperationException("Esperadas duas elevações na fase 3-" + number + ".");
+
+        for (int i = 0; i < walls.Length; i++)
+        {
+            string path = Root + "/PaintedStages/Art/Stage_3_" + number +
+                "_ElevationFace_" + (i + 1) + ".png";
+            var sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+            if (sprite == null) throw new InvalidOperationException("Face ISO ausente: " + path);
+            var wall = walls[i];
+            var face = new GameObject(prefix + "3-" + number + "-" + (i + 1));
+            face.transform.SetParent(layout.transform, false);
+            face.transform.localPosition = new Vector3(wall.center.x,
+                wall.yMin + (frontEdgeOffsetPixels - sprite.rect.height * .5f) / pixelsPerUnit, 0);
+            face.transform.localScale = new Vector3(wall.width / sprite.bounds.size.x,
+                1, 1);
+            var renderer = face.AddComponent<SpriteRenderer>();
+            renderer.sprite = sprite;
+            renderer.sortingOrder = -7;
+        }
     }
 
     static bool SameArea(Rect a, Rect b) =>

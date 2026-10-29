@@ -38,15 +38,15 @@ namespace GainGround.Game
    ApplyMotion(2,0);
    ApplyMotion(clip,time);
   }
-  public void SampleEnemy(int clip,float time)
+  public void SampleEnemy(int clip,float time,bool loop=true)
   {
    for(int i=0;i<bones.Length;i++) Apply(i,data.bones[i].translation,data.bones[i].rotation,data.bones[i].scale);
-   ApplyMotion(0,0);ApplyMotion(clip,time);
+   ApplyMotion(0,0);ApplyMotion(clip,time,loop);
   }
-  void ApplyMotion(int clip,float time)
+  void ApplyMotion(int clip,float time,bool loop=true)
   {
    if(clip<0||clip>=data.clips.Length)return;
-   var motion=data.clips[clip];float at=motion.duration>0?Mathf.Repeat(time,motion.duration):0;
+   var motion=data.clips[clip];float at=motion.duration>0?(loop?Mathf.Repeat(time,motion.duration):Mathf.Clamp(time,0,motion.duration)):0;
    foreach(var t in motion.tracks)
    {
     var b=data.bones[t.bone];Apply(t.bone,Interpolate(t.translation,t.frames,at,b.translation),Interpolate(t.rotation,t.frames,at,b.rotation),Interpolate(t.scale,t.frames,at,b.scale));

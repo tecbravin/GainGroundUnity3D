@@ -154,13 +154,15 @@ public static class GainGroundStagePaintBaker
         return result;
     }
 
-    static byte[] RenderMap(StagePaintLayout layout, out int width, out int height)
+    public static byte[] RenderMap(StagePaintLayout layout, out int width, out int height,
+        bool includeMarkers = true)
     {
         var stage = layout.stage;
-        width = layout.sourceBackground != null ? Mathf.RoundToInt(layout.sourceBackground.rect.width) :
-            Mathf.RoundToInt(stage.size.x * 64);
-        height = layout.sourceBackground != null ? Mathf.RoundToInt(layout.sourceBackground.rect.height) :
-            Mathf.RoundToInt(stage.size.y * 64);
+        var reference = layout.sourceBackground != null ? layout.sourceBackground : stage.background;
+        width = reference != null ? Mathf.RoundToInt(reference.rect.width) :
+            Mathf.RoundToInt(stage.size.x * 128);
+        height = reference != null ? Mathf.RoundToInt(reference.rect.height) :
+            Mathf.RoundToInt(stage.size.y * 128);
         if (width <= 0 || height <= 0 || width > 4096 || height > 4096)
             throw new InvalidOperationException("Dimensões de mapa inválidas para a pintura.");
         var root = new GameObject("Temporary stage paint render", typeof(Grid));
@@ -186,20 +188,30 @@ public static class GainGroundStagePaintBaker
             }
             foreach (var tilemap in new[] { layout.ground, layout.elevations, layout.decorations, layout.effects })
                 if (tilemap != null) UnityEngine.Object.Instantiate(tilemap.gameObject, root.transform).SetActive(true);
-            foreach (var marker in layout.GetComponentsInChildren<StagePaintMarker>(true))
+            for (int i = 0; i < layout.transform.childCount; i++)
             {
-                if (marker.visualPrefab == null) continue;
-                var instance = UnityEngine.Object.Instantiate(marker.visualPrefab, root.transform);
-                instance.transform.position = marker.Area.center;
-                var visual = instance.GetComponent<SpriteRenderer>();
-                if (visual != null && visual.sprite != null)
-                {
-                    if (visual.drawMode == SpriteDrawMode.Tiled) visual.size = marker.Area.size;
-                    else instance.transform.localScale = new Vector3(
-                        marker.Area.width / visual.sprite.bounds.size.x,
-                        marker.Area.height / visual.sprite.bounds.size.y, 1);
-                }
+                var child = layout.transform.GetChild(i);
+                bool isoElevationFace = child.name.StartsWith("ISO elevation front face ", StringComparison.Ordinal) ||
+                    child.name.StartsWith("Stage 4 elevation face ", StringComparison.Ordinal) ||
+                    child.name.StartsWith("Stage 5 elevation face ", StringComparison.Ordinal);
+                if (!isoElevationFace || child.GetComponent<SpriteRenderer>() == null) continue;
+                UnityEngine.Object.Instantiate(child.gameObject, root.transform).SetActive(true);
             }
+            if (includeMarkers)
+                foreach (var marker in layout.GetComponentsInChildren<StagePaintMarker>(true))
+                {
+                    if (marker.visualPrefab == null) continue;
+                    var instance = UnityEngine.Object.Instantiate(marker.visualPrefab, root.transform);
+                    instance.transform.position = marker.Area.center;
+                    var visual = instance.GetComponent<SpriteRenderer>();
+                    if (visual != null && visual.sprite != null)
+                    {
+                        if (visual.drawMode == SpriteDrawMode.Tiled) visual.size = marker.Area.size;
+                        else instance.transform.localScale = new Vector3(
+                            marker.Area.width / visual.sprite.bounds.size.x,
+                            marker.Area.height / visual.sprite.bounds.size.y, 1);
+                    }
+                }
             SetLayer(root, 31);
             target = RenderTexture.GetTemporary(width, height, 0, RenderTextureFormat.ARGB32);
             var camera = cameraObject.GetComponent<Camera>();

@@ -9,7 +9,8 @@ namespace GainGround.Game
 
         void InitializeTitleUI()
         {
-            var existingEventSystem = FindObjectOfType<UnityEngine.EventSystems.EventSystem>();
+            var existingEventSystem = FindAnyObjectByType<UnityEngine.EventSystems.EventSystem>();
+            EnsureInputSystemEventSystem(existingEventSystem);
             var prefab = Resources.Load<GameObject>("HUD/GainGroundTitleUI");
             if (prefab == null || prefab.GetComponent<GainGroundTitleView>() == null)
             {
@@ -22,6 +23,7 @@ namespace GainGround.Game
             {
                 var ownEventSystem = instance.GetComponentInChildren<UnityEngine.EventSystems.EventSystem>();
                 if (ownEventSystem != null) ownEventSystem.gameObject.SetActive(false);
+                RestoreInputSystemUIActions(existingEventSystem);
             }
             titleView = instance.GetComponent<GainGroundTitleView>();
             titleView.Bind(ChooseTitleButton, ToggleTitleRoster, ClickTitleGain);

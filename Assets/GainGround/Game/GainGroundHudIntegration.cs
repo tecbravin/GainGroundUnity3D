@@ -10,11 +10,53 @@ namespace GainGround.Game
         Coroutine hudPortraitRoutine;
         readonly HashSet<CharacterDefinition> requestedHudPortraits = new HashSet<CharacterDefinition>();
         float nextHudRefreshTime;
+        float nextEventSystemScanTime;
         StageDefinition lastHudStage;
 
+        void EnsureInputSystemEventSystem(UnityEngine.EventSystems.EventSystem eventSystem)
+        {
+            if (Time.unscaledTime < nextEventSystemScanTime) return;
+            nextEventSystemScanTime = Time.unscaledTime + .5f;
+            foreach (var system in Resources.FindObjectsOfTypeAll<UnityEngine.EventSystems.EventSystem>())
+            {
+                if (system == null || !system.gameObject.scene.IsValid()) continue;
+                var legacyModule = system.GetComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+                var inputModule = system.GetComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
+                bool inputSystemDevicesAvailable = UnityEngine.InputSystem.Keyboard.current != null || UnityEngine.InputSystem.Mouse.current != null;
+                if (!inputSystemDevicesAvailable)
+                {
+                    if (inputModule != null) inputModule.enabled = false;
+                    if (!system.gameObject.activeInHierarchy) continue;
+                    if (legacyModule == null) legacyModule = system.gameObject.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+                    legacyModule.enabled = true;
+                    continue;
+                }
+                if (legacyModule != null)
+                {
+                    legacyModule.enabled = false;
+                    Destroy(legacyModule);
+                }
+
+                if (!system.gameObject.activeInHierarchy) continue;
+
+                inputModule = system.GetComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
+                if (inputModule == null)
+                    inputModule = system.gameObject.AddComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
+                inputModule.enabled = true;
+            }
+        }
+
+        void RestoreInputSystemUIActions(UnityEngine.EventSystems.EventSystem eventSystem)
+        {
+            var inputModule = eventSystem != null
+                ? eventSystem.GetComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>()
+                : null;
+            if (inputModule != null) inputModule.AssignDefaultActions();
+        }
         void InitializeHud()
         {
-            var existingEventSystem = FindObjectOfType<UnityEngine.EventSystems.EventSystem>();
+            var existingEventSystem = FindAnyObjectByType<UnityEngine.EventSystems.EventSystem>();
+            EnsureInputSystemEventSystem(existingEventSystem);
             var prefab = Resources.Load<GameObject>("HUD/GainGroundHUD");
             if (prefab == null || prefab.GetComponent<GainGroundHudView>() == null)
             {
@@ -26,6 +68,7 @@ namespace GainGround.Game
             {
                 var ownEventSystem = instance.GetComponentInChildren<UnityEngine.EventSystems.EventSystem>();
                 if (ownEventSystem != null) ownEventSystem.gameObject.SetActive(false);
+                RestoreInputSystemUIActions(existingEventSystem);
             }
             hudView = instance.GetComponent<GainGroundHudView>();
             instance.name = "Gain Ground HUD";
@@ -139,7 +182,7 @@ namespace GainGround.Game
 
         IEnumerator LoadCurrentHudPortrait(CharacterDefinition hero, StageBundleFile file)
         {
-            yield return DownloadPortrait(file, hero);
+            yield return DownloadPortrait(file, hero, PortraitAddress(hero));
             if (hero != null && hero.hudPortrait != null) requestedHudPortraits.Remove(hero);
             hudPortraitRoutine = null;
         }

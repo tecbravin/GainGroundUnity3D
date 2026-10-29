@@ -609,10 +609,19 @@ MonoBehaviour:
   parts:
   - {fileID: 7215544197577472798}
   turnWithTarget: 1
-  walkClip: 1
-  attackClip: 2
+  walkClip: -1
+  attackClip: -1
+  deathClip: 4
   projectileSprite: {fileID: 21300000, guid: 8e5b4151da19838408180c2122b38bf9, type: 3}
   projectileVisualPrefab: {fileID: 100000, guid: 62f64ebb46e54404826f6691b832da14, type: 3}
+  lightningStrikePrefabs:
+  - {fileID: 100000, guid: 787a4210f1b241a18860dd1f3e3e218b, type: 3}
+  - {fileID: 100000, guid: ecb2f2fcb608405983838b4400f38380, type: 3}
+  - {fileID: 100000, guid: 1ea3b8efd969464a95647974ea685f33, type: 3}
+  - {fileID: 100000, guid: e6acf77baf9148f4a94840ab17789358, type: 3}
+  lightningBurstPrefabs:
+  - {fileID: 100000, guid: 37a504d516a54282925aa41a141c5a1a, type: 3}
+  - {fileID: 100000, guid: fa471cca2c104beea3b892e3a68a1030, type: 3}
   projectileFrames: []
   projectileFramesPerSecond: 12
   projectileSize: {x: 0, y: 0}

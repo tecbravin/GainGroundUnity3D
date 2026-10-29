@@ -227,7 +227,21 @@ namespace GainGround.Game
         {
             if (e.data.obstacleSize.sqrMagnitude > 0)
                 return ArenaRules.Intersects(new Rect(e.position-e.data.obstacleSize/2,e.data.obstacleSize),position,radius);
-            return (e.position-position).sqrMagnitude <= Mathf.Pow(e.data.hitRadius+radius,2);
+            float horizontalRadius = e.data.hitRadius + radius;
+            float verticalRadius = Mathf.Max(e.data.hitRadius, e.data.verticalHitRadius) + radius;
+            Vector2 offset = position - e.position;
+            return Mathf.Pow(offset.x / horizontalRadius, 2) + Mathf.Pow(offset.y / verticalRadius, 2) <= 1;
+        }
+
+        bool TryEnemyContactAttack(Enemy enemy, PlayerState player)
+        {
+            if (enemy.contactAttackCooldown > 0) return false;
+            enemy.contactAttackCooldown = enemy.model != null ?
+                Mathf.Max(.35f, enemy.model.AttackDuration) : .65f;
+            if (enemy.model != null) enemy.model.Attack();
+            PlayEnemyAttackSound(enemy);
+            HitPlayer(player);
+            return true;
         }
 
         bool UpdateCampaignEnemy(Enemy e, float dt)
@@ -241,7 +255,10 @@ namespace GainGround.Game
                 return true;
             }
             e.visual.color = Color.white;
-            var target = ClosestPlayer(e.position);
+            // Ground enemies prefer an exposed player; stage walls influence who
+            // they pressure. Wall archers deliberately keep their through-wall aim.
+            var target = behavior == EnemyBehavior.WallArcher ? null : ClosestVisiblePlayer(e);
+            if (target == null) target = ClosestPlayer(e.position);
             if (target == null) return true;
             if (behavior == EnemyBehavior.Barrier || behavior == EnemyBehavior.Generator) return true;
             e.vulnerable = true;
@@ -261,8 +278,27 @@ namespace GainGround.Game
                         e.data.teleportOnVanishDistance, e.data.hitRadius);
                     e.visual.transform.position = e.position;
                 }
-                e.vulnerable = cycle >= 1;
-                e.visual.color = new Color(1,1,1,e.vulnerable ? 1 : .2f);
+                if (behavior == EnemyBehavior.Burrow)
+                {
+                    // Rise, pause above the sand, then sink over a full cycle. Keep the
+                    // model's scale fixed so the motion reads as emerging from the ground.
+                    float emergence = cycle < 1f ? Mathf.SmoothStep(0, 1, cycle) :
+                        cycle < 3f ? 1f : 1f - Mathf.SmoothStep(0, 1, (cycle - 3f));
+                    e.vulnerable = emergence >= .9f;
+                    e.visual.enabled = emergence > .18f;
+                    if (e.model != null)
+                    {
+                        float emergenceDepth = Mathf.Max(.35f, e.data.visualSize.y * .5f);
+                        e.model.transform.localPosition = e.burrowBaseModelPosition +
+                            Vector3.up * (emergence * emergenceDepth - emergenceDepth);
+                    }
+                    e.visual.color = Color.white;
+                }
+                else
+                {
+                    e.vulnerable = cycle >= 1;
+                    e.visual.color = new Color(1,1,1,e.vulnerable ? 1 : .2f);
+                }
                 if (!e.vulnerable) return true;
             }
             Vector2 direction = (target.position-e.position).normalized;
@@ -324,7 +360,16 @@ namespace GainGround.Game
             else if (pattern == EnemyWalkingPattern.TowardPlayers) move = true;
             else if (pattern == EnemyWalkingPattern.Patrol)
             {
-                move = TryGetPatrolGoal(e, target.position, out patrolGoal);
+                if (behavior == EnemyBehavior.Giant)
+                {
+                    // The 2-10 giant pursues from the start; patrolDistance is
+                    // its strike engagement range, not a leash that keeps it idle.
+                    patrolGoal = target.position;
+                    move = true;
+                    e.patrolChasing = (target.position - e.position).sqrMagnitude <=
+                        e.patrolDistance * e.patrolDistance;
+                }
+                else move = TryGetPatrolGoal(e, target.position, out patrolGoal);
                 direction = (patrolGoal - e.position).normalized;
             }
             else if (patrol)
@@ -344,7 +389,8 @@ namespace GainGround.Game
                 if (e.data.spawnDelay > 0 && e.position.y > 0)
                 { direction = Vector2.down; move = true; }
             }
-            if (move && (pattern == EnemyWalkingPattern.Patrol || e.triggered) && !e.data.elevated)
+            if (move && (pattern == EnemyWalkingPattern.Patrol || e.triggered) && !e.data.elevated &&
+                !(behavior == EnemyBehavior.Giant && pattern == EnemyWalkingPattern.Patrol && e.giantAttackPhase != 0))
             {
                 Vector2 delta = pattern == EnemyWalkingPattern.Patrol ?
                     Vector2.ClampMagnitude(patrolGoal - e.position, e.moveSpeed * dt) : direction * e.moveSpeed * dt;
@@ -376,28 +422,20 @@ namespace GainGround.Game
                 if (pattern == EnemyWalkingPattern.Patrol) RecordPatrolPosition(e);
             }
             e.visual.transform.position=e.position;
+            if (behavior == EnemyBehavior.Giant && pattern == EnemyWalkingPattern.Patrol)
+            {
+                UpdateGiantPatrolAttack(e, dt);
+                foreach (var p in players)
+                    if (p.HasActive && !e.data.elevated && e.vulnerable && ShotTouchesEnemy(e, p.position, .2f) && HitPlayer(p))
+                        PlayEnemyAttackSound(e);
+                return true;
+            }
             if (behavior == EnemyBehavior.Computer && e.age >= e.nextLaserSphereVolley)
             {
                 ShootComputerLaserSpheres(e);
                 e.nextLaserSphereVolley = e.age + 8f;
             }
             e.cooldown-=dt;
-            if (behavior == EnemyBehavior.Giant && e.walkingPattern == EnemyWalkingPattern.Patrol &&
-                e.cooldown <= 0 && e.triggered)
-            {
-                var visiblePlayer = ClosestVisiblePlayer(e);
-                if (visiblePlayer != null)
-                {
-                    direction = (visiblePlayer.position - e.position).normalized;
-                    if (e.model != null) e.model.Attack();
-                    SpawnElectricShock(e.position, 3f);
-                    foreach (var player in players)
-                        if (player.HasActive && Vector2.Distance(player.position, e.position) <= 3f && HitPlayer(player))
-                            PlayEnemyAttackSound(e);
-                    e.cooldown = e.data.shotInterval;
-                    e.volley++;
-                }
-            }
             if (!e.data.melee && e.cooldown<=0 && e.triggered)
             {
                 var visible = ClosestVisiblePlayer(e);
@@ -420,9 +458,59 @@ namespace GainGround.Game
                 }
             }
             foreach (var p in players)
-                if (p.HasActive && !e.data.elevated && e.vulnerable && ShotTouchesEnemy(e,p.position,.2f) && HitPlayer(p))
-                    PlayEnemyAttackSound(e);
+                if (p.HasActive && !e.data.elevated && e.vulnerable &&
+                    ShotTouchesEnemy(e,p.position,.2f) && TryEnemyContactAttack(e,p)) break;
             return true;
+        }
+
+        void UpdateGiantPatrolAttack(Enemy enemy, float dt)
+        {
+            if (enemy.giantAttackPhase == 0)
+            {
+                enemy.cooldown -= dt;
+                if (enemy.cooldown > 0 || !enemy.triggered || !enemy.patrolChasing) return;
+                var target = ClosestVisiblePlayer(enemy);
+                if (target == null) return;
+                enemy.giantAttackFacing = (target.position - enemy.position).normalized;
+                if (enemy.giantAttackFacing.sqrMagnitude < .001f) enemy.giantAttackFacing = Vector2.down;
+                enemy.giantAttackPhase = 1;
+                enemy.giantAttackTimer = .8f;
+                return;
+            }
+
+            if (enemy.giantAttackPhase == 1)
+            {
+                enemy.giantAttackTimer -= dt;
+                if (enemy.giantAttackTimer > 0) return;
+                if (enemy.model != null) enemy.model.Attack();
+                float swingDuration = enemy.model != null ? enemy.model.AttackDuration : 1.6f;
+                float impactDelay = Mathf.Min(.62f, swingDuration * .7f);
+                enemy.giantAttackTimer = swingDuration;
+                enemy.giantImpactThreshold = swingDuration - impactDelay;
+                enemy.giantImpactPending = true;
+                enemy.giantAttackPhase = 2;
+                return;
+            }
+
+            enemy.giantAttackTimer -= dt;
+            if (enemy.giantImpactPending && enemy.giantAttackTimer <= enemy.giantImpactThreshold)
+            {
+                enemy.giantImpactPending = false;
+                SpawnElectricShock(enemy.position, 3f, enemy.model);
+                bool hitPlayer = false;
+                foreach (var player in players)
+                    if (player.HasActive && Vector2.Distance(player.position, enemy.position) <= 3f && HitPlayer(player))
+                        hitPlayer = true;
+                if (hitPlayer) PlayEnemyAttackSound(enemy);
+            }
+            if (enemy.giantAttackTimer <= 0)
+            {
+                enemy.giantAttackPhase = 0;
+                enemy.giantAttackTimer = 0;
+                enemy.giantImpactPending = false;
+                enemy.cooldown = enemy.data.shotInterval;
+                enemy.volley++;
+            }
         }
 
         bool TryGetPatrolGoal(Enemy enemy, Vector2 playerPosition, out Vector2 goal)
@@ -493,10 +581,24 @@ namespace GainGround.Game
         void ShootFan(Enemy e, Vector2 direction, int count, float spread, bool radial)
         {
             PlayEnemyAttackSound(e);
+            bool bomber = e.data.sprite != null && e.data.sprite.name == "bomber";
+            if (bomber) count = 1;
             for (int i=0;i<count;i++)
             {
                 float angle = radial ? i*360f/count + (e.volley%2)*22.5f : (i-(count-1)*.5f)*spread;
                 var d=(Vector2)(Quaternion.Euler(0,0,angle)*(radial?Vector2.up:direction));
+                if (bomber)
+                {
+                    const float bombRange = 2.8f;
+                    const float bettyBlastRadius = .75f;
+                    var bombOrigin = e.position + d.normalized * .22f + Vector2.up * .12f;
+                    var bomb = Fire(bombOrigin, d, true, e.data.elevated, 3.4f, bombRange, 1,
+                        new Color(1, .55f, .18f), e);
+                    bomb.lobbedBomb = true;
+                    bomb.blastRadius = bettyBlastRadius;
+                    bomb.trajectoryRange = bombRange;
+                    continue;
+                }
                 float range = e.data.behavior == EnemyBehavior.WallArcher ? stage.size.y * .5f : 22f;
                 Fire(e.position,d,true,e.data.elevated || e.data.behavior == EnemyBehavior.WallArcher,e.data.boss?3.6f:3.2f,range,1,
                     e.data.behavior==EnemyBehavior.Orb?Color.cyan:new Color(1,.35f,.15f),e);

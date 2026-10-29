@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace GainGround.Game
 {
@@ -79,6 +80,7 @@ namespace GainGround.Game
             public PlayerState lastHitPlayer;
             public PS2EnemyVisual model;
             public float cooldown, frozen, age, confusionAngle;
+            public float contactAttackCooldown;
             public int burstShotsRemaining;
             public bool chargeReturning;
             public EnemyWalkingPattern walkingPattern;
@@ -88,14 +90,26 @@ namespace GainGround.Game
             public bool vulnerable = true, triggered, waterConfused;
             public bool patrolChasing, patrolReturning;
             public List<Vector2> patrolTrail;
+            public int giantAttackPhase;
+            public float giantAttackTimer, giantImpactThreshold;
+            public bool giantImpactPending;
+            public Vector2 giantAttackFacing;
             public SpriteRenderer visual;
+            public Vector3 burrowBaseModelPosition;
+        }
+        sealed class DefeatedEnemyVisual
+        {
+            public SpriteRenderer anchor;
+            public PS2EnemyVisual model;
         }
         sealed class Shot
         {
             public Vector2 position, velocity, origin, launchDirection;
             public float boomerangSide;
             public float remaining, age, orbitAngle, travel;
+            public float trajectoryRange, blastRadius;
             public bool hostile, elevated, special, returning;
+            public bool lobbedBomb;
             public bool directionalSprite;
             public float spinDegreesPerSecond;
             public bool computerLaserSphere;
@@ -115,6 +129,7 @@ namespace GainGround.Game
         }
         readonly List<PlayerState> players = new List<PlayerState>();
         readonly List<Enemy> enemies = new List<Enemy>();
+        readonly List<DefeatedEnemyVisual> defeatedEnemyVisuals = new List<DefeatedEnemyVisual>();
         readonly List<Shot> shots = new List<Shot>();
         readonly Stack<Shot> spareShots = new Stack<Shot>();
         readonly Stack<SpriteRenderer> spareShotVisuals = new Stack<SpriteRenderer>();
@@ -245,7 +260,7 @@ namespace GainGround.Game
             ClearShots();
             if (arena != null) { arena.gameObject.SetActive(false); Destroy(arena.gameObject); }
             arena = new GameObject("Arena (generated from editable stage asset)").transform;
-            arena.SetParent(transform); enemies.Clear(); blastVisuals.Clear(); extraCaptives.Clear(); hazardStates.Clear();
+            arena.SetParent(transform); enemies.Clear(); defeatedEnemyVisuals.Clear(); blastVisuals.Clear(); extraCaptives.Clear(); hazardStates.Clear();
             stage = stages[stageIndex]; remainingTime = stage.timeLimit;
             BuildProjectileWallCells();
             ResetStageScorePresentation();
@@ -306,6 +321,8 @@ namespace GainGround.Game
                     spawn.sprite != null ? Color.white : spawn.elevated ? new Color(.6f, .8f, 1) : spawn.melee ? Color.white : new Color(1, .75f, .35f), 2);
                 enemy.visual.enabled = spawn.spawnDelay <= 0;
                 enemy.model = PS2EnemyVisual.Bind(enemy.visual, spawn);
+                if (enemy.model != null)
+                    enemy.burrowBaseModelPosition = enemy.model.transform.localPosition;
                 enemies.Add(enemy);
             }
             foreach (var p in players)
@@ -385,7 +402,7 @@ namespace GainGround.Game
             musicSource.playOnAwake = false;
             musicSource.spatialBlend = 0;
             musicSource.priority = 32;
-            if (gameCamera != null && FindObjectOfType<AudioListener>() == null)
+            if (gameCamera != null && FindAnyObjectByType<AudioListener>() == null)
                 gameCamera.gameObject.AddComponent<AudioListener>();
         }
 
@@ -435,6 +452,30 @@ namespace GainGround.Game
             lifetime.Initialize(renderer, this, frames, framesPerSecond);
         }
 
+        SpriteRenderer SpawnLightningVisualPrefab(GameObject prefab, Vector2 position, Vector2 size,
+            float rotationDegrees, int sortingOrder)
+        {
+            if (prefab == null || arena == null) return null;
+            var instance = Instantiate(prefab, arena);
+            var renderer = instance.GetComponent<SpriteRenderer>();
+            if (renderer == null)
+            {
+                Destroy(instance);
+                return null;
+            }
+            instance.transform.position = new Vector3(position.x, position.y, 0);
+            instance.transform.rotation = Quaternion.Euler(0, 0, rotationDegrees);
+            if (renderer.sprite != null)
+            {
+                var spriteSize = renderer.sprite.bounds.size;
+                if (spriteSize.x > .001f && spriteSize.y > .001f)
+                    instance.transform.localScale = new Vector3(size.x / spriteSize.x, size.y / spriteSize.y, 1);
+            }
+            renderer.sortingOrder = sortingOrder;
+            renderer.color = Color.white;
+            return renderer;
+        }
+
         Sprite SpriteFromEffectPrefab(GameObject prefab)
         {
             if (prefab == null) return null;
@@ -452,7 +493,9 @@ namespace GainGround.Game
             var shot = spareShots.Count > 0 ? spareShots.Pop() : new Shot();
             shot.position = shot.velocity = shot.origin = shot.launchDirection = Vector2.zero;
             shot.boomerangSide = shot.remaining = shot.age = shot.orbitAngle = shot.travel = 0;
+            shot.trajectoryRange = shot.blastRadius = 0;
             shot.hostile = shot.elevated = shot.special = shot.returning = shot.directionalSprite = false;
+            shot.lobbedBomb = false;
             shot.spinDegreesPerSecond = 0;
             shot.computerLaserSphere = false; shot.nextLaserSphereTurn = 0;
             shot.damage = 0; shot.visual = null; shot.weapon = null;
@@ -581,7 +624,7 @@ namespace GainGround.Game
                 float halfX = enemy.data.obstacleSize.sqrMagnitude > 0 ?
                     enemy.data.obstacleSize.x * .5f : enemy.data.hitRadius;
                 float halfY = enemy.data.obstacleSize.sqrMagnitude > 0 ?
-                    enemy.data.obstacleSize.y * .5f : enemy.data.hitRadius;
+                    enemy.data.obstacleSize.y * .5f : Mathf.Max(enemy.data.hitRadius, enemy.data.verticalHitRadius);
                 for (int x = Mathf.FloorToInt(enemy.position.x - halfX); x <= Mathf.FloorToInt(enemy.position.x + halfX); x++)
                     for (int y = Mathf.FloorToInt(enemy.position.y - halfY); y <= Mathf.FloorToInt(enemy.position.y + halfY); y++)
                     {
@@ -607,7 +650,7 @@ namespace GainGround.Game
             PollBindings();
 #if UNITY_WEBGL && !UNITY_EDITOR
             if (state == ScreenState.Title && !titleMusicInteractionHandled &&
-                (Input.anyKeyDown || Input.GetMouseButtonDown(0) || Input.touchCount > 0))
+                (AnyKeyDown || MousePressed(0) || TouchCount > 0))
             {
                 titleMusicInteractionHandled = true;
                 if (titleMusic != null && musicSource != null && musicSource.clip == titleMusic)
@@ -639,20 +682,20 @@ namespace GainGround.Game
             {
                 endingMessageElapsed += Time.unscaledDeltaTime;
                 if (endingMessageElapsed >= EndingMessageDuration ||
-                    Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Escape) ||
-                    MenuDown(GameAction.Fire) || Input.GetMouseButtonDown(0) ||
-                    (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
+                    IsKeyPressed(Key.Enter) || IsKeyPressed(Key.Escape) ||
+                    MenuDown(GameAction.Fire) || MousePressed(0) ||
+                    TouchPressed)
                     ReturnToMenu();
                 return;
             }
             if (state == ScreenState.Defeat || state == ScreenState.GameOver) { UpdateContinueInput(); return; }
             if (state != ScreenState.Playing)
             {
-                if (Input.GetKeyDown(KeyCode.Return) || MenuDown(GameAction.Fire)) Continue();
+                if (IsKeyPressed(Key.Enter) || MenuDown(GameAction.Fire)) Continue();
                 return;
             }
             if (stageIntroPlaying) { AdvanceStageIntro(Time.unscaledDeltaTime); return; }
-            if (Input.GetKeyDown(KeyCode.Escape) || MenuDown(GameAction.Pause))
+            if (IsKeyPressed(Key.Escape) || MenuDown(GameAction.Pause))
             {
                 paused = !paused;
                 mobileGameScroll = Vector2.zero;
@@ -683,7 +726,21 @@ namespace GainGround.Game
             UpdateHazards();
             if (state != ScreenState.Playing) return;
             UpdateShots(dt);
-            if (state == ScreenState.Playing && enemies.Count == 0) ClearStage();
+            TickDefeatedEnemyVisuals(dt);
+            if (state == ScreenState.Playing && enemies.Count == 0 && defeatedEnemyVisuals.Count == 0) ClearStage();
+        }
+
+        void TickDefeatedEnemyVisuals(float dt)
+        {
+            for (int i = defeatedEnemyVisuals.Count - 1; i >= 0; i--)
+            {
+                var defeated = defeatedEnemyVisuals[i];
+                if (defeated.model == null || defeated.anchor == null || defeated.model.TickDeath(dt))
+                {
+                    if (defeated.anchor != null) Destroy(defeated.anchor.gameObject);
+                    defeatedEnemyVisuals.RemoveAt(i);
+                }
+            }
         }
 
         void UpdatePlayer(PlayerState p, PlayerInput input, float dt)
@@ -1023,6 +1080,7 @@ namespace GainGround.Game
                 enemy.visual.enabled = true;
                 var before = enemy.position;
                 bool frozen = enemy.frozen > 0;
+                enemy.contactAttackCooldown = Mathf.Max(0, enemy.contactAttackCooldown - dt);
                 if (enemy.waterConfused && frozen && !enemy.data.boss)
                 {
                     enemy.confusionAngle = Mathf.Repeat(enemy.confusionAngle + 540f * dt, 360f);
@@ -1065,8 +1123,9 @@ namespace GainGround.Game
                     }
                 }
                 foreach (var p in players)
-                    if (p.HasActive && !enemy.data.elevated && (p.position - enemy.position).sqrMagnitude < .25f && HitPlayer(p))
-                        PlayEnemyAttackSound(enemy);
+                    if (p.HasActive && !enemy.data.elevated &&
+                        (p.position - enemy.position).sqrMagnitude < .25f &&
+                        TryEnemyContactAttack(enemy, p)) break;
                 UpdateEnemyModel(enemy, before, dt);
                 if (state != ScreenState.Playing) return;
             }
@@ -1075,13 +1134,14 @@ namespace GainGround.Game
         {
             if(enemy.model == null)return;
             var target=ClosestPlayer(enemy.position);
-            var facing=enemy.patrolReturning ? (enemy.data.position-enemy.position).normalized :
+            var facing=enemy.giantAttackPhase!=0&&enemy.giantAttackFacing.sqrMagnitude>.001f
+                ? enemy.giantAttackFacing : enemy.patrolReturning ? (enemy.data.position-enemy.position).normalized :
                 target == null ? Vector2.down : (target.position-enemy.position).normalized;
             enemy.model.Tick(dt,facing,(enemy.position-before).sqrMagnitude>.000001f);
             if (enemy.waterConfused && enemy.frozen > 0 && !enemy.data.boss && enemy.model.rig != null)
                 enemy.model.rig.localRotation *= Quaternion.Euler(0, enemy.confusionAngle, 0);
         }
-        void Fire(Vector2 origin, Vector2 direction, bool hostile, bool elevated, float speed, float range,
+        Shot Fire(Vector2 origin, Vector2 direction, bool hostile, bool elevated, float speed, float range,
             int damage, Color color, Enemy source = null, AudioClip playerSound = null)
         {
             var shot = RentShot();
@@ -1123,6 +1183,7 @@ namespace GainGround.Game
             }
             shots.Add(shot);
             if (!hostile) PlaySfx(playerSound != null ? playerSound : shotSound);
+            return shot;
         }
         void UpdateShots(float dt)
         {
@@ -1161,17 +1222,33 @@ namespace GainGround.Game
                 for (int s = 0; s < steps && !remove; s++)
                 {
                     shot.position += delta; shot.remaining -= delta.magnitude;
+                    if (shot.lobbedBomb) shot.travel += delta.magnitude;
                     if (shot.hostile && TryReflectEnemyShot(shot)) delta = shot.velocity * dt / steps;
                     remove = shot.remaining <= 0 || Mathf.Abs(shot.position.x) > stage.size.x / 2 || Mathf.Abs(shot.position.y) > stage.size.y / 2;
+                    if (shot.lobbedBomb && (shot.remaining <= 0 || remove))
+                    {
+                        DetonateEnemyBomb(shot);
+                        remove = true;
+                        break;
+                    }
                     if (!shot.hostile && TryDamageStageObject(shot.position, shot.damage)) remove = true;
-                    if (!shot.elevated && ProjectileWallBlocked(shot.position)) remove = true;
+                    if (!shot.elevated && ProjectileWallBlocked(shot.position))
+                    {
+                        remove = true;
+                        if (shot.lobbedBomb) DetonateEnemyBomb(shot);
+                    }
                     if (remove) break;
                     if (shot.hostile)
                     {
                         foreach (var p in players)
                             if (p.HasActive && (shot.position - p.position).sqrMagnitude <
                                 (shot.computerLaserSphere ? .16f : .09f))
-                            { HitPlayer(p); remove = true; break; }
+                            {
+                                if (!shot.elevated && IsPlayerShelteredFromGroundShots(p.position)) continue;
+                                if (shot.lobbedBomb) DetonateEnemyBomb(shot);
+                                else HitPlayer(p);
+                                remove = true; break;
+                            }
                     }
                     else if (HasProjectileEnemyNearby(shot.position, .12f)) for (int e = enemies.Count - 1; e >= 0; e--)
                     {
@@ -1182,7 +1259,9 @@ namespace GainGround.Game
                         break;
                     }
                 }
-                shot.visual.transform.position = shot.position;
+                float arcHeight = shot.lobbedBomb && shot.trajectoryRange > 0
+                    ? Mathf.Sin(Mathf.PI * Mathf.Clamp01(shot.travel / shot.trajectoryRange)) * .72f : 0;
+                shot.visual.transform.position = shot.position + Vector2.up * arcHeight;
                 if (shot.directionalSprite)
                     shot.visual.transform.rotation = Quaternion.Euler(0, 0,
                         Mathf.Atan2(shot.velocity.y, shot.velocity.x) * Mathf.Rad2Deg - 90);

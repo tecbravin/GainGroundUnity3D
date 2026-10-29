@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace GainGround.Game
 {
@@ -103,19 +104,19 @@ namespace GainGround.Game
             if (canvas == null || !canvas.enabled || gainButton == null ||
                 !gainButton.interactable || gainClickAction == null) return;
             var hitArea = gainButton.transform as RectTransform;
-            if (Input.touchCount > 0)
+            if (Touchscreen.current != null && GainGroundGame.TouchPressed)
             {
-                for (int i = 0; i < Input.touchCount; i++)
+                for (int i = 0; i < Touchscreen.current.touches.Count; i++)
                 {
-                    var touch = Input.GetTouch(i);
-                    if (touch.phase != TouchPhase.Began ||
-                        !RectTransformUtility.RectangleContainsScreenPoint(hitArea, touch.position, null)) continue;
+                    var touch = Touchscreen.current.touches[i];
+                    if (!touch.press.wasPressedThisFrame ||
+                        !RectTransformUtility.RectangleContainsScreenPoint(hitArea, touch.position.ReadValue(), null)) continue;
                     gainClickAction();
                     break;
                 }
             }
-            else if (Input.GetMouseButtonDown(0) &&
-                RectTransformUtility.RectangleContainsScreenPoint(hitArea, Input.mousePosition, null))
+            else if (GainGroundGame.MousePressed(0) &&
+                RectTransformUtility.RectangleContainsScreenPoint(hitArea, Mouse.current.position.ReadValue(), null))
                 gainClickAction();
         }
 
@@ -124,10 +125,10 @@ namespace GainGround.Game
             if (canvas == null || !canvas.enabled || menuScroll == null ||
                 menuScroll.viewport == null || menuScroll.content == null ||
                 !menuPanel.gameObject.activeInHierarchy) return;
-            float wheel = Input.mouseScrollDelta.y;
-            if (Mathf.Approximately(wheel, 0) ||
+            float wheel = Mouse.current != null ? Mouse.current.scroll.ReadValue().y / 120f : 0;
+            if (Mouse.current == null || Mathf.Approximately(wheel, 0) ||
                 RectTransformUtility.RectangleContainsScreenPoint(menuScroll.viewport,
-                    Input.mousePosition, canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera))
+                    Mouse.current.position.ReadValue(), canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera))
                 return;
             float overflow = menuScroll.content.rect.height - menuScroll.viewport.rect.height;
             if (overflow > 0)

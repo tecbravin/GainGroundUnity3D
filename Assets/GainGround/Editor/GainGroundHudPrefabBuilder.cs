@@ -2,6 +2,7 @@ using GainGround.Game;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.UI;
 
 public static class GainGroundHudPrefabBuilder
 {
@@ -56,7 +57,7 @@ public static class GainGroundHudPrefabBuilder
         scaler.screenMatchMode = UnityEngine.UI.CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
         scaler.matchWidthOrHeight = .5f;
 
-        var eventSystem = new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
+        var eventSystem = new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
         eventSystem.transform.SetParent(rect, false);
 
         var left = Rail(rect, "Player 1 - left", false, new Color(.12f, .28f, .38f, .48f));

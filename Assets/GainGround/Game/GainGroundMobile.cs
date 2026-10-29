@@ -1,5 +1,7 @@
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.EnhancedTouch;
 using Application = UnityEngine.Device.Application;
 using Screen = UnityEngine.Device.Screen;
 
@@ -27,7 +29,7 @@ namespace GainGround.Game
 #if UNITY_WEBGL && !UNITY_EDITOR
             mobilePlatform = mobilePlatform || GainGroundIsMobile() != 0;
 #endif
-            if (UsesMobileControls) Input.simulateMouseWithTouches = true;
+            if (UsesMobileControls) TouchSimulation.Enable();
             ApplyMobileOrientation();
         }
 
@@ -79,8 +81,8 @@ namespace GainGround.Game
         void UpdateMobileControls()
         {
             mobileInputs[0] = mobileInputs[1] = default;
-            if (UsesMobileControls && !Input.simulateMouseWithTouches)
-                Input.simulateMouseWithTouches = true;
+            if (UsesMobileControls)
+                if(Touchscreen.current==null)TouchSimulation.Enable();
             if (!UsesMobileControls || !IsPlaying || paused || hudView == null) return;
             var touch = hudView.ReadTouch(0);
             mobileInputs[0] = new PlayerInput {

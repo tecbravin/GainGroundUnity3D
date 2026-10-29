@@ -7,254 +7,172 @@ using GainGround.Game;
 using UnityEditor;
 using UnityEditor.U2D.Sprites;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
-// Build-only copies. The editable prefab and its tile PNGs remain the source of truth.
+// Produces the runtime's compact raster maps and small per-world preview atlases.
+// The authoring tilemaps remain untouched and are only rendered when their source hash changes.
 public static class WebGLStageAtlasGenerator
 {
-    const string Root = "Assets/GainGround/GeneratedWebGL/StageAtlases";
-    const string PreviewRoot = "Assets/GainGround/GeneratedWebGL/StagePreviews";
+    const string Root = "Assets/GainGround/GeneratedWebGL";
+    const string MapRoot = Root + "/StageMaps";
+    const string PreviewRoot = Root + "/StagePreviews";
+    const int PreviewMaxSide = 384;
 
-    public static string CreatePreview(StageDefinition stage, int index)
+    public static string CreateRuntimeMap(StageDefinition stage, int index)
     {
-        if (stage == null || stage.background == null) throw new ArgumentNullException(nameof(stage));
-        EnsureFolder(PreviewRoot);
-        string sourcePath = AssetDatabase.GetAssetPath(stage.background.texture);
-        var source = new Texture2D(2, 2, TextureFormat.RGBA32, false);
-        Texture2D preview = null;
-        try
+        if (stage == null)
+            throw new ArgumentNullException(nameof(stage), "A fase precisa de um layout de origem.");
+        if (stage.paintedLayout == null)
         {
-            if (!ImageConversion.LoadImage(source, File.ReadAllBytes(AbsoluteAssetPath(sourcePath))))
-                throw new InvalidOperationException("Não foi possível ler a prévia: " + sourcePath);
-            var rect = stage.background.rect;
-            int sourceWidth = Mathf.RoundToInt(rect.width), sourceHeight = Mathf.RoundToInt(rect.height);
-            float scale = Mathf.Min(1f, 512f / Mathf.Max(sourceWidth, sourceHeight));
-            int width = Mathf.Max(1, Mathf.RoundToInt(sourceWidth * scale));
-            int height = Mathf.Max(1, Mathf.RoundToInt(sourceHeight * scale));
-            preview = new Texture2D(width, height, TextureFormat.RGBA32, false);
-            var pixels = new Color[width * height];
-            for (int y = 0; y < height; y++)
-                for (int x = 0; x < width; x++)
-                {
-                    float u = (rect.x + (x + .5f) * sourceWidth / width) / source.width;
-                    float v = (rect.y + (y + .5f) * sourceHeight / height) / source.height;
-                    pixels[y * width + x] = source.GetPixelBilinear(u, v);
-                }
-            preview.SetPixels(pixels);
-            preview.Apply(false);
-            string path = PreviewRoot + "/Stage_" + (index + 1).ToString("D2") + ".png";
-            File.WriteAllBytes(AbsoluteAssetPath(path), preview.EncodeToPNG());
-            AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceSynchronousImport);
-            var importer = AssetImporter.GetAtPath(path) as TextureImporter;
-            if (importer == null) throw new InvalidOperationException("Importador da prévia ausente: " + path);
-            importer.textureType = TextureImporterType.Sprite;
-            importer.spriteImportMode = SpriteImportMode.Single;
-            importer.spritePixelsPerUnit = width / stage.size.x;
-            importer.mipmapEnabled = false;
-            importer.alphaIsTransparency = true;
-            importer.maxTextureSize = 512;
-            importer.textureCompression = TextureImporterCompression.Compressed;
-            importer.SaveAndReimport();
-            return path;
+            var background = stage.background;
+            if (background == null && stage.name == "Stage_1_7")
+                background = AssetDatabase.LoadAssetAtPath<Sprite>(
+                    "Assets/GainGround/Editable/OriginalCampaign/Complete/Maps/1-07.png");
+            if (background != null) return AssetDatabase.GetAssetPath(background);
+            throw new InvalidOperationException("Layout pintável e mapa de origem ausentes: " + stage.name);
         }
-        finally
-        {
-            UnityEngine.Object.DestroyImmediate(source);
-            if (preview != null) UnityEngine.Object.DestroyImmediate(preview);
-        }
-    }
-
-    [MenuItem("Gain Ground/Validate generated WebGL atlas (stage 1-1)")]
-    public static void ValidateSample()
-    {
-        const string stagePath = "Assets/GainGround/Editable/OriginalCampaign/Stage_1_1.asset";
-        var stage = AssetDatabase.LoadAssetAtPath<StageDefinition>(stagePath);
-        if (stage == null) throw new InvalidOperationException("Estágio 1-1 ausente.");
-        string result = Create(stage, 0);
-        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(result);
-        var layout = prefab != null ? prefab.GetComponent<StagePaintLayout>() : null;
-        if (layout == null || layout.ground == null || layout.ground.GetUsedTilesCount() == 0)
-            throw new InvalidOperationException("Atlas gerado sem tiles no layout.");
-        foreach (string dependency in AssetDatabase.GetDependencies(result, true))
-            if (dependency.StartsWith("Assets/GainGround/Editable/OriginalCampaign/PaintedStages/Tiles/", StringComparison.Ordinal) ||
-                dependency == stagePath)
-                throw new InvalidOperationException("Layout WebGL ainda depende do asset editável: " + dependency);
-        Debug.Log("Atlas WebGL 1-1 validado: " + result);
-    }
-
-    public static string Create(StageDefinition stage, int index)
-    {
-        if (stage == null || stage.paintedLayout == null) throw new ArgumentNullException(nameof(stage));
-        EnsureFolder(Root);
-        string folder = Root + "/Stage_" + (index + 1).ToString("D2");
-        EnsureFolder(folder);
-        string path = folder + "/Layout.prefab";
+        EnsureFolder(MapRoot);
+        string path = MapRoot + "/Stage_" + (index + 1).ToString("D2") + ".png";
         string sourcePath = AssetDatabase.GetAssetPath(stage.paintedLayout.gameObject);
+        string sourceHash = AssetDatabase.GetAssetDependencyHash(sourcePath) + "|" +
+            stage.size.x.ToString("R") + "|" + stage.size.y.ToString("R") + "|" + stage.floorColor;
+        if (stage.name == "Stage_3_4" || stage.name == "Stage_3_5")
+            sourceHash += "|iso-elevation-front-faces-v2";
+        var importer = AssetImporter.GetAtPath(path) as TextureImporter;
+        if (importer != null && importer.userData == sourceHash) return path;
+
         var root = PrefabUtility.LoadPrefabContents(sourcePath);
         try
         {
             var layout = root.GetComponent<StagePaintLayout>();
             if (layout == null) throw new InvalidOperationException("Layout pintável ausente: " + sourcePath);
-            foreach (var marker in root.GetComponentsInChildren<StagePaintMarker>(true))
-                UnityEngine.Object.DestroyImmediate(marker.gameObject);
-            if (layout.collision != null)
-            {
-                UnityEngine.Object.DestroyImmediate(layout.collision.gameObject);
-                layout.collision = null;
-            }
-            // The runtime layout must not pull the authoring StageDefinition and its assets into the bundle.
-            layout.stage = null;
-            layout.sourceBackground = null;
-            layout.originalWalls = Array.Empty<Rect>();
-            layout.lastBakedWalls = Array.Empty<Rect>();
-            layout.managedObjectIds = Array.Empty<string>();
-
-            var tilemaps = new[] { layout.ground, layout.elevations, layout.decorations, layout.effects };
-            var tiles = new List<Tile>();
-            var seenTiles = new HashSet<Tile>();
-            var sprites = new List<Sprite>();
-            var spriteIndices = new Dictionary<Sprite, int>();
-            foreach (var map in tilemaps)
-            {
-                if (map == null) continue;
-                foreach (var cell in map.cellBounds.allPositionsWithin)
-                {
-                    var tileBase = map.GetTile(cell);
-                    if (tileBase == null) continue;
-                    var tile = tileBase as Tile;
-                    if (tile == null)
-                        throw new InvalidOperationException(stage.name + " usa um TileBase não suportado: " + tileBase.name);
-                    if (seenTiles.Add(tile)) tiles.Add(tile);
-                    if (tile.sprite != null && !spriteIndices.ContainsKey(tile.sprite))
-                    { spriteIndices.Add(tile.sprite, sprites.Count); sprites.Add(tile.sprite); }
-                }
-            }
-
-            var atlasSprites = PackSprites(sprites, folder);
-            var copies = new Dictionary<Tile, Tile>();
-            int tileNumber = 0;
-            foreach (var source in tiles)
-            {
-                var copy = UnityEngine.Object.Instantiate(source);
-                copy.name = "Tile_" + tileNumber.ToString("D3");
-                if (source.sprite != null) copy.sprite = atlasSprites[spriteIndices[source.sprite]];
-                AssetDatabase.CreateAsset(copy, folder + "/" + copy.name + ".asset");
-                copies.Add(source, copy);
-                tileNumber++;
-            }
-            foreach (var map in tilemaps)
-            {
-                if (map == null) continue;
-                foreach (var cell in map.cellBounds.allPositionsWithin)
-                {
-                    var tile = map.GetTile(cell) as Tile;
-                    if (tile != null) map.SetTile(cell, copies[tile]);
-                }
-                map.CompressBounds();
-            }
-            PrefabUtility.SaveAsPrefabAsset(root, path);
-            AssetDatabase.SaveAssets();
-            Debug.Log(stage.name + ": atlas WebGL com " + sprites.Count + " sprites e " + tiles.Count + " tiles.");
+            if (layout.stage == null) layout.stage = stage;
+            int width, height;
+            byte[] image = GainGroundStagePaintBaker.RenderMap(layout, out width, out height, false);
+            File.WriteAllBytes(AbsoluteAssetPath(path), image);
+            AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceSynchronousImport);
+            importer = AssetImporter.GetAtPath(path) as TextureImporter;
+            ConfigureSprite(importer, width / stage.size.x, 4096);
+            importer.userData = sourceHash;
+            importer.SaveAndReimport();
             return path;
         }
         finally { PrefabUtility.UnloadPrefabContents(root); }
     }
 
-    static Sprite[] PackSprites(List<Sprite> originals, string folder)
+    public static string CreatePreviewAtlas(StageDefinition[] stages, int world)
     {
-        if (originals.Count == 0) return Array.Empty<Sprite>();
-        var slices = new Texture2D[originals.Count];
+        if (stages == null || stages.Length == 0) throw new ArgumentNullException(nameof(stages));
+        EnsureFolder(PreviewRoot);
+        string path = PreviewRoot + "/World_" + (world + 1).ToString("D2") + ".png";
+        int first = world * 10;
+        int count = Mathf.Min(10, stages.Length - first);
+        var mapPaths = new string[count];
+        var addresses = new string[count];
+        var signature = new StringBuilder();
+        for (int i = 0; i < count; i++)
+        {
+            int stageIndex = first + i;
+            mapPaths[i] = CreateRuntimeMap(stages[stageIndex], stageIndex);
+            var importer = AssetImporter.GetAtPath(mapPaths[i]);
+            signature.Append(importer != null ? importer.userData : "missing").Append('|');
+            addresses[i] = "stage-" + (stageIndex + 1).ToString("D2") + "-preview";
+        }
+
+        var atlasImporter = AssetImporter.GetAtPath(path) as TextureImporter;
+        string sourceHash = signature.ToString();
+        if (atlasImporter != null && atlasImporter.userData == sourceHash) return path;
+
+        var slices = new Texture2D[count];
         Texture2D atlas = null;
         try
         {
-            float ppu = originals[0].pixelsPerUnit;
-            for (int i = 0; i < originals.Count; i++)
-            {
-                var sprite = originals[i];
-                if (Mathf.Abs(sprite.pixelsPerUnit - ppu) > .01f)
-                    throw new InvalidOperationException("Tiles com pixels por unidade diferentes no mesmo estágio: " + sprite.name);
-                string path = AssetDatabase.GetAssetPath(sprite.texture);
-                string extension = Path.GetExtension(path).ToLowerInvariant();
-                if (extension != ".png" && extension != ".jpg" && extension != ".jpeg")
-                    throw new InvalidOperationException("Sprite de tile precisa vir de PNG/JPG: " + path);
-                var source = new Texture2D(2, 2, TextureFormat.RGBA32, false);
-                try
-                {
-                    if (!ImageConversion.LoadImage(source, File.ReadAllBytes(AbsoluteAssetPath(path))))
-                        throw new InvalidOperationException("Não foi possível ler o sprite: " + path);
-                    var rect = sprite.rect;
-                    int x = Mathf.RoundToInt(rect.x), y = Mathf.RoundToInt(rect.y);
-                    int width = Mathf.RoundToInt(rect.width), height = Mathf.RoundToInt(rect.height);
-                    var slice = new Texture2D(width, height, TextureFormat.RGBA32, false);
-                    slice.SetPixels(source.GetPixels(x, y, width, height));
-                    slice.Apply(false);
-                    slices[i] = slice;
-                }
-                finally { UnityEngine.Object.DestroyImmediate(source); }
-            }
+            for (int i = 0; i < count; i++) slices[i] = CreateThumbnail(mapPaths[i]);
             atlas = new Texture2D(2, 2, TextureFormat.RGBA32, false);
             Rect[] packed = atlas.PackTextures(slices, 2, 4096, false);
-            var spriteRects = new SpriteRect[originals.Count];
-            for (int i = 0; i < originals.Count; i++)
+            var spriteRects = new SpriteRect[count];
+            for (int i = 0; i < count; i++)
             {
                 var rect = new Rect(Mathf.RoundToInt(packed[i].x * atlas.width),
                     Mathf.RoundToInt(packed[i].y * atlas.height),
                     Mathf.RoundToInt(packed[i].width * atlas.width),
                     Mathf.RoundToInt(packed[i].height * atlas.height));
                 if (rect.width != slices[i].width || rect.height != slices[i].height)
-                    throw new InvalidOperationException("Atlas excede 4096 pixels; não reduza os tiles automaticamente.");
-                var original = originals[i];
+                    throw new InvalidOperationException("O atlas de prévias excedeu 4096 pixels.");
                 spriteRects[i] = new SpriteRect {
-                    name = "Sprite_" + i.ToString("D3"), rect = rect,
-                    spriteID = StableSpriteId(folder, i),
-                    alignment = SpriteAlignment.Custom,
-                    pivot = new Vector2(original.pivot.x / original.rect.width,
-                        original.pivot.y / original.rect.height),
-                    border = original.border
+                    name = addresses[i], rect = rect,
+                    spriteID = StableSpriteId(path, addresses[i]),
+                    alignment = SpriteAlignment.Center, pivot = new Vector2(.5f, .5f)
                 };
             }
-            string atlasPath = folder + "/Atlas.png";
-            File.WriteAllBytes(AbsoluteAssetPath(atlasPath), atlas.EncodeToPNG());
-            AssetDatabase.ImportAsset(atlasPath, ImportAssetOptions.ForceSynchronousImport);
-            var importer = AssetImporter.GetAtPath(atlasPath) as TextureImporter;
-            if (importer == null) throw new InvalidOperationException("Importador do atlas ausente: " + atlasPath);
-            importer.textureType = TextureImporterType.Sprite;
-            importer.spriteImportMode = SpriteImportMode.Multiple;
-            importer.spritePixelsPerUnit = ppu;
-            importer.mipmapEnabled = false;
-            importer.alphaIsTransparency = true;
-            importer.maxTextureSize = 4096;
-            importer.SaveAndReimport();
+
+            File.WriteAllBytes(AbsoluteAssetPath(path), atlas.EncodeToPNG());
+            AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceSynchronousImport);
+            atlasImporter = AssetImporter.GetAtPath(path) as TextureImporter;
+            ConfigureSprite(atlasImporter, 64, 4096);
+            atlasImporter.spriteImportMode = SpriteImportMode.Multiple;
+            atlasImporter.userData = sourceHash;
             var factories = new SpriteDataProviderFactories();
             factories.Init();
-            var provider = factories.GetSpriteEditorDataProviderFromObject(importer);
-            if (provider == null) throw new InvalidOperationException("Provedor de sprites ausente: " + atlasPath);
+            var provider = factories.GetSpriteEditorDataProviderFromObject(atlasImporter);
+            if (provider == null) throw new InvalidOperationException("Provedor de sprites ausente: " + path);
             provider.InitSpriteEditorDataProvider();
             provider.SetSpriteRects(spriteRects);
-            var nameProvider = provider.GetDataProvider<ISpriteNameFileIdDataProvider>();
-            if (nameProvider != null)
+            var names = provider.GetDataProvider<ISpriteNameFileIdDataProvider>();
+            if (names != null)
             {
-                var pairs = new SpriteNameFileIdPair[spriteRects.Length];
-                for (int i = 0; i < pairs.Length; i++)
-                    pairs[i] = new SpriteNameFileIdPair(spriteRects[i].name, spriteRects[i].spriteID);
-                nameProvider.SetNameFileIdPairs(pairs);
+                var pairs = new SpriteNameFileIdPair[count];
+                for (int i = 0; i < count; i++) pairs[i] = new SpriteNameFileIdPair(addresses[i], spriteRects[i].spriteID);
+                names.SetNameFileIdPairs(pairs);
             }
             provider.Apply();
-            importer.SaveAndReimport();
-            var byName = new Dictionary<string, Sprite>();
-            foreach (var asset in AssetDatabase.LoadAllAssetsAtPath(atlasPath))
-                if (asset is Sprite sprite) byName.Add(sprite.name, sprite);
-            var result = new Sprite[originals.Count];
-            for (int i = 0; i < result.Length; i++)
-                if (!byName.TryGetValue(spriteRects[i].name, out result[i]))
-                    throw new InvalidOperationException("Sprite ausente no atlas: " + spriteRects[i].name);
-            return result;
+            atlasImporter.SaveAndReimport();
+
+            var imported = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var asset in AssetDatabase.LoadAllAssetsAtPath(path))
+                if (asset is Sprite sprite) imported.Add(sprite.name);
+            foreach (string address in addresses)
+                if (!imported.Contains(address)) throw new InvalidOperationException("Prévia ausente no atlas: " + address);
+            return path;
         }
         finally
         {
             foreach (var slice in slices) if (slice != null) UnityEngine.Object.DestroyImmediate(slice);
             if (atlas != null) UnityEngine.Object.DestroyImmediate(atlas);
         }
+    }
+
+    static Texture2D CreateThumbnail(string mapPath)
+    {
+        var source = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+        try
+        {
+            if (!ImageConversion.LoadImage(source, File.ReadAllBytes(AbsoluteAssetPath(mapPath))))
+                throw new InvalidOperationException("Não foi possível ler o mapa: " + mapPath);
+            float scale = Mathf.Min(1f, (float)PreviewMaxSide / Mathf.Max(source.width, source.height));
+            int width = Mathf.Max(1, Mathf.RoundToInt(source.width * scale));
+            int height = Mathf.Max(1, Mathf.RoundToInt(source.height * scale));
+            var result = new Texture2D(width, height, TextureFormat.RGBA32, false);
+            var pixels = new Color[width * height];
+            for (int y = 0; y < height; y++)
+                for (int x = 0; x < width; x++)
+                    pixels[y * width + x] = source.GetPixelBilinear((x + .5f) / width, (y + .5f) / height);
+            result.SetPixels(pixels);
+            result.Apply(false);
+            return result;
+        }
+        finally { UnityEngine.Object.DestroyImmediate(source); }
+    }
+
+    static void ConfigureSprite(TextureImporter importer, float pixelsPerUnit, int maxSize)
+    {
+        if (importer == null) throw new InvalidOperationException("Importador de textura ausente.");
+        importer.textureType = TextureImporterType.Sprite;
+        importer.spriteImportMode = SpriteImportMode.Single;
+        importer.spritePixelsPerUnit = pixelsPerUnit;
+        importer.mipmapEnabled = false;
+        importer.alphaIsTransparency = true;
+        importer.maxTextureSize = maxSize;
+        importer.textureCompression = TextureImporterCompression.Compressed;
     }
 
     static void EnsureFolder(string path)
@@ -268,11 +186,11 @@ public static class WebGLStageAtlasGenerator
     static string AbsoluteAssetPath(string path) =>
         Path.GetFullPath(Path.Combine(Application.dataPath, "..", path));
 
-    static GUID StableSpriteId(string folder, int index)
+    static GUID StableSpriteId(string path, string spriteName)
     {
         using (var md5 = MD5.Create())
         {
-            byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(folder + "/Sprite_" + index.ToString("D3")));
+            byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(path + "/" + spriteName));
             return new GUID(BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant());
         }
     }

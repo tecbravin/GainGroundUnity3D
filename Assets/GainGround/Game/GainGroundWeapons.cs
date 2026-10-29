@@ -396,7 +396,10 @@ namespace GainGround.Game
             if (enemy.health <= 0)
             {
                 SpawnSplitEnemies(enemy);
-                Destroy(enemy.visual.gameObject); enemies.Remove(enemy);
+                if (enemy.model != null && enemy.model.PlayDeath())
+                    defeatedEnemyVisuals.Add(new DefeatedEnemyVisual { anchor = enemy.visual, model = enemy.model });
+                else if (enemy.visual != null) Destroy(enemy.visual.gameObject);
+                enemies.Remove(enemy);
                 AwardPoints(enemy.lastHitPlayer,DifficultyRules.ScorePoints(campaignDifficulty,enemy.data.boss ? 2000 : 200));
                 if (enemy.data.obstacleSize.sqrMagnitude > 0) RebuildMovementWalls();
             }
@@ -476,6 +479,20 @@ namespace GainGround.Game
             SpawnBlast(shot.position, w.blastRadius);
         }
 
+        void DetonateEnemyBomb(Shot shot)
+        {
+            float radius = shot.blastRadius;
+            if (radius <= 0) return;
+            PlaySfx(explosionSound);
+            for (int i = players.Count - 1; i >= 0; i--)
+            {
+                var player = players[i];
+                if (player.HasActive && (player.position - shot.position).sqrMagnitude <= radius * radius)
+                    HitPlayer(player);
+            }
+            SpawnBlast(shot.position, radius);
+        }
+
         bool WallBetween(Vector2 a, Vector2 b)
         {
             int steps = Mathf.Max(1, Mathf.CeilToInt(Vector2.Distance(a, b) / .08f));
@@ -486,6 +503,14 @@ namespace GainGround.Game
                 foreach (var wall in stage.walls)
                     if (wall.Contains(point)) return true;
             }
+            return false;
+        }
+
+        bool IsPlayerShelteredFromGroundShots(Vector2 position)
+        {
+            if (stage.projectileShelterAreas == null) return false;
+            foreach (var area in stage.projectileShelterAreas)
+                if (area.Contains(position)) return true;
             return false;
         }
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.InputSystem;
 namespace GainGround.Game
 {
  public sealed partial class GainGroundGame
@@ -115,10 +116,10 @@ namespace GainGround.Game
   }
   void UpdateSaveSlotsInput()
   {
-   if(Input.GetKeyDown(KeyCode.Escape)){saveBrowserOpen=false;return;}
-   int delta=Input.GetKeyDown(KeyCode.DownArrow)||MenuDown(GameAction.Down)?1:Input.GetKeyDown(KeyCode.UpArrow)||MenuDown(GameAction.Up)?-1:0;
+   if(IsKeyPressed(Key.Escape)){saveBrowserOpen=false;return;}
+   int delta=IsKeyPressed(Key.DownArrow)||MenuDown(GameAction.Down)?1:IsKeyPressed(Key.UpArrow)||MenuDown(GameAction.Up)?-1:0;
    if(delta!=0){saveSlotIndex=(saveSlotIndex+delta+3)%3;overwriteSlot=-1;saveError="";}
-   if(Input.GetKeyDown(KeyCode.Return)||MenuDown(GameAction.Fire))SelectSaveSlot(saveSlotIndex);
+   if(IsKeyPressed(Key.Enter)||MenuDown(GameAction.Fire))SelectSaveSlot(saveSlotIndex);
   }
   string SaveSlotLabel(int slot)
   {

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace GainGround.Game
 {
@@ -336,36 +337,36 @@ namespace GainGround.Game
         }
         void UpdateMenuInput()
         {
-            if ((state == ScreenState.Title || state == ScreenState.Options || state == ScreenState.StageSelect) && Input.GetKeyDown(KeyCode.F11))
+            if ((state == ScreenState.Title || state == ScreenState.Options || state == ScreenState.StageSelect) && IsKeyPressed(Key.F11))
                 CountSecretF11Press();
             if (state == ScreenState.StageSelect)
             {
-                if (Input.GetKeyDown(KeyCode.Escape))
+                if (IsKeyPressed(Key.Escape))
                 { stageIntroRequested = false; state = ScreenState.Title; return; }
-                int delta = Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow) ||
+                int delta = IsKeyPressed(Key.RightArrow) || IsKeyPressed(Key.DownArrow) ||
                     MenuDown(GameAction.Right) || MenuDown(GameAction.Down) ? 1 :
-                    Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.UpArrow) ||
+                    IsKeyPressed(Key.LeftArrow) || IsKeyPressed(Key.UpArrow) ||
                     MenuDown(GameAction.Left) || MenuDown(GameAction.Up) ? -1 : 0;
                 if (stages != null && stages.Length > 0) stageSelectIndex = (stageSelectIndex + delta + stages.Length) % stages.Length;
-                if ((Input.GetKeyDown(KeyCode.Return) || MenuDown(GameAction.Fire)) && stages != null && stages.Length > 0)
+                if ((IsKeyPressed(Key.Enter) || MenuDown(GameAction.Fire)) && stages != null && stages.Length > 0)
                     StartAtSelectedStage(stageSelectIndex);
                 return;
             }
-            int vertical = Input.GetKeyDown(KeyCode.DownArrow) || MenuDown(GameAction.Down) ? 1 :
-                Input.GetKeyDown(KeyCode.UpArrow) || MenuDown(GameAction.Up) ? -1 : 0;
-            bool confirm = Input.GetKeyDown(KeyCode.Return) || MenuDown(GameAction.Fire);
+            int vertical = IsKeyPressed(Key.DownArrow) || MenuDown(GameAction.Down) ? 1 :
+                IsKeyPressed(Key.UpArrow) || MenuDown(GameAction.Up) ? -1 : 0;
+            bool confirm = IsKeyPressed(Key.Enter) || MenuDown(GameAction.Fire);
             if (state == ScreenState.Title)
             {
-                if (Input.GetKeyDown(KeyCode.F2)) ToggleTitleRoster();
+                if (IsKeyPressed(Key.F2)) ToggleTitleRoster();
                 menuIndex = (menuIndex + vertical + TitleMenuLabels.Length) % TitleMenuLabels.Length;
                 if (confirm) ActivateMenuItem();
                 return;
             }
-            if (Input.GetKeyDown(KeyCode.Escape)) { DiscardOptions(); return; }
+            if (IsKeyPressed(Key.Escape)) { DiscardOptions(); return; }
             int optionsCount = CanMapControls ? 8 : 7;
             optionsIndex = (optionsIndex + vertical + optionsCount) % optionsCount;
-            int horizontal = Input.GetKeyDown(KeyCode.RightArrow) || MenuDown(GameAction.Right) ? 1 :
-                Input.GetKeyDown(KeyCode.LeftArrow) || MenuDown(GameAction.Left) ? -1 : 0;
+            int horizontal = IsKeyPressed(Key.RightArrow) || MenuDown(GameAction.Right) ? 1 :
+                IsKeyPressed(Key.LeftArrow) || MenuDown(GameAction.Left) ? -1 : 0;
             if (optionsIndex == 0) draftSettings.BGM = Mathf.Clamp(draftSettings.BGM + horizontal * 5, 0, 100);
             if (optionsIndex == 1) draftSettings.SFX = Mathf.Clamp(draftSettings.SFX + horizontal * 5, 0, 100);
             ApplyAudioVolumes();
